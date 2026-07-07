@@ -1,0 +1,65 @@
+# hematteo.github.io
+
+An interactive 3D **physics junk drawer** — my CV, dumped onto a workshop cutting mat as objects you can grab, throw, stack, and knock around. Click any object to read the story behind it.
+
+**Live:** https://hematteo.github.io
+
+![The junk drawer](./public/og.png)
+
+## The idea
+
+Websites aren't supposed to have weight. This one does. Instead of a scrolling list of bullet points, ten accomplishments are real rigid bodies in a tray with real physics — pick them up, throw them at the walls, tip the coffee mug and watch it spill. Read all ten and the drawer tells you you're done.
+
+Each object maps to something real:
+
+| Object | Stands for |
+|---|---|
+| 🛶 Punt | MPhil, University of Cambridge |
+| ✈️ Paper airplane | *Learning to Read Out* (paper) |
+| 🔺 Glass prism | *Sparse Readout Prism* (paper) |
+| 🕹️ Joystick | Low-bit RL policies (paper) |
+| ☕ Coffee mug | Solo-built LLM platform, ~3K MAU (it spills) |
+| ⌨️ Keyboard | Amazon Alexa-AI internship |
+| 🖥️ GPU | `vigil-gpu`, open-source training monitor |
+| 🐬 Dolphin | Dolphin-acoustics ML (F1 0.48 → 0.86) |
+| 🏆 Trophy | Hackathon wins |
+| 🥇 Medal | Top Student Medal, GRE 340/340 |
+
+## Built with
+
+- **[three.js](https://threejs.org)** — WebGL rendering, all objects modelled in code (no asset files)
+- **[cannon-es](https://github.com/pmndrs/cannon-es)** — rigid-body physics
+- **[Vite](https://vitejs.dev)** — build and dev server
+- **Web Audio API** — every clonk, chirp, and fanfare is synthesised at runtime; no audio files
+- No external requests at runtime — fonts are system stacks, textures are drawn on `<canvas>`
+
+## Features
+
+- Grab / throw / stack physics with material-accurate collision sounds
+- Coffee that spills and stains the mat when the mug tips
+- Idle life: the paper airplane glides, the dolphin flops, the prism casts a rainbow
+- Completion funnel: read all ten → confetti + a call to action
+- Mobile: tilt-to-slide gravity (device orientation) and bottom-sheet cards
+- Keyboard navigable, screen-reader announcements, respects `prefers-reduced-motion`
+- Light/dark themes; renderer sleeps when the scene is at rest to save battery
+
+## Develop
+
+```bash
+npm install
+npm run dev        # local dev server
+npm run build      # production build to dist/
+npm run preview    # serve the built site
+npm test           # full 17-check Playwright interaction suite
+npm run smoke      # fast headless smoke test (used in CI)
+```
+
+Requires Node 18+. The full suite (`npm test`) uses your installed Chrome; CI uses Playwright's bundled Chromium.
+
+## Deploy
+
+Pushing to `main` builds and deploys to GitHub Pages via [`.github/workflows/deploy.yml`](./.github/workflows/deploy.yml). `.github/workflows/ci.yml` runs the smoke test on every push and PR.
+
+## License
+
+[MIT](./LICENSE) © Matteo He
