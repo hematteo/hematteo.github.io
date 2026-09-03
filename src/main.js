@@ -21,9 +21,9 @@ const ITEMS = [
     link: 'https://github.com/hematteo/learning-to-read-out', sound: 'paper',
   },
   {
-    id: 'prism', name: 'A glass prism', eyebrow: 'PAPER · UNDER REVIEW',
-    story: '“Sparse Readout Prism: A Sparse LM-Head Basis for Logit-Lens.” First-author submission. Splits a language model’s output matrix into sparse, auditable feature directions — a prism for logits.',
-    link: 'https://github.com/hematteo/sparse-readout-prism', sound: 'glass',
+    id: 'prism', name: 'A glass prism', eyebrow: 'PAPER · ARXIV:2609.01936 · UNDER REVIEW',
+    story: '“Sparse Readout Prism: Explaining Logit-Lens Scores in Features Instead of Tokens.” First-author preprint, arXiv:2609.01936. Splits a language model’s readout into sparse feature directions that explain any logit-lens score — a prism for logits.',
+    link: 'https://arxiv.org/abs/2609.01936', sound: 'glass',
   },
   {
     id: 'joystick', name: 'A joystick', eyebrow: 'PAPER · IN PREPARATION',
