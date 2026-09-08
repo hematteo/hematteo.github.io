@@ -1,6 +1,6 @@
 # hematteo.github.io
 
-A research-first personal website for Matteo He, with selected interpretability research, open-source tools, background, and a downloadable CV.
+A personal research website for Matteo He, with AI-safety interests, selected interpretability research, education and distinctions, engineering experience, and a downloadable CV.
 
 The original interactive 3D **physics junk drawer** lives at `/drawer/`. Click any object there to read the story behind it.
 
@@ -13,8 +13,9 @@ The original interactive 3D **physics junk drawer** lives at `/drawer/`. Click a
 The homepage is semantic HTML with a locally hosted font. Paper summaries, links, and native expandable details work without JavaScript. A small module adds accessible figure enlargement; the 3D renderer loads only on `/drawer/`.
 
 - Edit profile content in `index.html` and styles in `src/profile.css`.
-- Figure enhancement: `src/profile.js`.
+- Figure enlargement and click-to-reveal contact: `src/profile.js`. Email obfuscation discourages simple harvesting; it is not access control. LinkedIn remains available without JavaScript.
 - Public CV, citations, and research figures: `public/cv/` and `public/research/`.
+- Website CV source: `cv-source/matteo-he-research.tex`. Compile with `latexmk -pdf -outdir=/tmp/website-cv cv-source/matteo-he-research.tex`, then copy the PDF to `public/cv/`. Use the public version with website contact; application CVs retain direct contact details separately.
 - Content provenance and publication-status rules: `CONTENT_SOURCES.md`.
 - The Vite build emits both `/index.html` and `/drawer/index.html`.
 

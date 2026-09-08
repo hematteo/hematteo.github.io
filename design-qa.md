@@ -2,7 +2,7 @@
 
 Date: 2026-09-08
 
-Final result: passed (implementation and browser checks against the approved written brief; this is not a pixel-matching comparison to an image mockup).
+Current result: passed after the AI-safety positioning and contact-privacy revision described below. Earlier verification records and captures refer to their respective revisions.
 
 ## Verified
 
@@ -40,3 +40,13 @@ Reviewed all three one-page source PDFs visually and as extracted text: `mhcv.pd
 The 15-check smoke suite passed after these content changes. Subsequent copy-only edits clarified the research questions, restored the fixed Pythia-1B step-1000 condition, and used “at least ten” for the CV's “10+” attention heads. Final production build and whitespace checks passed.
 
 The final visual recheck of this revision was blocked: automatic browser approval review reported a revoked refresh token and required signing in again. Earlier screenshots show the preceding copy, not this revision. No browser workaround was attempted. The original layout verification and the new automated checks remain the available evidence.
+
+## AI-safety positioning and contact privacy revision
+
+- Broadened the profile around safety, alignment, and oversight; explicitly describes readout projects as MPhil dissertation work. Seeking safety fellowships and research roles.
+- Reordered sections: profile/interests, selected research, education/distinctions, research engineering, contact. GRE 340/340 and both section scores included with academic distinctions.
+- Removed direct address from initial HTML, structured metadata, and drawer. Accessible reveal buttons create mail links on activation and preserve keyboard focus; LinkedIn fallback is visible without JavaScript.
+- Public CV rebuilt from the canonical AI-safety source with broader positioning, dissertation context, GRE, and website contact instead of direct email/phone. One-page render inspected: legible, no clipping or overlap. PDF text and annotation checks confirm contact link, no direct address/phone, and no embedded attachments.
+- Production build and 21 smoke checks passed, including keyboard reveal, both contact controls, no-JavaScript fallback, four viewport widths after reveal, figure dialog, research disclosures, and preserved drawer initialization. Built HTML/JS/CSS/JSON checked for plaintext address.
+- Browser access is working again. Fresh CUA inspection verified the updated introduction and mobile education/GRE layout. Earlier saved screenshots are not evidence of this revision.
+- Obfuscation reduces simple scraping only. Existing public copies, repository history, external linked papers, and sophisticated crawlers remain outside this protection.

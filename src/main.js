@@ -64,10 +64,6 @@ const ITEMS = [
 
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches
 const IS_TOUCH = matchMedia('(pointer: coarse)').matches
-const LINKS = {
-  email: 'mailto:matteohe.tech@gmail.com?subject=CV%20please',
-  github: 'https://github.com/hematteo',
-}
 
 // ---------------------------------------------------------------- theme
 
@@ -918,11 +914,11 @@ function showFinalCard () {
   openedViaKeyboard = false
   cardEyebrow.textContent = '10/10 · THE WHOLE DRAWER'
   cardTitle.textContent = 'That’s everything.'
-  cardBody.textContent = 'Ten objects, ten stories — you’ve rummaged through the entire drawer. Want the boring version too? A normal, well-behaved PDF is one email away.'
+  cardBody.textContent = 'Ten objects, ten stories — you’ve rummaged through the entire drawer. Want the boring version too? There’s a normal, well-behaved CV below.'
   cardLink.hidden = true
   cardActions.hidden = false
   showCard()
-  srStatus.textContent = 'That is everything — all ten stories read. Links to email and GitHub are in the panel.'
+  srStatus.textContent = 'That is everything — all ten stories read. Links to the CV and GitHub are in the panel.'
   fanfare()
 }
 counter.addEventListener('click', () => { if (completed) showFinalCard() })
