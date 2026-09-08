@@ -15,4 +15,4 @@ Prepared 8 September 2026. The approved brief is a compact research index for re
 
 The page describes completed degrees rather than implying current Cambridge employment. The language-learning platform is explicitly archived. No private unpublished manuscript PDF is included. No analytics or third-party runtime requests are added to the profile.
 
-Contact buttons construct an address from reversed fragments only when activated. The initial HTML, JSON-LD, drawer, and public CV contain no direct address. This discourages basic harvesting but is not access control; determined crawlers can decode the script, and older public documents or repository history may retain the address.
+The latest contact revision removes the reversed address fragments and reveal controls entirely. A native Formspree form is prepared with an empty endpoint; development shows a disabled preview, production offers LinkedIn until configured. The recipient is to be stored only with the delivery provider. Provider CAPTCHA and spam filtering must be configured and real delivery verified before enabling this publicly. Older public documents and repository history may retain the address.

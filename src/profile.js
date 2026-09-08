@@ -1,19 +1,3 @@
-// Discourage basic address harvesting; this is obfuscation, not access control.
-// Build mail links only after a visitor activates a contact button.
-document.querySelectorAll('[data-email-reveal]').forEach(button => {
-  button.addEventListener('click', () => {
-    const address = ['hcet.ehoettam', 'liamg', 'moc']
-      .map(part => [...part].reverse().join(''))
-    const email = `${address[0]}@${address[1]}.${address[2]}`
-    const link = document.createElement('a')
-    link.href = `mailto:${email}`
-    link.textContent = email
-    link.className = button.className
-    button.replaceWith(link)
-    link.focus({ preventScroll: true })
-  }, { once: true })
-})
-
 // Progressive enhancement: figure links remain usable without JavaScript.
 const dialog = document.getElementById('figure-dialog')
 const expandedFigure = document.getElementById('expanded-figure')

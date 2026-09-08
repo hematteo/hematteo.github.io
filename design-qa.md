@@ -2,7 +2,7 @@
 
 Date: 2026-09-08
 
-Current result: passed after the AI-safety positioning and contact-privacy revision described below. Earlier verification records and captures refer to their respective revisions.
+Current result: local form preparation and unconfigured fallback verified. Delivery and provider spam protection are pending account setup. Earlier verification records and captures refer to their respective revisions.
 
 ## Verified
 
@@ -50,3 +50,11 @@ The final visual recheck of this revision was blocked: automatic browser approva
 - Production build and 21 smoke checks passed, including keyboard reveal, both contact controls, no-JavaScript fallback, four viewport widths after reveal, figure dialog, research disclosures, and preserved drawer initialization. Built HTML/JS/CSS/JSON checked for plaintext address.
 - Browser access is working again. Fresh CUA inspection verified the updated introduction and mobile education/GRE layout. Earlier saved screenshots are not evidence of this revision.
 - Obfuscation reduces simple scraping only. Existing public copies, repository history, external linked papers, and sophisticated crawlers remain outside this protection.
+
+## Contact form preparation (supersedes reveal controls)
+
+- Removed all reveal controls and the encoded recipient from runtime source. Also removed the literal recipient from smoke-test source; no new address is published through test code.
+- Added a native HTML form with name, email, message, length limits, honeypot, and processor privacy notice. Opaque Formspree endpoint configured at build time; non-Formspree and email-based endpoint values are rejected.
+- No endpoint has been supplied. Local dev displays a disabled preview; production hides it and offers LinkedIn. No messages, verification emails, or live submissions were sent.
+- Updated smoke suite: 20 checks passed, including the disabled/hidden unconfigured form, no reveal controls, no-JavaScript LinkedIn fallback, viewport fit, and existing research/drawer behavior.
+- Fresh browser screenshot inspected the local two-column contact form preview. Provider CAPTCHA, filtering, and end-to-end inbox delivery remain unverified and must be configured before activation. Native POST will use the provider's verification and confirmation pages.

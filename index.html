@@ -41,7 +41,7 @@
           <p class="intro-description">I’m an early-career researcher interested in reducing the risks posed by advanced AI. I want to develop methods that help us detect hidden objectives, evaluate behavior under oversight, and understand when a model’s apparent cooperation is misleading.</p>
           <p class="intro-description">My background combines mechanistic interpretability research with hands-on ML engineering. At Cambridge, my dissertation examined how readout methods shape what we infer about language models.</p>
           <div class="profile-links" aria-label="Profile and contact links">
-            <button type="button" class="email-reveal" data-email-reveal>Reveal email</button>
+            <a href="#contact">Contact</a>
             <a href="https://github.com/hematteo">GitHub</a>
             <a href="https://huggingface.co/hematteo">Hugging Face</a>
             <a href="https://linkedin.com/in/matteohe">LinkedIn</a>
@@ -178,8 +178,24 @@
       </section>
 
       <section id="contact" class="contact" aria-labelledby="contact-heading">
-        <div><p class="eyebrow">AI safety roles · Fellowships · Collaborations</p><h2 id="contact-heading">Let’s talk about the work.</h2><p>I’d like to work with researchers developing better ways to evaluate, understand, and oversee advanced AI systems.</p><noscript><p>Contact me through <a href="https://linkedin.com/in/matteohe">LinkedIn</a>, or enable JavaScript to reveal my email.</p></noscript></div>
-        <button type="button" class="contact-link email-reveal" data-email-reveal>Reveal email</button>
+        <div><p class="eyebrow">AI safety roles · Fellowships · Collaborations</p><h2 id="contact-heading">Let’s talk about the work.</h2><p>I’d like to work with researchers developing better ways to evaluate, understand, and oversee advanced AI systems.</p><p><a href="https://linkedin.com/in/matteohe">Contact me on LinkedIn</a></p></div>
+        <div class="contact-form-panel" %CONTACT_VISIBILITY%>
+          <p class="form-preview-note" %CONTACT_PREVIEW_VISIBILITY%>Form preview — message delivery is not connected yet. Please use LinkedIn for now.</p>
+          <form class="contact-form" action="%CONTACT_ENDPOINT%" method="post">
+            <fieldset %CONTACT_DISABLED%>
+              <legend class="sr-only">Send Matteo a message</legend>
+              <label for="contact-name">Name</label>
+              <input id="contact-name" name="name" autocomplete="name" required maxlength="120">
+              <label for="contact-email">Your email</label>
+              <input id="contact-email" name="email" type="email" autocomplete="email" required maxlength="254">
+              <label for="contact-message">Message</label>
+              <textarea id="contact-message" name="message" rows="5" required minlength="20" maxlength="5000" placeholder="Tell me about the role, fellowship, or research you have in mind."></textarea>
+              <div hidden aria-hidden="true"><label>Leave this blank<input name="_gotcha" tabindex="-1" autocomplete="off"></label></div>
+              <button type="submit">Send message</button>
+            </fieldset>
+            <p class="form-note">Your message and reply address will be processed by <a href="https://formspree.io/legal/privacy-policy/">Formspree</a>. Sending continues to its verification and confirmation page.</p>
+          </form>
+        </div>
       </section>
     </main>
     <footer><span>Matteo He <span class="footer-year">2026</span></span><div><a href="/cv/matteo-he-research.pdf">CV</a><a href="https://github.com/hematteo">GitHub</a><a href="/drawer/">The junk drawer</a><a href="#main">Back to top</a></div></footer>

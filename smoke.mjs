@@ -3,6 +3,9 @@
 // without the timing sensitivity of the full interaction suite in test.mjs.
 import { chromium } from 'playwright'
 import { spawn } from 'node:child_process'
+import { readFileSync } from 'node:fs'
+
+const { endpoint } = JSON.parse(readFileSync(new URL('./contact.config.json', import.meta.url), 'utf8'))
 
 const PORT = 5177
 const BASE = `http://127.0.0.1:${PORT}/`
@@ -37,20 +40,14 @@ try {
 
   const initialResponse = await page.goto(BASE)
   const initialHtml = await initialResponse.text()
-  check('initial HTML has no email address or mailto link', !initialHtml.includes('matteohe.tech@gmail.com') && !initialHtml.includes('mailto:'))
+  check('initial HTML has no email address or mailto link', !/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i.test(initialHtml) && !initialHtml.includes('mailto:'))
   check('research profile renders', await page.locator('h1').textContent() === 'Matteo He')
   check('selected research is visible', await page.locator('#research h3').count() === 3)
   check('profile does not load the 3D renderer', await page.evaluate(() => typeof window.__jd) === 'undefined')
   const cv = await page.request.get(new URL(await page.locator('.profile-links a').last().getAttribute('href'), BASE).href)
   check('CV PDF is available', cv.ok() && cv.headers()['content-type']?.includes('application/pdf'))
-  check('email is hidden before interaction', await page.locator('a[href^="mailto:"]').count() === 0)
-  const reveal = page.locator('.profile-links [data-email-reveal]')
-  await reveal.focus()
-  await page.keyboard.press('Enter')
-  const emailLink = page.locator('.profile-links a[href^="mailto:"]')
-  check('keyboard reveals the correct email and preserves focus', await emailLink.getAttribute('href') === 'mailto:matteohe.tech@gmail.com' && await emailLink.evaluate(el => el === document.activeElement))
-  await page.locator('#contact [data-email-reveal]').click()
-  check('contact section reveals the correct email', await page.locator('#contact a[href^="mailto:"]').textContent() === 'matteohe.tech@gmail.com')
+  check('no email reveal controls remain', await page.locator('a[href^="mailto:"], [data-email-reveal]').count() === 0)
+  check('unconfigured form cannot accept messages', endpoint ? await page.locator('.contact-form').getAttribute('action') === endpoint : !(await page.locator('.contact-form-panel').isVisible()) && await page.locator('.contact-form button').isDisabled())
   await page.locator('.figure-link').first().click()
   check('research figure opens', await page.locator('#figure-dialog').evaluate(el => el.open))
   await page.keyboard.press('Escape')
@@ -81,7 +78,7 @@ try {
   const noScript = await browser.newContext({ javaScriptEnabled: false })
   const staticPage = await noScript.newPage()
   await staticPage.goto(BASE)
-  check('contact fallback is available without JavaScript', await staticPage.locator('#contact noscript a').isVisible())
+  check('contact fallback is available without JavaScript', await staticPage.locator('#contact a[href="https://linkedin.com/in/matteohe"]').isVisible())
   await noScript.close()
   check('no runtime errors', errors.length === 0, errors.join(' | '))
 } finally {
