@@ -1,7 +1,7 @@
 {
   "name": "hematteo-github-io",
   "version": "1.0.0",
-  "description": "An interactive 3D physics junk drawer — my CV as objects you can grab, throw, and rummage through.",
+  "description": "Matteo He's research profile, selected work, and interactive 3D junk drawer.",
   "private": true,
   "type": "module",
   "scripts": {

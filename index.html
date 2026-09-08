@@ -1,303 +1,193 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Matteo He — Junk Drawer</title>
-  <meta name="description" content="An interactive 3D physics junk drawer: my CV as objects you can grab, throw, and rummage through. ML researcher & engineer, Cambridge.">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🗄️%3C/text%3E%3C/svg%3E">
-  <meta name="theme-color" content="#3e7c6f" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#23262b" media="(prefers-color-scheme: dark)">
-
-  <meta property="og:type" content="website">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Matteo He | Mechanistic Interpretability &amp; ML Research</title>
+  <meta name="description" content="Matteo He researches language model readout dynamics and mechanistic interpretability. First-author research, open-source ML tools, and a Cambridge MPhil with Distinction.">
+  <meta name="theme-color" content="#faf9f6">
+  <link rel="icon" type="image/png" href="/research/prism-mark.png">
+  <link rel="canonical" href="https://hematteo.github.io/">
+  <meta property="og:type" content="profile">
+  <meta property="og:title" content="Matteo He — Research &amp; selected work">
+  <meta property="og:description" content="Understanding how language models turn representations into predictions. Mechanistic interpretability, readout dynamics, and tools for ML research.">
   <meta property="og:url" content="https://hematteo.github.io/">
-  <meta property="og:title" content="Matteo He — Junk Drawer">
-  <meta property="og:description" content="My CV, dumped in a drawer. Ten accomplishments as real 3D objects you can grab, throw, and read. Grab something.">
-  <meta property="og:image" content="https://hematteo.github.io/og.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Matteo He — Junk Drawer">
-  <meta name="twitter:description" content="My CV, dumped in a drawer. Ten accomplishments as real 3D objects you can grab, throw, and read.">
-  <meta name="twitter:image" content="https://hematteo.github.io/og.png">
-<style>
-  *, *::before, *::after { box-sizing: border-box; }
-  * { margin: 0; }
-  :root {
-    --ink: #f4f6f3;
-    --ink-dim: rgba(244, 246, 243, 0.62);
-    --accent: #ff6a3d;
-    --panel: rgba(20, 18, 12, 0.85);
-    --panel-ink: #f4f6f3;
-    --panel-dim: rgba(244, 246, 243, 0.6);
-    --pill: rgba(20, 18, 12, 0.55);
-    --vig: 0.22;
-    --hud-ink: #241a0e;
-    --hud-dim: rgba(36, 26, 14, 0.85);
-    --hud-shadow: 0 1px 6px rgba(255, 244, 220, 0.35);
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --panel: rgba(10, 8, 5, 0.88);
-      --pill: rgba(10, 8, 5, 0.6);
-      --vig: 0.5;
-      --hud-ink: #f4f6f3;
-      --hud-dim: rgba(244, 246, 243, 0.62);
-      --hud-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
-    }
-  }
-  :root[data-theme="light"] {
-    --panel: rgba(20, 18, 12, 0.85);
-    --pill: rgba(20, 18, 12, 0.55);
-    --vig: 0.22;
-    --hud-ink: #241a0e;
-    --hud-dim: rgba(36, 26, 14, 0.85);
-    --hud-shadow: 0 1px 6px rgba(255, 244, 220, 0.35);
-  }
-  :root[data-theme="dark"] {
-    --panel: rgba(10, 8, 5, 0.88);
-    --pill: rgba(10, 8, 5, 0.6);
-    --vig: 0.5;
-    --hud-ink: #f4f6f3;
-    --hud-dim: rgba(244, 246, 243, 0.62);
-    --hud-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
-  }
-  html, body { height: 100%; overflow: hidden; }
-  body {
-    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-    -webkit-font-smoothing: antialiased;
-    background: #23262b;
-  }
-  #app { position: fixed; inset: 0; }
-  #scene { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
-  #vignette {
-    position: absolute; inset: 0; pointer-events: none;
-    background: radial-gradient(ellipse 78% 68% at 50% 44%, transparent 48%, rgba(8, 5, 2, var(--vig)) 100%);
-  }
-
-  .mono { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
-  .sr-only {
-    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
-  }
-  #tooltip {
-    position: absolute; z-index: 5; pointer-events: none;
-    background: var(--panel); color: var(--panel-ink);
-    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-    font-size: 0.7rem; letter-spacing: 0.04em;
-    padding: 5px 10px; border-radius: 8px;
-    border: 1px solid rgba(244,246,243,0.14);
-    transform: translateY(-100%);
-    white-space: nowrap;
-  }
-  #tooltip[hidden] { display: none; }
-
-  header {
-    position: absolute; top: 20px; left: 22px;
-    color: var(--hud-ink); pointer-events: none;
-    text-shadow: var(--hud-shadow);
-    max-width: min(44ch, 62vw);
-  }
-  header h1 {
-    font-size: clamp(1.5rem, 3.4vw, 2.2rem);
-    font-weight: 800; letter-spacing: -0.03em; line-height: 1;
-    text-transform: uppercase;
-  }
-  header p {
-    margin-top: 8px;
-    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-    font-size: clamp(0.68rem, 1.4vw, 0.8rem);
-    color: var(--hud-dim);
-    letter-spacing: 0.02em;
-    line-height: 1.5;
-  }
-  header p b { color: var(--accent); font-weight: 600; }
-
-  .controls {
-    position: absolute; top: 20px; right: 22px;
-    display: flex; gap: 8px;
-  }
-  .controls button, #counter {
-    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-    font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase;
-  }
-  .controls button {
-    background: var(--pill); color: var(--ink);
-    border: 1px solid rgba(244,246,243,0.25);
-    border-radius: 999px; padding: 8px 14px;
-    cursor: pointer; backdrop-filter: blur(6px);
-  }
-  .controls button:hover { border-color: var(--accent); color: var(--accent); }
-  .controls button:focus-visible, #card a:focus-visible, #card button:focus-visible,
-  #counter:focus-visible, #scene:focus-visible {
-    outline: 2px solid var(--accent); outline-offset: 2px;
-  }
-
-  #counter {
-    position: absolute; right: 22px; top: 62px;
-    color: var(--hud-dim); text-align: right;
-    text-shadow: var(--hud-shadow);
-    background: none; border: 0; padding: 4px 0;
-  }
-  #counter[disabled] { pointer-events: none; }
-  #counter:not([disabled]) {
-    cursor: pointer; color: var(--accent);
-    background: var(--pill); padding: 7px 13px; border-radius: 999px;
-    border: 1px solid rgba(244,246,243,0.2);
-    text-shadow: none; backdrop-filter: blur(6px);
-  }
-  #counter:not([disabled]):hover { text-decoration: underline; }
-
-  #hint {
-    position: absolute; bottom: 22px; left: 50%; transform: translateX(-50%);
-    background: var(--pill); color: var(--ink);
-    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-    font-size: 0.72rem; letter-spacing: 0.06em;
-    padding: 9px 18px; border-radius: 999px;
-    border: 1px solid rgba(244,246,243,0.18);
-    backdrop-filter: blur(6px);
-    pointer-events: none;
-    transition: opacity 0.6s ease;
-    white-space: nowrap;
-  }
-  #hint.gone { opacity: 0; }
-
-  #card {
-    position: absolute; left: 22px; bottom: 22px;
-    width: min(370px, calc(100vw - 44px));
-    background: var(--panel); color: var(--panel-ink);
-    border: 1px solid rgba(244,246,243,0.14);
-    border-radius: 14px;
-    padding: 20px 22px 18px;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 12px 40px rgba(0,0,0,0.35);
-    opacity: 0; transform: translateY(14px);
-    transition: opacity 0.22s ease, transform 0.22s ease;
-  }
-  #card.open { opacity: 1; transform: translateY(0); }
-  #card-eyebrow {
-    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-    font-size: 0.66rem; letter-spacing: 0.14em;
-    color: var(--accent);
-  }
-  #card h2 {
-    margin-top: 6px;
-    font-size: 1.3rem; font-weight: 750; letter-spacing: -0.02em;
-    text-wrap: balance;
-  }
-  #card p {
-    margin-top: 10px;
-    font-size: 0.86rem; line-height: 1.55;
-    color: var(--panel-dim);
-  }
-  #card-link[hidden] { display: none; }
-  #card-link {
-    display: inline-block; margin-top: 12px;
-    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-    font-size: 0.72rem; letter-spacing: 0.06em;
-    color: var(--accent); text-decoration: none;
-    border-bottom: 1px solid var(--accent);
-    padding-bottom: 1px;
-  }
-  #card-close {
-    position: absolute; top: 10px; right: 10px;
-    background: none; border: 0; color: var(--panel-dim);
-    font-size: 1.05rem; line-height: 1; cursor: pointer;
-    padding: 6px 8px; border-radius: 8px;
-  }
-  #card-close:hover { color: var(--panel-ink); }
-  #card-actions { display: flex; gap: 16px; margin-top: 14px; flex-wrap: wrap; }
-  #card-actions[hidden] { display: none; }
-  #card-actions a {
-    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-    font-size: 0.72rem; letter-spacing: 0.06em;
-    color: var(--accent); text-decoration: none;
-    border-bottom: 1px solid var(--accent);
-    padding-bottom: 1px;
-  }
-
-  footer {
-    position: absolute; bottom: 22px; right: 22px;
-    display: flex; gap: 14px;
-  }
-  footer a {
-    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-    font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--hud-dim); text-decoration: none;
-    text-shadow: var(--hud-shadow);
-  }
-  footer a:hover { color: var(--accent); }
-
-  @media (max-width: 640px) {
-    footer { left: 16px; right: auto; bottom: 64px; }
-    .controls { flex-direction: column; align-items: flex-end; gap: 7px; }
-    .controls button { padding: 11px 16px; }
-    header { max-width: calc(100vw - 160px); }
-    #counter { top: auto; bottom: 76px; right: 16px; }
-    #card-close { padding: 12px 14px; font-size: 1.2rem; }
-    #card {
-      left: 0; right: 0; bottom: 0; width: auto;
-      border-radius: 18px 18px 0 0;
-      border-left: 0; border-right: 0; border-bottom: 0;
-      padding: 26px 22px calc(18px + env(safe-area-inset-bottom));
-    }
-    #card::before {
-      content: ""; position: absolute; top: 9px; left: 50%;
-      width: 40px; height: 4px; border-radius: 2px;
-      transform: translateX(-50%);
-      background: rgba(244, 246, 243, 0.3);
-    }
-    #card-actions a, #card-link { padding: 8px 0; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    #card { transition: none; }
-    #hint { transition: none; }
-  }
-</style>
+  <meta name="twitter:card" content="summary">
+  <link rel="preload" href="/fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/src/profile.css">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Person","name":"Matteo He","url":"https://hematteo.github.io/","email":"matteohe.tech@gmail.com","sameAs":["https://github.com/hematteo","https://linkedin.com/in/matteohe","https://huggingface.co/hematteo"],"alumniOf":[{"@type":"CollegeOrUniversity","name":"University of Cambridge"},{"@type":"CollegeOrUniversity","name":"University of St Andrews"}],"knowsAbout":["Mechanistic interpretability","Language model readout dynamics","Machine learning"]}
+  </script>
 </head>
 <body>
-<div id="app">
-  <canvas id="scene" tabindex="0" role="application" aria-label="Interactive pile of objects — drag to throw, click to read" aria-describedby="kbd-help"></canvas>
-  <div id="sr-status" class="sr-only" role="status" aria-live="polite"></div>
-  <p id="kbd-help" class="sr-only">Use the arrow keys to browse the objects, Enter to read an object's story, Escape to close it.</p>
-  <div id="vignette"></div>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="page">
+    <header class="masthead">
+      <a class="wordmark" href="#main" aria-label="Matteo He, top of page">Matteo He<span class="wordmark-period">.</span></a>
+      <nav aria-label="Main navigation">
+        <a href="#research">Research</a>
+        <a href="#systems">Systems</a>
+        <a href="#about">About</a>
+        <a href="/cv/matteo-he-research.pdf">CV <span class="file-type">PDF</span></a>
+      </nav>
+    </header>
 
-  <header>
-    <h1>Matteo He</h1>
-    <p>ML researcher &amp; engineer, Cambridge.<br>
-    Everything I've made, dumped in a drawer. <b>Grab something.</b></p>
-  </header>
+    <main id="main">
+      <section class="intro" aria-labelledby="name">
+        <div class="intro-main">
+          <p class="eyebrow">Mechanistic interpretability · Language models</p>
+          <h1 id="name">Matteo He</h1>
+          <p class="research-statement">I study how language models turn internal representations into predictions.</p>
+          <p class="intro-description">I develop methods and experiments to understand language model behavior, with a focus on readout dynamics and mechanistic interpretability.</p>
+          <div class="profile-links" aria-label="Profile and contact links">
+            <a href="mailto:matteohe.tech@gmail.com">Email</a>
+            <a href="https://github.com/hematteo">GitHub</a>
+            <a href="https://huggingface.co/hematteo">Hugging Face</a>
+            <a href="https://linkedin.com/in/matteohe">LinkedIn</a>
+            <a href="/cv/matteo-he-research.pdf">Research CV</a>
+          </div>
+        </div>
+        <aside class="intro-aside" aria-label="Background and opportunities">
+          <p class="aside-label">Research meets engineering</p>
+          <p class="credential">Cambridge MPhil<span>Advanced Computer Science<br>Distinction, 2026</span></p>
+          <p class="credential">Previously at Amazon<span>Alexa-AI · ML infrastructure</span></p>
+          <div class="availability">
+            <p>Open to research scientist and research engineer opportunities in interpretability and LLM research.</p>
+            <a href="mailto:matteohe.tech@gmail.com?subject=Research%20opportunity">Get in touch</a>
+          </div>
+        </aside>
+      </section>
 
-  <div class="controls">
-    <button id="dump" type="button">Dump again</button>
-    <button id="mute" type="button" aria-pressed="false">Sound on</button>
-    <button id="tilt" type="button" aria-pressed="false" hidden>Tilt off</button>
+      <section id="research" class="section" aria-labelledby="research-heading">
+        <div class="section-heading">
+          <h2 id="research-heading">Selected research</h2>
+          <span class="section-note">Questions, methods &amp; evidence</span>
+        </div>
+
+        <article class="research-entry" id="sparse-readout-prism">
+          <div class="entry-number" aria-hidden="true">01</div>
+          <div class="entry-content">
+            <div class="paper-meta"><span>2026</span><span>First author</span><span>Preprint · Under review</span></div>
+            <h3><a href="https://arxiv.org/abs/2609.01936">Sparse Readout Prism</a></h3>
+            <p class="paper-subtitle">Explaining Logit-Lens Scores in Features Instead of Tokens</p>
+            <p class="authors"><strong>Matteo He</strong>, William F. Shen, Xinchi Qiu, Nicholas D. Lane</p>
+            <div class="paper-body featured-body">
+              <div>
+                <p class="paper-question">Which readout features make a token score high?</p>
+                <p>I factorize the model’s output weights into sparse features, then account for token scores through signed feature contributions and an explicit residual. Selected Qwen3.5 dictionaries retain 88.7–90.0% top-token agreement on held-out states after readout replacement.</p>
+                <div class="artifact-links">
+                  <a href="https://arxiv.org/abs/2609.01936">Paper</a>
+                  <a href="https://github.com/hematteo/sparse-readout-prism">Code</a>
+                  <a href="https://huggingface.co/hematteo/sparse-readout-prism">Dictionaries</a>
+                  <a href="/research/sparse-readout-prism.bib" download>BibTeX</a>
+                </div>
+              </div>
+              <figure class="paper-figure">
+                <a href="/research/sparse-readout-prism.png" class="figure-link" aria-label="View the Sparse Readout Prism method figure at full size">
+                  <img src="/research/sparse-readout-prism.png" alt="Sparse Readout Prism decomposes a readout query into feature directions, then accounts for its score using signed contributions and a residual." width="1400" height="707" fetchpriority="high">
+                </a>
+                <figcaption>From readout weights to feature-level score accounting. <span>Click to enlarge.</span></figcaption>
+              </figure>
+            </div>
+            <details class="research-details">
+              <summary>Method &amp; scope</summary>
+              <div class="details-content">
+                <p>The method uses the unembedding weights to learn reusable readout features. It decomposes selected logits and token margins, with reconstruction, replacement, sign, residual, and confound checks. This is an account of the readout’s contribution, rather than a claim to explain the model’s entire computation.</p>
+                <figure class="supporting-figure">
+                  <a href="/research/readout-features.png" class="figure-link" aria-label="View the readout-feature examples at full size"><img src="/research/readout-features.png" alt="Two paper examples show signed feature differences between insect and software senses of bug, and structure and network senses of bridge." width="1400" height="1145" loading="lazy"></a>
+                  <figcaption>Selected feature contrasts from the paper: “bug” and “bridge”.</figcaption>
+                </figure>
+              </div>
+            </details>
+          </div>
+        </article>
+
+        <article class="research-entry" id="learning-to-read-out">
+          <div class="entry-number" aria-hidden="true">02</div>
+          <div class="entry-content">
+            <div class="paper-meta"><span>2026</span><span>First author</span><span>Manuscript under review</span></div>
+            <h3><a href="https://github.com/hematteo/learning-to-read-out">Learning to Read Out</a></h3>
+            <p class="paper-subtitle">Unembedding Dynamics in Language Model Pretraining</p>
+            <p class="authors"><strong>Matteo He</strong>, William F. Shen, Alex Iacob, Andrej Jovanovic, Xinchi Qiu, Nicholas D. Lane</p>
+            <div class="paper-body">
+              <p class="paper-question">When does information in a hidden state become available to the model’s own readout?</p>
+              <p>I study the output readout as a learned measurement channel during pretraining. Trajectory crosscoders, readout swaps, and controlled probes separate hidden-state availability from native-readout expression across model checkpoints.</p>
+              <div class="artifact-links">
+                <a href="https://github.com/hematteo/learning-to-read-out">Code</a>
+                <a href="https://github.com/hematteo/learning-to-read-out/tree/main/notebooks">Guided notebooks</a>
+                <a href="/research/learning-to-read-out.bib" download>BibTeX</a>
+              </div>
+            </div>
+            <details class="research-details">
+              <summary>Method &amp; scope</summary>
+              <div class="details-content"><p>I extract output-weight snapshots over pretraining, fit sparse dictionaries to their trajectories, and use checkpoint-level interventions and ablations to study the readout’s development. The code release includes reusable analysis components, CPU-only examples, and a map from experiments to paper figures. The manuscript is under review; the public release currently provides code and notebooks.</p></div>
+            </details>
+          </div>
+        </article>
+
+        <article class="research-entry" id="attention-heads">
+          <div class="entry-number" aria-hidden="true">03</div>
+          <div class="entry-content">
+            <div class="paper-meta"><span>2024</span><span>Honours dissertation · St Andrews</span></div>
+            <h3>Automating the Interpretability of Attention Heads in LLMs</h3>
+            <div class="paper-body">
+              <p class="paper-question">Can language models generate and test explanations of attention-head behavior?</p>
+              <p>I built a GPT-2 interpretability pipeline using an LLM explainer and simulator to propose and evaluate functional explanations. This work started my interest in making interpretability methods systematic and testable.</p>
+            </div>
+            <details class="research-details">
+              <summary>Approach &amp; evaluation</summary>
+              <div class="details-content"><p>The dissertation paired GPT-4 as an explainer with GPT-3.5 as a simulator. Iterative evaluation improved distribution-based error metrics by 25% and reduced token errors from 366 to 157 on the dissertation’s evaluation. These are results from that experimental setup, rather than a general benchmark claim.</p></div>
+            </details>
+          </div>
+        </article>
+      </section>
+
+      <section id="systems" class="section" aria-labelledby="systems-heading">
+        <div class="section-heading"><h2 id="systems-heading">Tools &amp; systems</h2><span class="section-note">Built to be used</span></div>
+        <div class="systems-grid">
+          <article class="system-entry">
+            <p class="paper-meta">Open source · Python · 2026</p>
+            <h3><a href="https://github.com/hematteo/vigil">vigil-gpu</a></h3>
+            <p>A terminal monitor for rented cloud GPUs. Tracks training logs and metrics across instances, with reconnecting SSH streams and alerts for stalled runs, NaNs, and loss plateaus.</p>
+            <div class="artifact-links"><a href="https://github.com/hematteo/vigil">Code</a><a href="https://pypi.org/project/vigil-gpu/">PyPI</a></div>
+          </article>
+          <article class="system-entry">
+            <p class="paper-meta">Solo-built product · 2024–2025 · Archived</p>
+            <h3>LLMs in the browser</h3>
+            <p>I built and operated a Japanese language-learning platform serving approximately 3,000 monthly active users. WebGPU/WebLLM ran inference on users’ devices, with zero server-side inference cost.</p>
+            <details class="system-details"><summary>Engineering scope</summary><p>End-to-end ownership of inference, frontend and backend, authentication, subscriptions, deployment, monitoring, and reliability. The platform is archived and maintenance is paused.</p></details>
+          </article>
+        </div>
+        <article class="amazon-entry"><p class="paper-meta">Amazon Alexa-AI · SDE intern · 2023</p><p>Built ML data and experiment infrastructure used by <strong>20+ Applied Scientists</strong>, supporting faster dataset iteration and AWS pipelines processing millions of utterances daily.</p></article>
+      </section>
+
+      <section id="about" class="section about" aria-labelledby="about-heading">
+        <div class="section-heading"><h2 id="about-heading">Background</h2></div>
+        <div class="about-grid">
+          <div class="about-copy">
+            <p>I completed an MPhil in Advanced Computer Science at the <strong>University of Cambridge with Distinction</strong>, following a First Class degree in Computer Science and Mathematics at St Andrews.</p>
+            <p>I’m interested in interpretability that can support stronger evaluations and oversight of advanced AI systems. I like research where a precise question leads to a concrete experiment, a useful instrument, or a result that changes how we think about a model.</p>
+            <p class="personal-note">Away from the papers: <a href="/drawer/">a few things I’ve made, in a rather literal junk drawer.</a></p>
+          </div>
+          <dl class="education">
+            <div><dt>University of Cambridge <span>2025–2026</span></dt><dd>MPhil, Advanced Computer Science<br>Distinction · AI Alignment Fellowship</dd></div>
+            <div><dt>University of St Andrews <span>2021–2024</span></dt><dd>BSc (Hons), Computer Science &amp; Mathematics<br>First Class · Top Student Medal</dd></div>
+          </dl>
+        </div>
+      </section>
+
+      <section class="contact" aria-labelledby="contact-heading">
+        <div><p class="eyebrow">Research opportunities &amp; collaborations</p><h2 id="contact-heading">Let’s talk about the work.</h2><p>I’m looking for a team where I can contribute to ambitious interpretability and language-model research.</p></div>
+        <a class="contact-link" href="mailto:matteohe.tech@gmail.com">matteohe.tech@gmail.com</a>
+      </section>
+    </main>
+    <footer><span>Matteo He <span class="footer-year">2026</span></span><div><a href="/cv/matteo-he-research.pdf">CV</a><a href="https://github.com/hematteo">GitHub</a><a href="/drawer/">The junk drawer</a><a href="#main">Back to top</a></div></footer>
   </div>
-  <button id="counter" class="mono" aria-live="polite" disabled>0/10 examined</button>
-
-  <div id="hint" aria-hidden="true">drag to throw &nbsp;·&nbsp; click to read</div>
-  <div id="tooltip" hidden></div>
-
-  <aside id="card" hidden tabindex="-1">
-    <button id="card-close" type="button" aria-label="Close">✕</button>
-    <div id="card-eyebrow"></div>
-    <h2 id="card-title"></h2>
-    <p id="card-body"></p>
-    <a id="card-link" href="#" target="_blank" rel="noopener">view on github ↗</a>
-    <div id="card-actions" hidden>
-      <a href="mailto:matteohe.tech@gmail.com?subject=CV%20please">email me the pdf ↗</a>
-      <a href="https://github.com/hematteo" target="_blank" rel="noopener">github ↗</a>
-    </div>
-  </aside>
-
-  <footer>
-    <a href="https://github.com/hematteo" target="_blank" rel="noopener">GitHub</a>
-    <a href="https://linkedin.com/in/matteohe" target="_blank" rel="noopener">LinkedIn</a>
-    <a href="mailto:matteohe.tech@gmail.com">Email</a>
-  </footer>
-</div>
-
-<script type="module" src="/src/main.js"></script>
+  <dialog id="figure-dialog" aria-labelledby="figure-dialog-title">
+    <div class="dialog-header"><h2 id="figure-dialog-title">Research figure</h2><button type="button" id="close-figure">Close</button></div>
+    <img id="expanded-figure" alt="">
+    <p id="figure-description"></p>
+  </dialog>
+  <script type="module" src="/src/profile.js"></script>
 </body>
 </html>

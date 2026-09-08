@@ -1,12 +1,24 @@
 # hematteo.github.io
 
-An interactive 3D **physics junk drawer** — my CV, dumped onto a workshop cutting mat as objects you can grab, throw, stack, and knock around. Click any object to read the story behind it.
+A research-first personal website for Matteo He, with selected interpretability research, open-source tools, background, and a downloadable CV.
+
+The original interactive 3D **physics junk drawer** lives at `/drawer/`. Click any object there to read the story behind it.
 
 **Live:** https://hematteo.github.io
 
 ![The junk drawer](./public/og.png)
 
-## The idea
+## Research profile
+
+The homepage is semantic HTML with a locally hosted font. Paper summaries, links, and native expandable details work without JavaScript. A small module adds accessible figure enlargement; the 3D renderer loads only on `/drawer/`.
+
+- Edit profile content in `index.html` and styles in `src/profile.css`.
+- Figure enhancement: `src/profile.js`.
+- Public CV, citations, and research figures: `public/cv/` and `public/research/`.
+- Content provenance and publication-status rules: `CONTENT_SOURCES.md`.
+- The Vite build emits both `/index.html` and `/drawer/index.html`.
+
+## The drawer
 
 Websites aren't supposed to have weight. This one does. Instead of a scrolling list of bullet points, ten accomplishments are real rigid bodies in a tray with real physics — pick them up, throw them at the walls, tip the coffee mug and watch it spill. Read all ten and the drawer tells you you're done.
 
@@ -50,8 +62,8 @@ npm install
 npm run dev        # local dev server
 npm run build      # production build to dist/
 npm run preview    # serve the built site
-npm test           # full 17-check Playwright interaction suite
-npm run smoke      # fast headless smoke test (used in CI)
+npm test           # drawer Playwright interaction suite
+npm run smoke      # profile, responsive layout, CV, figures, and drawer smoke checks (used in CI)
 ```
 
 Requires Node 18+. The full suite (`npm test`) uses your installed Chrome; CI uses Playwright's bundled Chromium.

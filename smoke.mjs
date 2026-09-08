@@ -36,6 +36,24 @@ try {
   page.on('console', m => { if (m.type() === 'error') errors.push(m.text()) })
 
   await page.goto(BASE)
+  check('research profile renders', await page.locator('h1').textContent() === 'Matteo He')
+  check('selected research is visible', await page.locator('#research h3').count() === 3)
+  check('profile does not load the 3D renderer', await page.evaluate(() => typeof window.__jd) === 'undefined')
+  const cv = await page.request.get(new URL(await page.locator('.profile-links a').last().getAttribute('href'), BASE).href)
+  check('CV PDF is available', cv.ok() && cv.headers()['content-type']?.includes('application/pdf'))
+  await page.locator('.figure-link').first().click()
+  check('research figure opens', await page.locator('#figure-dialog').evaluate(el => el.open))
+  await page.keyboard.press('Escape')
+  check('Escape closes the figure', !(await page.locator('#figure-dialog').evaluate(el => el.open)))
+  await page.locator('#sparse-readout-prism summary').click()
+  check('research method expands', await page.locator('#sparse-readout-prism details').evaluate(el => el.open))
+  for (const width of [320, 390, 768, 1440]) {
+    await page.setViewportSize({ width, height: 900 })
+    check(`profile fits ${width}px viewport`, await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth))
+  }
+  await page.setViewportSize({ width: 1280, height: 800 })
+  await page.locator('footer a[href="/drawer/"]').click()
+  check('drawer link navigates', new URL(page.url()).pathname === '/drawer/')
   await page.waitForTimeout(4000)
 
   const jd = await page.evaluate(() => typeof window.__jd)
