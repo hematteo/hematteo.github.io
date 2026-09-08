@@ -32,3 +32,11 @@ A stitched full-page screenshot was rejected because the browser capture duplica
 Local working preview: http://127.0.0.1:4187/
 Branch: codex/research-profile
 No remote push or public deployment performed.
+
+## CV-inspired content revision
+
+Reviewed all three one-page source PDFs visually and as extracted text: `mhcv.pdf`, the AI-safety canonical CV, and the Neel Nanda MATS CV. Updated the introduction to foreground faithful readout measurement, moved first-author research into the introductory credentials, and replaced generic paper summaries with the CVs' scoped findings. Kept detailed experimental conditions in expandable method sections.
+
+The 15-check smoke suite passed after these content changes. Subsequent copy-only edits clarified the research questions, restored the fixed Pythia-1B step-1000 condition, and used “at least ten” for the CV's “10+” attention heads. Final production build and whitespace checks passed.
+
+The final visual recheck of this revision was blocked: automatic browser approval review reported a revoked refresh token and required signing in again. Earlier screenshots show the preceding copy, not this revision. No browser workaround was attempted. The original layout verification and the new automated checks remain the available evidence.

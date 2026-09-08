@@ -4,13 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Matteo He | Mechanistic Interpretability &amp; ML Research</title>
-  <meta name="description" content="Matteo He researches language model readout dynamics and mechanistic interpretability. First-author research, open-source ML tools, and a Cambridge MPhil with Distinction.">
+  <meta name="description" content="Matteo He researches when language-model readouts faithfully reflect internal representations and how measurement choices affect conclusions about model capabilities.">
   <meta name="theme-color" content="#faf9f6">
   <link rel="icon" type="image/png" href="/research/prism-mark.png">
   <link rel="canonical" href="https://hematteo.github.io/">
   <meta property="og:type" content="profile">
   <meta property="og:title" content="Matteo He — Research &amp; selected work">
-  <meta property="og:description" content="Understanding how language models turn representations into predictions. Mechanistic interpretability, readout dynamics, and tools for ML research.">
+  <meta property="og:description" content="Mechanistic interpretability research on faithful readouts, sparse features, and how measurement choices shape conclusions about model capabilities.">
   <meta property="og:url" content="https://hematteo.github.io/">
   <meta name="twitter:card" content="summary">
   <link rel="preload" href="/fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -37,8 +37,8 @@
         <div class="intro-main">
           <p class="eyebrow">Mechanistic interpretability · Language models</p>
           <h1 id="name">Matteo He</h1>
-          <p class="research-statement">I study how language models turn internal representations into predictions.</p>
-          <p class="intro-description">I develop methods and experiments to understand language model behavior, with a focus on readout dynamics and mechanistic interpretability.</p>
+          <p class="research-statement">I study when language-model readouts faithfully reflect internal representations.</p>
+          <p class="intro-description">My work asks how measurement choices shape conclusions about model capabilities. I build sparse methods, interventions, and reproducible experiments to make readout-based explanations more trustworthy.</p>
           <div class="profile-links" aria-label="Profile and contact links">
             <a href="mailto:matteohe.tech@gmail.com">Email</a>
             <a href="https://github.com/hematteo">GitHub</a>
@@ -49,8 +49,8 @@
         </div>
         <aside class="intro-aside" aria-label="Background and opportunities">
           <p class="aside-label">Research meets engineering</p>
+          <p class="credential">First-author research<span>Public arXiv preprint<br>Related manuscript under review</span></p>
           <p class="credential">Cambridge MPhil<span>Advanced Computer Science<br>Distinction, 2026</span></p>
-          <p class="credential">Previously at Amazon<span>Alexa-AI · ML infrastructure</span></p>
           <div class="availability">
             <p>Open to research scientist and research engineer opportunities in interpretability and LLM research.</p>
             <a href="mailto:matteohe.tech@gmail.com?subject=Research%20opportunity">Get in touch</a>
@@ -73,8 +73,8 @@
             <p class="authors"><strong>Matteo He</strong>, William F. Shen, Xinchi Qiu, Nicholas D. Lane</p>
             <div class="paper-body featured-body">
               <div>
-                <p class="paper-question">Which readout features make a token score high?</p>
-                <p>I factorize the model’s output weights into sparse features, then account for token scores through signed feature contributions and an explicit residual. Selected Qwen3.5 dictionaries retain 88.7–90.0% top-token agreement on held-out states after readout replacement.</p>
+                <p class="paper-question">How do a lens’s fitting choices affect what it reports?</p>
+                <p>I found that English- and Chinese-fitted Jacobian lenses could report different languages for identical Qwen3.5-9B hidden states. Sparse Readout Prism instead decomposes lens scores through shared features of the model’s output weights, with explicit residuals and local readout-side ablations.</p>
                 <div class="artifact-links">
                   <a href="https://arxiv.org/abs/2609.01936">Paper</a>
                   <a href="https://github.com/hematteo/sparse-readout-prism">Code</a>
@@ -92,7 +92,7 @@
             <details class="research-details">
               <summary>Method &amp; scope</summary>
               <div class="details-content">
-                <p>The method uses the unembedding weights to learn reusable readout features. It decomposes selected logits and token margins, with reconstruction, replacement, sign, residual, and confound checks. This is an account of the readout’s contribution, rather than a claim to explain the model’s entire computation.</p>
+                <p>The method fits sparse autoencoders directly to LM-head weights and decomposes selected logits and margins into signed feature contributions. Across six readouts without softcaps, it improved logit-difference reconstruction coverage by 8.9–17.3 percentage points over the strongest of six geometric baselines. Coverage requires the correct sign and less than 50% relative error. Reconstruction, replacement, sign, residual, and confound checks bound what the explanation establishes.</p>
                 <figure class="supporting-figure">
                   <a href="/research/readout-features.png" class="figure-link" aria-label="View the readout-feature examples at full size"><img src="/research/readout-features.png" alt="Two paper examples show signed feature differences between insect and software senses of bug, and structure and network senses of bridge." width="1400" height="1145" loading="lazy"></a>
                   <figcaption>Selected feature contrasts from the paper: “bug” and “bridge”.</figcaption>
@@ -110,8 +110,8 @@
             <p class="paper-subtitle">Unembedding Dynamics in Language Model Pretraining</p>
             <p class="authors"><strong>Matteo He</strong>, William F. Shen, Alex Iacob, Andrej Jovanovic, Xinchi Qiu, Nicholas D. Lane</p>
             <div class="paper-body">
-              <p class="paper-question">When does information in a hidden state become available to the model’s own readout?</p>
-              <p>I study the output readout as a learned measurement channel during pretraining. Trajectory crosscoders, readout swaps, and controlled probes separate hidden-state availability from native-readout expression across model checkpoints.</p>
+              <p class="paper-question">When is information available before the model’s own readout expresses it?</p>
+              <p>On Pythia-6.9B, I found subject–verb agreement linearly decodable from hidden states several hundred steps before native-readout expression; gaps persisted at convergence on harder relative-clause contrasts. This exposes a measurement confound in output-based capability timelines.</p>
               <div class="artifact-links">
                 <a href="https://github.com/hematteo/learning-to-read-out">Code</a>
                 <a href="https://github.com/hematteo/learning-to-read-out/tree/main/notebooks">Guided notebooks</a>
@@ -120,7 +120,7 @@
             </div>
             <details class="research-details">
               <summary>Method &amp; scope</summary>
-              <div class="details-content"><p>I extract output-weight snapshots over pretraining, fit sparse dictionaries to their trajectories, and use checkpoint-level interventions and ablations to study the readout’s development. The code release includes reusable analysis components, CPU-only examples, and a map from experiments to paper figures. The manuscript is under review; the public release currently provides code and notebooks.</p></div>
+              <div class="details-content"><p>I extract output-weight snapshots over pretraining, fit trajectory crosscoders to their development, and combine readout swaps, linear probes, and feature ablations. On fixed Pythia-1B step-1000 hidden states, removing eight localized readout features from the reconstructed terminal readout reduced held-out agreement accuracy from 90.0% to 48.7%; matched controls stayed at 90.0%. In single-seed 31M-parameter control runs, each 4× increase in output-readout learning rate halved the reorganization step; final validation losses agreed within 0.06 nats.</p><p>The public release includes reusable analysis components, CPU-only examples, guided notebooks, and an experiment-to-figure manifest. The manuscript remains under review.</p></div>
             </details>
           </div>
         </article>
@@ -132,11 +132,11 @@
             <h3>Automating the Interpretability of Attention Heads in LLMs</h3>
             <div class="paper-body">
               <p class="paper-question">Can language models generate and test explanations of attention-head behavior?</p>
-              <p>I built a GPT-2 interpretability pipeline using an LLM explainer and simulator to propose and evaluate functional explanations. This work started my interest in making interpretability methods systematic and testable.</p>
+              <p>I built a GPT-2 interpretability pipeline using an LLM explainer and simulator to propose and evaluate functional explanations. The project improved distribution-based evaluation metrics by 25% and reduced token errors from 366 to 157 across the dissertation’s evaluation.</p>
             </div>
             <details class="research-details">
               <summary>Approach &amp; evaluation</summary>
-              <div class="details-content"><p>The dissertation paired GPT-4 as an explainer with GPT-3.5 as a simulator. Iterative evaluation improved distribution-based error metrics by 25% and reduced token errors from 366 to 157 on the dissertation’s evaluation. These are results from that experimental setup, rather than a general benchmark claim.</p></div>
+              <div class="details-content"><p>The dissertation paired GPT-4 as an explainer with GPT-3.5 as a simulator, then compared predicted and observed attention through distributional and token-level errors. It generated high-fidelity explanations across at least ten syntactic attention heads. These results refer to the dissertation’s experimental setup.</p></div>
             </details>
           </div>
         </article>
