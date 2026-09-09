@@ -1,3 +1,4 @@
+import { createWorldInteractions } from './world-interactions.js'
 import { createFlight } from './flight.js'
 import * as THREE from 'three'
 import * as CANNON from 'cannon-es'
@@ -10,7 +11,12 @@ const NOTES = [
   ['A place to land', 'Research meets the mug that fueled a browser-based language-learning project. Even a paper needs a coffee break.', 'Bring the colored airplane gently beside the upright mug.'],
   ['A little wind tunnel', 'The GPU lends its cooling fans to the paper. Move the GPU to move the updraft, or let the plane settle after its flight.', 'Bring the airplane beside the upright GPU. Its fans have another use.'],
   ['Writing in light', 'The airplane carries the spectrum into the air, leaving a ribbon that fades behind it.', 'Send the colored airplane through the GPU’s updraft.'],
-  ['Three-way conversation', 'GPU for lift, paper for flight, joystick for direction. Use the on-screen controls or focus the drawer and press WASD.', 'Bring the joystick near the GPU while the airplane is flying.'],
+  ['Three decisions, a whole flight', 'Left, neutral, right. A tiny three-action policy steers the paper through the drawer. A / S / D work too.', 'Bring the joystick beside the airplane, or into the GPU’s wind tunnel.'],
+  ['Listening to the room', 'The dolphin sends a pulse out and turns toward the returning echoes. Rearrange the objects to change what it hears.', 'Tap the dolphin with a few objects nearby.'],
+  ['A little vigil', 'A clearly toy training run draws its loss across the keys. A plateau turns the vigil light amber. Resume to help it converge.', 'Bring the keyboard beside the GPU and wait for its amber light.'],
+  ['The unexplained bit', 'One white thread escapes the spectrum. The paper can pin it down, but lifting the paper lets it slip away.', 'Place the airplane over the tip of the white thread beside the spectrum.'],
+  ['A passenger with opinions', 'The dolphin boards the Cambridge punt. Gentle movement is welcome; a sudden shove is not.', 'Bring the dolphin gently alongside the upright punt.'],
+  ['Borrowed spotlight', 'The trophy reflects the desk light. Turn it to illuminate another object—even the prism can borrow its beam.', 'Bring the trophy near the lamp. Select it and press R to turn its reflection.'],
 ]
 
 export function buildDeskLight () {
@@ -50,6 +56,9 @@ export function createDiscoveries ({ scene, objects, bounds, grabbed, wake, redu
   const title = document.getElementById('discovery-title')
   const clue = document.getElementById('discovery-clue')
   const list = document.getElementById('discovery-list')
+  const choice = document.getElementById('discovery-choice')
+  NOTES.forEach((note, i) => { const option = document.createElement('option'); option.value = i; option.textContent = note[0]; choice.append(option) })
+  choice.addEventListener('change', renderNotes)
   const arrangeButton = document.getElementById('discovery-arrange')
 
   // Each wing has its own tint, retained when it leaves the beam.
@@ -92,6 +101,7 @@ export function createDiscoveries ({ scene, objects, bounds, grabbed, wake, redu
     toggle.textContent = found.size ? `Discoveries ${found.size}/${NOTES.length}` : 'Discoveries'
     title.textContent = found.size === NOTES.length ? 'A little world, connected.' : 'Some things belong together.'
     clue.textContent = found.size === NOTES.length ? 'Move them apart and bring them back. The paper remembers its colors until you dump the drawer again.' : NOTES[NOTES.findIndex((_, i) => !found.has(i))][2]
+    if (choice.value !== 'next') clue.textContent = NOTES[Number(choice.value)][2]
     list.replaceChildren(...[...found].sort((a, b) => a - b).map(id => {
       const item = document.createElement('li')
       const heading = document.createElement('strong')
@@ -138,13 +148,25 @@ export function createDiscoveries ({ scene, objects, bounds, grabbed, wake, redu
     interacted = true
     detach()
     flight.reset()
+    world.reset(); world.enable()
     const next = NOTES.findIndex((_, i) => !found.has(i))
-    const step = next < 0 ? NOTES.length : next
+    const step = choice.value === 'next' ? (next < 0 ? 0 : next) : Number(choice.value)
     const b = bounds(), cx = (b.xL + b.xR) / 2, cz = (b.zB + b.zF) / 2
     const horizontal = b.xR - b.xL > 8
     const along = horizontal ? [1, 0] : [0, 1]
     const origin = horizontal ? [cx - 1.5, cz] : [cx, cz - 1.5]
     const place = (o, distance) => setPosition(o, origin[0] + along[0] * distance, origin[1] + along[1] * distance)
+    if (step >= 6) {
+      const groups = { 6: ['dolphin', 'prism', 'mug'], 7: ['gpu', 'keyboard'], 8: ['light', 'prism', 'plane'], 9: ['dolphin', 'punt'], 10: ['light', 'trophy', 'prism'] }
+      objects.filter(o => !groups[step].includes(o.item.id)).forEach((o, i) => setPosition(o, b.xL + 0.8 + (i % 3) * (b.xR - b.xL - 1.6) / 2, b.zB + 0.8 + Math.floor(i / 3) * 1.15, 0.1))
+      on = true
+      if (step === 6) { setPosition(get('dolphin'), cx, cz + 0.4); setPosition(prism, cx - 1.6, cz); setPosition(mug, cx + 1.5, cz + 1.3); world.queueEcho() }
+      if (step === 7) { setPosition(gpu, cx - 0.65, cz + 0.5); setPosition(get('keyboard'), cx + 0.6, cz + 1.2) }
+      if (step === 8) { place(light, -1.2); place(prism, 0.5); const q = prism.body.position; setPosition(plane, q.x + along[0] * 1.7 - along[1] * 0.8, q.z + along[1] * 1.7 + along[0] * 0.8, 0.1) }
+      if (step === 9) { setPosition(get('punt'), cx, cz + 0.5); setPosition(get('dolphin'), cx, cz + 1.45) }
+      if (step === 10) { setPosition(light, cx - 1.65, cz); setPosition(get('trophy'), cx, cz); get('trophy').body.quaternion.setFromAxisAngle(axis, Math.PI * 0.75); setPosition(prism, cx, cz + 2) }
+      closeNotes(); wake(360); announce(NOTES[step][2]); return
+    }
     // Clear the small experiment area so a random pile cannot obstruct the pairing.
     const participants = new Set(['light', 'prism', 'plane', 'mug', ...(step >= 3 ? ['gpu', 'joystick'] : [])])
     objects.filter(o => !participants.has(o.item.id)).forEach((o, i) => {
@@ -190,23 +212,28 @@ export function createDiscoveries ({ scene, objects, bounds, grabbed, wake, redu
   const flight = createFlight({ scene, objects, bounds, grabbed, reduced, wake,
     colored: () => colored, detach, discover })
 
+  const world = createWorldInteractions({ scene, objects, grabbed, wake, reduced, announce, discover, lightOn: () => on })
+
   return {
+    action (id) { interacted = true; world.action(id) },
+    dolphinBusy () { return world.dolphinBusy() },
     toggleLight () { interacted = true; on = !on; wake(120); announce(on ? 'Desk light on. Bring the prism closer.' : 'Desk light off.'); return on },
     handleKey (ev) { return flight.handleKey(ev) },
-    beforeGrab (o) { interacted = true; flight.beforeGrab(o); if (o === plane) detach() },
+    beforeGrab (o) { interacted = true; flight.beforeGrab(o); world.beforeGrab(o); if (o === plane) detach() },
     reset () {
-      flight.reset(); detach(); interacted = false; colored = false; on = true; path = null; lightDwell = colorDwell = perchDwell = 0
+      flight.reset(); world.reset(); detach(); interacted = false; colored = false; on = true; path = null; lightDwell = colorDwell = perchDwell = 0
       cooldown = 2; wake(180)
     },
-    state () { return { found: [...found], lightOn: on, spectrum: !!path, colored, perched, tint, flight: flight.state() } },
-    active () { return flight.active() || Math.abs(fade - (path ? 1 : 0)) > 0.005 || Math.abs(tint - (colored ? 1 : 0)) > 0.005 ||
+    state () { return { found: [...found], lightOn: on, spectrum: !!path, colored, perched, tint, flight: flight.state(), world: world.state() } },
+    active () { return world.active() || flight.active() || Math.abs(fade - (path ? 1 : 0)) > 0.005 || Math.abs(tint - (colored ? 1 : 0)) > 0.005 ||
       (lightDwell > 0 && lightDwell < 0.7) || (colorDwell > 0 && colorDwell < 0.7) || (perchDwell > 0 && perchDwell < 0.5) || (perched && perchTime < 1) },
     update (dt) {
       cooldown = Math.max(0, cooldown - dt)
       const held = grabbed()
       light.body.quaternion.vmult(axis, up)
       const available = on && up.y > 0.65 && prism.mesh.visible && light.mesh.visible
-      path = lightPath(light.body.position, prism.body.position, bounds(), available)
+      const source = world.reflectedSource() || light
+      path = lightPath(source.body.position, prism.body.position, bounds(), available)
       const valid = interacted && !!path && held !== prism && held !== light && prism.body.velocity.lengthSquared() < 1
       lightDwell = valid ? Math.min(1, lightDwell + dt) : 0
       if (lightDwell >= 0.7) discover(0)
@@ -216,7 +243,7 @@ export function createDiscoveries ({ scene, objects, bounds, grabbed, wake, redu
       fade = reduced ? (path ? 1 : 0) : THREE.MathUtils.damp(fade, path ? 1 : 0, 7, dt)
       beam.material.opacity = path ? fade * 0.55 : 0
       if (path) {
-        from.set(0, 0.56, 0).applyQuaternion(light.mesh.quaternion).add(light.mesh.position)
+        from.set(0, 0.56, 0).applyQuaternion(source.mesh.quaternion).add(source.mesh.position)
         to.set(prism.body.position.x, prism.body.position.y + 0.24, prism.body.position.z)
         direction.subVectors(to, from)
         beam.position.copy(from).add(to).multiplyScalar(0.5)
@@ -254,6 +281,7 @@ export function createDiscoveries ({ scene, objects, bounds, grabbed, wake, redu
         plane.body.updateMassProperties()
         discover(2)
       }
+      world.update(dt, path)
       flight.update(dt)
       if (perched) {
         perchTime = Math.min(1, perchTime + dt * 1.5)

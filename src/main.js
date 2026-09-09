@@ -936,6 +936,12 @@ function openCard (o, viaKeyboard = false) {
   cardTitle.textContent = o.item.name
   cardBody.textContent = o.item.story
   cardActions.hidden = true
+  const play = document.getElementById('card-play')
+  const actions = { dolphin: 'Send an echo', keyboard: 'Check the toy run', punt: 'Nudge the boat', trophy: 'Turn the reflector' }
+  play.hidden = !actions[o.item.id]
+  play.textContent = actions[o.item.id] || ''
+  play.onclick = () => { closeCard(); discoveries.action(o.item.id) }
+  if (o.item.id === 'dolphin') discoveries.action('dolphin')
   if (o.item.link) {
     cardLink.href = o.item.link
     cardLink.hidden = false
@@ -956,6 +962,7 @@ function openCard (o, viaKeyboard = false) {
 }
 
 function showFinalCard () {
+  document.getElementById('card-play').hidden = true
   finalShown = true
   finalTimer = null
   openedViaKeyboard = false
@@ -1053,7 +1060,11 @@ canvas.addEventListener('blur', () => wakeRender(30))
 canvas.addEventListener('keydown', (ev) => {
   if (discoveries.handleKey(ev)) return
   const n = objects.length
-  if (ev.shiftKey && ev.key.startsWith('Arrow') && kbIdx >= 0) {
+  if (ev.key.toLowerCase() === 'r' && kbIdx >= 0) {
+    const o = objects[kbIdx]; discoveries.beforeGrab(o)
+    o.body.quaternion.mult(new CANNON.Quaternion().setFromAxisAngle(new CANNON.Vec3(0, 1, 0), (ev.shiftKey ? -1 : 1) * Math.PI / 12), o.body.quaternion)
+    o.body.aabbNeedsUpdate = true; o.body.wakeUp(); wakeRender(180)
+  } else if (ev.shiftKey && ev.key.startsWith('Arrow') && kbIdx >= 0) {
     const o = objects[kbIdx]
     discoveries.beforeGrab(o)
     const step = 0.3
@@ -1267,7 +1278,7 @@ function maybeFlop () {
   const now = performance.now()
   if (now < nextFlop) return
   nextFlop = now + 10000 + Math.random() * 10000
-  if (REDUCED || document.hidden) return
+  if (REDUCED || document.hidden || discoveries.dolphinBusy()) return
   const b = dolphinObj.body
   if (grabbed === dolphinObj || !dolphinObj.mesh.visible) return
   if (b.velocity.lengthSquared() > 0.1) return // only flop from rest

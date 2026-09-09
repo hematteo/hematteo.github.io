@@ -302,6 +302,11 @@
   #flight-land { padding: 0 12px; font: .75rem ui-monospace, monospace; }
   #app:has(#flight-controls:not([hidden])) #discovery-toast { bottom: 208px; }
   @media (max-width: 640px) { #flight-controls { bottom: 126px; padding: 10px; } #app:has(#flight-controls:not([hidden])) #discovery-toast { bottom: 228px; } }
+  #discovery-choice { width:100%; min-height:44px; margin:6px 0 10px; padding:8px; background:#203b32; color:#e9f1e8; border:1px solid #ffffff30; border-radius:6px; }
+  #training-controls { position:absolute; bottom:155px; left:20px; max-width:calc(100% - 40px); padding:12px; background:#10291fee; color:#e0e8dd; border:1px solid #bcd5bd30; border-radius:9px; font:11px ui-monospace,monospace; z-index:6; }
+  #training-resume, #card-play { min-height:44px; margin:8px; padding:8px 14px; border:1px solid #b9d5be50; border-radius:6px; color:#e2efd9; background:#355348; cursor:pointer; }
+  #flight-controls button[aria-pressed="true"] { background:#537862; }
+  @media(max-width:640px) { #training-controls { bottom:220px; left:12px; } }
 </style>
 </head>
 <body>
@@ -332,20 +337,22 @@
       <h2 id="discovery-title">Some things belong together.</h2>
       <ol id="discovery-list"></ol>
       <p id="discovery-clue"></p>
+      <label for="discovery-choice" class="discovery-help">Try an interaction</label>
+      <select id="discovery-choice"><option value="next">Next discovery</option></select>
       <button id="discovery-arrange" type="button">Help me arrange this pair</button>
-      <p class="discovery-help">Drag objects together. Click the little light to switch it.<br>Keyboard: arrow keys to browse, Shift + arrows to move.</p>
+      <p class="discovery-help">Drag objects together. Click the little light to switch it.<br>Keyboard: arrow keys to browse, Shift + arrows to move; R to rotate.</p>
     </section>
   </div>
   <section id="flight-controls" aria-label="Airplane flight controls" hidden>
-    <p id="flight-status">Flight connected · WASD to steer</p>
+    <p id="flight-status">Three actions · A / S / D</p>
     <div>
       <button type="button" data-steer="-1,0" aria-label="Steer left">←</button>
-      <button type="button" data-steer="0,-1" aria-label="Steer forward">↑</button>
-      <button type="button" data-steer="0,1" aria-label="Steer back">↓</button>
+      <button type="button" data-steer="0,0" aria-label="Neutral steering">•</button>
       <button type="button" data-steer="1,0" aria-label="Steer right">→</button>
       <button type="button" id="flight-land">Land</button>
     </div>
   </section>
+  <section id="training-controls" hidden aria-label="Toy training run"><span id="training-status" role="status"></span><button id="training-resume" type="button" hidden>Resume run</button></section>
   <div id="discovery-toast" role="status" hidden></div>
   <div id="hint" aria-hidden="true">drag to throw &nbsp;·&nbsp; click to read &nbsp;·&nbsp; bring things together</div>
   <div id="tooltip" hidden></div>
@@ -355,6 +362,7 @@
     <div id="card-eyebrow"></div>
     <h2 id="card-title"></h2>
     <p id="card-body"></p>
+    <button id="card-play" type="button" hidden></button>
     <a id="card-link" href="#" target="_blank" rel="noopener">view on github ↗</a>
     <div id="card-actions" hidden>
       <a href="/cv/matteo-he-research.pdf">research CV ↗</a>

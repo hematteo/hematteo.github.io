@@ -101,12 +101,33 @@ states while keeping the field notes for the current visit; no storage is used.
 
 Bring the paper beside an upright GPU to spin up its fans and lift the paper.
 A colored plane leaves a fading rainbow ribbon. Move the GPU to move the updraft;
-bring the joystick nearby for on-screen steering or WASD. Flights end after a
+bring the joystick nearby for three discrete steering actions: left, neutral, right (A / S / D). The joystick can also launch the plane without the GPU. Flights end after a
 short interval, or with **Land**. They restart only after another interaction.
-The Discoveries panel now has six entries and can arrange either chain.
+The Discoveries panel has eleven entries and a picker for trying any pairing.
 
 Reduced motion keeps the discoveries and controls, with immediate positioning
 and no spinning fans, animated wind or trails. The scene retains idle rendering.
 Beveled edges, articulated GPU fans, paper folds, hollow glazed ceramic,
 transmissive glass, soft shadows and warmer/cooler light separation refine the
 existing workshop rather than replacing its layout.
+
+### More combinations
+
+- Tap the dolphin to send a visible acoustic pulse. Nearby objects reflect it;
+  the dolphin turns toward returning echoes. Repeat from its story card.
+- GPU + keyboard runs a deliberately fictional training sequence across the keycaps.
+  A plateau lights the GPU’s vigil indicator amber. **Resume run** completes it;
+  separating the pair disconnects it.
+- The prism leaves one white residual beside its spectrum. Rest the paper over
+  its tip to pin it; pick up or move the paper to let it escape.
+- Bring the dolphin alongside the punt to board. It follows the boat, adds weight,
+  and jumps out if the boat moves too abruptly. **Nudge the boat** in its story
+  card is an accessible way to try that response.
+- The trophy reflects the lamp according to its orientation. Select any object
+  and press **R** to rotate it (Shift + R reverses); the trophy’s story card also
+  offers a turn button. A reflected beam can power the prism’s spectrum.
+
+Echoes, boarding, fan activity and the released thread finish their animations
+and allow rendering to sleep. Reduced motion preserves every discovery while
+suppressing spinning, hopping, trails and traveling pulses. All physical states
+reset on **Dump again**, while the eleven field notes remain for this visit.

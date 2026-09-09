@@ -38,3 +38,14 @@ test('GPU updraft requires upright fans and paper inside the lift zone', () => {
   assert.equal(windEligible(gpu, { ...plane, x: 3 }, 1), false)
   assert.equal(windEligible(gpu, { ...plane, y: 4 }, 1), false)
 })
+
+test('reflector obeys equal angles and can send light around a corner', async () => {
+  const { reflectedRay, rayHit } = await import('./src/discovery-rules.js')
+  const ray = reflectedRay({ x: -2, z: 0 }, { x: 0, z: 0 }, { x: 1, z: -1 })
+  assert.ok(Math.abs(ray.x) < 1e-10)
+  assert.ok(Math.abs(ray.z - 1) < 1e-10)
+  assert.ok(Math.abs(rayHit({ x: 0, z: 0 }, ray, { x: 0, z: 2 }, 0.3) - 1.7) < 1e-10)
+  assert.equal(rayHit({ x: 0, z: 0 }, ray, { x: 0, z: -2 }, 0.3), null)
+  assert.equal(rayHit({ x: 0, z: 0 }, ray, { x: 2, z: 2 }, 0.3), null)
+  assert.equal(reflectedRay({ x: 0, z: 0 }, { x: 0, z: 0 }, { x: 1, z: 0 }), null)
+})

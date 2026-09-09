@@ -29,3 +29,19 @@ export function windEligible (gpu, plane, upright) {
   return upright > 0.7 && Math.hypot(plane.x - gpu.x, plane.z - gpu.z) < 1.6 &&
     plane.y - gpu.y > -0.3 && plane.y - gpu.y < 2.2
 }
+
+export function reflectedRay (source, mirror, normal) {
+  const dx = mirror.x - source.x, dz = mirror.z - source.z
+  const d = Math.hypot(dx, dz), n = Math.hypot(normal.x, normal.z)
+  if (d < 0.1 || n < 0.1) return null
+  const x = dx / d, z = dz / d, nx = normal.x / n, nz = normal.z / n
+  const dot = x * nx + z * nz
+  return { x: x - 2 * dot * nx, z: z - 2 * dot * nz }
+}
+export function rayHit (origin, ray, center, radius) {
+  const dx = center.x - origin.x, dz = center.z - origin.z
+  const along = dx * ray.x + dz * ray.z
+  const across2 = dx * dx + dz * dz - along * along
+  if (along <= 0 || across2 > radius * radius) return null
+  return Math.max(0.05, along - Math.sqrt(Math.max(0, radius * radius - across2)))
+}
