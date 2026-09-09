@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sparse Readout Prism: research explorer | Matteo He</title>
+  <meta name="description" content="Explore how Sparse Readout Prism accounts for readout scores through feature contributions and a residual, and compare two lenses applied to the same hidden state.">
+  <meta name="theme-color" content="#faf9f6">
+  <link rel="canonical" href="https://hematteo.github.io/research/prism/">
+  <link rel="icon" href="/research/prism-mark.png">
+  <link rel="stylesheet" href="/src/profile.css">
+  <link rel="stylesheet" href="/src/trajectory-page.css">
+  <link rel="stylesheet" href="/src/prism.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="page explorer-page">
+    <header class="masthead"><a class="wordmark" href="/">Matteo He<span class="wordmark-period">.</span></a><nav aria-label="Main navigation"><a href="/#research">Research</a><a href="/cv/matteo-he-research.pdf">CV <span class="file-type">PDF</span></a></nav></header>
+    <main id="main">
+      <div class="explorer-introduction">
+        <a class="back-link" href="/#sparse-readout-prism">← Back to Sparse Readout Prism</a>
+        <p class="eyebrow">Sparse Readout Prism · Research explorer</p>
+        <h1>What token scores leave out</h1>
+        <p>A score for “bug” cannot tell us whether its support comes from insect or software features. And two different tokens can share a dominant feature. These examples show what becomes visible when we examine the contributions behind a token score.</p>
+        <p><strong>Sparse Readout Prism (SRP)</strong> learns a dictionary from the model’s output weights. It expresses a token’s readout direction as a combination of features plus a reconstruction residual. The model’s internal activity determines how much each feature contributes to the score.</p>
+        <nav class="story-nav" aria-label="Explore the paper"><a href="#decomposition">One token, two contexts</a><a href="#lens-comparison">Two tokens, a shared feature</a><a href="#layer-attribution">Inside a layer’s contribution</a></nav>
+      </div>
+      <section class="prism-panel" id="decomposition" aria-labelledby="score-heading">
+        <div class="prism-heading"><div><p class="chart-eyebrow">01 · One token, different contributions</p><h2 id="score-heading">What supports “bug” in each context?</h2></div><a href="https://arxiv.org/abs/2609.01936" class="chart-source">Read the paper ↗</a></div>
+        <p class="prism-guide">Keep the token and dictionary fixed, then change the prompt. The same feature can contribute in both contexts, with different strength.</p>
+        <div class="bug-prompts">
+          <div><p class="chart-eyebrow">Insect context</p><p>The child watched a tiny crawling <strong>…</strong></p></div>
+          <div><p class="chart-eyebrow">Software context</p><p>The programmer reproduced the crash and filed a <strong>…</strong></p></div>
+        </div>
+        <div class="bug-fixed"><span>Selected token <strong>“ bug”</strong></span><span>Same output row · Same dictionary</span></div>
+        <div id="bug-interactive" hidden>
+          <div class="prism-choices" role="group" aria-label="Context to inspect"><button type="button" data-context="0" aria-pressed="true">Insect context</button><button type="button" data-context="1" aria-pressed="false">Software context</button><button type="button" data-context="delta" aria-pressed="false">Show the change</button></div>
+          <p id="bug-view-description" class="prism-guide" aria-live="polite"></p>
+          <div class="bar-legend"><span><i class="positive-key"></i><span id="bug-positive">Raises the score</span></span><span><i class="negative-key"></i><span id="bug-negative">Lowers the score</span></span><span>Logit units · Fixed scale</span></div>
+          <div id="bug-bars" aria-label="Four selected feature contributions"></div>
+          <p class="prism-animation-note">Switching contexts animates between two recorded values. Intermediate bar lengths are a visual transition, not additional model measurements.</p>
+          <p class="figure-scope">Four illustrative directions are shown. The accounting below includes every feature contribution, the offset, and the reconstruction residual.</p>
+          <div id="bug-equation" class="score-equation" aria-live="polite"></div>
+          <div id="bug-inspector" class="feature-inspector" aria-live="polite">Select a feature to compare its contributions and inspect its associated tokens.</div>
+          <p class="prism-takeaway"><strong>The token stays the same; its support shifts.</strong> The mosquito feature contributes less in the software context, while defect and debugging features contribute more. The features are shared across contexts, so this is a change in their contributions, not a switch between two separate dictionaries.</p>
+          <details class="research-details prism-terms"><summary>Full score accounting and how to read the features</summary><div class="details-content">
+            <p>These four illustrative directions were selected for the insect and software comparison. They are not the complete explanation or the four largest contributions. All undisplayed contributions remain in “Other features”.</p>
+            <div class="bug-accounting-wrap"><table class="bug-accounting"><caption>Recorded scores for the same token, in logit units</caption><thead><tr><th scope="col">Term</th><th scope="col">Insect</th><th scope="col">Software</th></tr></thead><tbody id="bug-accounting"></tbody></table></div>
+            <p>A feature is a direction learned from the output weights. Its token examples are the output rows that score highly on that direction; they help describe it without defining a complete concept. The numbers beside the labels are feature IDs.</p>
+            <p>The offset is the score contribution from the dictionary’s mean and bias terms. The residual is the contribution from the part of the token’s output row that the dictionary does not reconstruct. Both can change with context, even though the output row is fixed.</p>
+            <p>Scores are measured before conversion into probabilities. “Bug” is the selected token in both contexts; it is not the highest scoring token in the insect context. The exported token includes a leading space (ID 9584).</p>
+          </div></details>
+        </div>
+        <div id="bug-static"><p class="prism-guide">For the insect and software contexts respectively, the mosquito feature contributes +1.058 and +0.293 logits; the defect feature contributes +0.709 and +1.645. The same token draws on a different balance of features.</p><p class="figure-scope">Full recorded scores: insect 14.275, software 18.907. Reconstruction residuals: +0.742 and −0.120. Four selected directions illustrate the comparison; other features also contribute.</p></div>
+        <p class="figure-scope">Qwen3.5-2B · Final readout · Dictionary: 32× width, k = 256. This uses the companion export’s single-token scores for the paper’s two “bug” prompts. No comparison token is changed between contexts.</p>
+      </section>
+      <section class="research-story-section" id="lens-comparison" aria-labelledby="lens-heading">
+        <p class="story-number">02 · Different tokens, a shared contribution</p><h2 id="lens-heading">The same internal activity, two token readings</h2>
+        <p class="story-intro">A hidden state is the model’s internal activity at a particular point in its computation. Here we keep that activity fixed and read it with two lenses: one fitted using English text, the other using Chinese text. The model itself is unchanged.</p>
+        <p class="story-intro">For the Chinese prompt below, the lenses report “London” and “伦敦”, the Chinese name for London. SRP lets us compare the feature contributions behind these two readings.</p>
+        <div class="frozen-state"><span>Held fixed</span><strong>Qwen3.5-9B · Layer 26 · Same prompt and hidden state</strong><p lang="zh">中国的首都是北京。英国的首都是</p><p>The capital of China is Beijing. The capital of the UK is…</p></div>
+        <div class="prism-choices lens-switch" role="group" aria-label="Select the fitting language" hidden><button type="button" data-lens="0" aria-pressed="true">Lens fitted on English</button><button type="button" data-lens="1" aria-pressed="false">Lens fitted on Chinese</button></div>
+        <div id="lens-local" hidden><p id="lens-local-title" class="prism-guide" aria-live="polite"></p><div id="lens-local-bars" aria-label="Selected lens score decomposition"></div></div>
+        <div class="lens-pair">
+          <article class="lens-card" data-lens-card="0"><p>Fitted on English</p><h3>London</h3><p class="lens-score">Score <strong>38.398</strong></p><div class="shared-feature-track"><span style="width:75.2%"></span></div><p><strong>75.2%</strong> of the feature sum from feature 23180</p><dl><div><dt>Feature 23180</dt><dd>+30.075</dd></div><div><dt>Other features</dt><dd>+9.912</dd></div><div><dt>Offset</dt><dd>−1.139</dd></div><div><dt>Residual</dt><dd>−0.449</dd></div></dl></article>
+          <article class="lens-card" data-lens-card="1"><p>Fitted on Chinese</p><h3 lang="zh">伦敦</h3><p class="lens-score">Score <strong>39.143</strong></p><div class="shared-feature-track"><span style="width:62.9%"></span></div><p><strong>62.9%</strong> of the feature sum from feature 23180</p><dl><div><dt>Feature 23180</dt><dd>+24.024</dd></div><div><dt>Other features</dt><dd>+14.164</dd></div><div><dt>Offset</dt><dd>−0.116</dd></div><div><dt>Residual</dt><dd>+1.071</dd></div></dl></article>
+        </div>
+        <p class="prism-takeaway"><strong>What this shows.</strong> The reported token changes with the lens, but feature 23180 remains the largest contributor in both accounts. These different readings share a dominant feature contribution in this example.</p>
+        <p id="lens-announcement" class="lens-announcement" aria-live="polite"></p>
+        <p class="figure-scope">The percentages use each lens’s signed feature sum, excluding offset and residual. Each card explains the token reported by that lens; both the fitted map and selected token differ. The percentages describe contributions to scores, not probabilities or percentages of the model’s reasoning.</p>
+      </section>
+      <section class="research-story-section" id="layer-attribution" aria-labelledby="layer-heading">
+        <p class="story-number">03 · A closer look at attribution</p><h2 id="layer-heading">A small net contribution can hide opposing terms</h2>
+        <p class="story-intro">For “The source has not been checked yet. The appropriate next action is to”, the model scores <strong>verify</strong> above <strong>assume</strong>. Ordinary direct logit attribution measures each layer’s net contribution to that difference. SRP separates that contribution by readout feature.</p>
+        <details class="research-details"><summary>Explore the layer attribution example</summary><div class="details-content">
+          <p>At layer 23, the net contribution is about <strong>+0.7</strong>. Verification and checking features contribute about <strong>+3.2</strong>, opposed by <strong>−0.9</strong> from assumption features and <strong>−1.7</strong> from other sparse features, plus the reconstruction residual. The net value conceals these larger terms.</p>
+          <figure class="story-figure"><img src="/research/prism-layer-attribution.png" alt="Paper heatmap of feature contributions by layer. At layer 23, verification contributes +3.2, assumption −0.9, and other sparse features −1.7; ordinary attribution is +0.7. Verification support concentrates in later layers." loading="lazy"><figcaption>The paper’s recorded component attribution. Red supports verify; blue supports assume. The rightmost column is ordinary direct logit attribution. Displayed values are rounded.</figcaption></figure>
+          <p>The exact final margin is +4.31, the component attribution sum is +4.36, and the sparse feature sum is +4.28 (rounded). The readout reconstruction residual and the component additivity error are separate sources of discrepancy.</p>
+          <p>These contributions nominate particular features and layers for intervention. Establishing a general verification mechanism would require causal tests and evaluation across more prompts.</p>
+        </div></details>
+      </section>
+      <section class="research-story-section" id="reading-prism" aria-labelledby="reading-heading">
+        <h2 id="reading-heading">What the examples establish</h2>
+        <p class="story-intro">The same token can draw on different feature contributions; different token readings can share a dominant feature; and a layer’s net effect can conceal opposing terms. SRP makes these comparisons in a shared basis of readout features. An additive account alone does not establish a causal mechanism or the language in which the model “thinks”.</p>
+        <details class="research-details"><summary>Data and experimental scope</summary><div class="details-content"><p>The bug records come from the Qwen3.5-2B companion export, at the final position of each prompt, for token ID 9584 in the same 32×, k=256 dictionary. We use the raw score for the same token in both contexts, including the offset and residual. The four displayed directions have recorded contributions in both contexts. A missing entry in a truncated export is never treated as zero.</p><p>The London records come from the paper’s comparison of Jacobian lenses fitted on English and Chinese (fac_03, layer 26), evaluated on the same frozen Qwen3.5-9B state with a shared dictionary. The controls switch between recorded conditions. Decomposition scores use recorded values at full precision, which differ slightly from the rounded token ranking scores in the paper.</p><p>The layer attribution figure is reproduced from the paper’s appendix on feature resolved direct logit attribution, for the verify minus assume contrast. It uses the paper’s fixed final normalization convention. This is attribution over a recorded forward pass, not a simulation of an intervention.</p><a href="/research/prism.json" download>Download the interactive example data</a></div></details>
+      </section>
+      <div class="story-end"><a href="/#sparse-readout-prism">← Back to the project summary</a><a href="https://github.com/hematteo/sparse-readout-prism">Explore the code ↗</a></div>
+    </main>
+    <footer><span>Matteo He</span><div><a href="/#research">Research</a><a href="/research/trajectories/">Learning to Read Out</a><a href="#main">Back to top</a></div></footer>
+  </div>
+  <script type="module" src="/src/prism.js"></script>
+</body>
+</html>

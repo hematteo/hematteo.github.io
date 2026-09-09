@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Matteo He — Junk Drawer</title>
+  <meta name="description" content="An interactive 3D physics junk drawer: my CV as objects you can grab, throw, and rummage through. ML researcher & engineer, Cambridge.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🗄️%3C/text%3E%3C/svg%3E">
+  <meta name="theme-color" content="#3e7c6f" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#23262b" media="(prefers-color-scheme: dark)">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://hematteo.github.io/drawer/">
+  <link rel="canonical" href="https://hematteo.github.io/drawer/">
+  <meta property="og:title" content="Matteo He — Junk Drawer">
+  <meta property="og:description" content="My CV, dumped in a drawer. Ten accomplishments as real 3D objects you can grab, throw, and read. Grab something.">
+  <meta property="og:image" content="https://hematteo.github.io/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Matteo He — Junk Drawer">
+  <meta name="twitter:description" content="My CV, dumped in a drawer. Ten accomplishments as real 3D objects you can grab, throw, and read.">
+  <meta name="twitter:image" content="https://hematteo.github.io/og.png">
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  * { margin: 0; }
+  :root {
+    --ink: #f4f6f3;
+    --ink-dim: rgba(244, 246, 243, 0.62);
+    --accent: #ff6a3d;
+    --panel: rgba(20, 18, 12, 0.85);
+    --panel-ink: #f4f6f3;
+    --panel-dim: rgba(244, 246, 243, 0.6);
+    --pill: rgba(20, 18, 12, 0.55);
+    --vig: 0.22;
+    --hud-ink: #241a0e;
+    --hud-dim: rgba(36, 26, 14, 0.85);
+    --hud-shadow: 0 1px 6px rgba(255, 244, 220, 0.35);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --panel: rgba(10, 8, 5, 0.88);
+      --pill: rgba(10, 8, 5, 0.6);
+      --vig: 0.5;
+      --hud-ink: #f4f6f3;
+      --hud-dim: rgba(244, 246, 243, 0.62);
+      --hud-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
+    }
+  }
+  :root[data-theme="light"] {
+    --panel: rgba(20, 18, 12, 0.85);
+    --pill: rgba(20, 18, 12, 0.55);
+    --vig: 0.22;
+    --hud-ink: #241a0e;
+    --hud-dim: rgba(36, 26, 14, 0.85);
+    --hud-shadow: 0 1px 6px rgba(255, 244, 220, 0.35);
+  }
+  :root[data-theme="dark"] {
+    --panel: rgba(10, 8, 5, 0.88);
+    --pill: rgba(10, 8, 5, 0.6);
+    --vig: 0.5;
+    --hud-ink: #f4f6f3;
+    --hud-dim: rgba(244, 246, 243, 0.62);
+    --hud-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
+  }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background: #23262b;
+  }
+  #app { position: fixed; inset: 0; }
+  #scene { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+  #vignette {
+    position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse 78% 68% at 50% 44%, transparent 48%, rgba(8, 5, 2, var(--vig)) 100%);
+  }
+
+  .mono { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+  #tooltip {
+    position: absolute; z-index: 5; pointer-events: none;
+    background: var(--panel); color: var(--panel-ink);
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.7rem; letter-spacing: 0.04em;
+    padding: 5px 10px; border-radius: 8px;
+    border: 1px solid rgba(244,246,243,0.14);
+    transform: translateY(-100%);
+    white-space: nowrap;
+  }
+  #tooltip[hidden] { display: none; }
+
+  header {
+    position: absolute; top: 20px; left: 22px;
+    color: var(--hud-ink); pointer-events: none;
+    text-shadow: var(--hud-shadow);
+    max-width: min(44ch, 62vw);
+  }
+  header h1 {
+    font-size: clamp(1.5rem, 3.4vw, 2.2rem);
+    font-weight: 800; letter-spacing: -0.03em; line-height: 1;
+    text-transform: uppercase;
+  }
+  header p {
+    margin-top: 8px;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: clamp(0.68rem, 1.4vw, 0.8rem);
+    color: var(--hud-dim);
+    letter-spacing: 0.02em;
+    line-height: 1.5;
+  }
+  header p b { color: var(--accent); font-weight: 600; }
+
+  .controls {
+    position: absolute; top: 20px; right: 22px;
+    display: flex; gap: 8px;
+  }
+  .controls button, #counter {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .controls button {
+    background: var(--pill); color: var(--ink);
+    border: 1px solid rgba(244,246,243,0.25);
+    border-radius: 999px; padding: 8px 14px;
+    cursor: pointer; backdrop-filter: blur(6px);
+  }
+  .controls button:hover { border-color: var(--accent); color: var(--accent); }
+  .controls button:focus-visible, #card a:focus-visible, #card button:focus-visible,
+  #counter:focus-visible, #scene:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px;
+  }
+
+  #counter {
+    position: absolute; right: 22px; top: 62px;
+    color: var(--hud-dim); text-align: right;
+    text-shadow: var(--hud-shadow);
+    background: none; border: 0; padding: 4px 0;
+  }
+  #counter[disabled] { pointer-events: none; }
+  #counter:not([disabled]) {
+    cursor: pointer; color: var(--accent);
+    background: var(--pill); padding: 7px 13px; border-radius: 999px;
+    border: 1px solid rgba(244,246,243,0.2);
+    text-shadow: none; backdrop-filter: blur(6px);
+  }
+  #counter:not([disabled]):hover { text-decoration: underline; }
+
+  #hint {
+    position: absolute; bottom: 22px; left: 50%; transform: translateX(-50%);
+    background: var(--pill); color: var(--ink);
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.72rem; letter-spacing: 0.06em;
+    padding: 9px 18px; border-radius: 999px;
+    border: 1px solid rgba(244,246,243,0.18);
+    backdrop-filter: blur(6px);
+    pointer-events: none;
+    transition: opacity 0.6s ease;
+    white-space: nowrap;
+  }
+  #hint.gone { opacity: 0; }
+
+  #card {
+    position: absolute; left: 22px; bottom: 22px;
+    width: min(370px, calc(100vw - 44px));
+    background: var(--panel); color: var(--panel-ink);
+    border: 1px solid rgba(244,246,243,0.14);
+    border-radius: 14px;
+    padding: 20px 22px 18px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+    opacity: 0; transform: translateY(14px);
+    transition: opacity 0.22s ease, transform 0.22s ease;
+  }
+  #card.open { opacity: 1; transform: translateY(0); }
+  #card-eyebrow {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.66rem; letter-spacing: 0.14em;
+    color: var(--accent);
+  }
+  #card h2 {
+    margin-top: 6px;
+    font-size: 1.3rem; font-weight: 750; letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  #card p {
+    margin-top: 10px;
+    font-size: 0.86rem; line-height: 1.55;
+    color: var(--panel-dim);
+  }
+  #card-link[hidden] { display: none; }
+  #card-link {
+    display: inline-block; margin-top: 12px;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.72rem; letter-spacing: 0.06em;
+    color: var(--accent); text-decoration: none;
+    border-bottom: 1px solid var(--accent);
+    padding-bottom: 1px;
+  }
+  #card-close {
+    position: absolute; top: 10px; right: 10px;
+    background: none; border: 0; color: var(--panel-dim);
+    font-size: 1.05rem; line-height: 1; cursor: pointer;
+    padding: 6px 8px; border-radius: 8px;
+  }
+  #card-close:hover { color: var(--panel-ink); }
+  #card-actions { display: flex; gap: 16px; margin-top: 14px; flex-wrap: wrap; }
+  #card-actions[hidden] { display: none; }
+  #card-actions a {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.72rem; letter-spacing: 0.06em;
+    color: var(--accent); text-decoration: none;
+    border-bottom: 1px solid var(--accent);
+    padding-bottom: 1px;
+  }
+
+  footer {
+    position: absolute; bottom: 22px; right: 22px;
+    display: flex; gap: 14px;
+  }
+  footer a {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--hud-dim); text-decoration: none;
+    text-shadow: var(--hud-shadow);
+  }
+  footer a:hover { color: var(--accent); }
+
+  @media (max-width: 640px) {
+    footer { left: 16px; right: auto; bottom: 64px; }
+    .controls { flex-direction: column; align-items: flex-end; gap: 7px; }
+    .controls button { padding: 11px 16px; }
+    header { max-width: calc(100vw - 160px); }
+    #counter { top: auto; bottom: 76px; right: 16px; }
+    #card-close { padding: 12px 14px; font-size: 1.2rem; }
+    #card {
+      left: 0; right: 0; bottom: 0; width: auto;
+      border-radius: 18px 18px 0 0;
+      border-left: 0; border-right: 0; border-bottom: 0;
+      padding: 26px 22px calc(18px + env(safe-area-inset-bottom));
+    }
+    #card::before {
+      content: ""; position: absolute; top: 9px; left: 50%;
+      width: 40px; height: 4px; border-radius: 2px;
+      transform: translateX(-50%);
+      background: rgba(244, 246, 243, 0.3);
+    }
+    #card-actions a, #card-link { padding: 8px 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #card { transition: none; }
+    #hint { transition: none; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <canvas id="scene" tabindex="0" role="application" aria-label="Interactive pile of objects. Drag to throw, click to read." aria-describedby="kbd-help"></canvas>
+  <div id="sr-status" class="sr-only" role="status" aria-live="polite"></div>
+  <p id="kbd-help" class="sr-only">Use the arrow keys to browse the objects, Enter to read an object's story, Escape to close it.</p>
+  <div id="vignette"></div>
+
+  <header>
+    <h1>Matteo He</h1>
+    <p>ML researcher &amp; engineer, Cambridge.<br>
+    Everything I've made, dumped in a drawer. <b>Grab something.</b></p>
+  </header>
+
+  <div class="controls">
+    <button id="dump" type="button">Dump again</button>
+    <button id="mute" type="button" aria-pressed="false">Sound on</button>
+    <button id="tilt" type="button" aria-pressed="false" hidden>Tilt off</button>
+  </div>
+  <button id="counter" class="mono" aria-live="polite" disabled>0/10 examined</button>
+
+  <div id="hint" aria-hidden="true">drag to throw &nbsp;·&nbsp; click to read</div>
+  <div id="tooltip" hidden></div>
+
+  <aside id="card" hidden tabindex="-1">
+    <button id="card-close" type="button" aria-label="Close">✕</button>
+    <div id="card-eyebrow"></div>
+    <h2 id="card-title"></h2>
+    <p id="card-body"></p>
+    <a id="card-link" href="#" target="_blank" rel="noopener">view on github ↗</a>
+    <div id="card-actions" hidden>
+      <a href="/cv/matteo-he-research.pdf">research CV ↗</a>
+      <a href="https://github.com/hematteo" target="_blank" rel="noopener">github ↗</a>
+    </div>
+  </aside>
+
+  <footer>
+    <a href="/">Research profile</a>
+    <a href="https://github.com/hematteo" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://linkedin.com/in/matteohe" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="/#contact">Contact</a>
+  </footer>
+</div>
+
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>

@@ -5,7 +5,7 @@ import { chromium } from 'playwright'
 import { spawn } from 'node:child_process'
 
 const PORT = 5199
-const BASE = `http://127.0.0.1:${PORT}/`
+const BASE = `http://127.0.0.1:${PORT}/drawer/`
 const CI = !!process.env.CI
 
 // --- boot `vite preview` and wait for it to answer -------------------------
