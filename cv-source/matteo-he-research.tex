@@ -1,156 +1,81 @@
-%-------------------------
-% Matteo He - AI Safety and Interpretability CV
-% One-page, ATS-readable LaTeX source
-%-------------------------
-
+% Matteo He - Public research CV, based on mhcv.pdf
+% Academic layout adapted from the canonical Research Scientist CV.
 \documentclass[letterpaper,11pt]{article}
-\usepackage{latexsym}
-\usepackage[empty]{fullpage}
+\usepackage[margin=0.6in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
 \usepackage{titlesec}
-\usepackage[usenames,dvipsnames]{color}
 \usepackage{enumitem}
 \usepackage[hidelinks]{hyperref}
-\usepackage{fancyhdr}
 \usepackage[english]{babel}
-\usepackage{tabularx}
 \input{glyphtounicode}
-
-\pagestyle{fancy}
-\fancyhf{}
-\fancyfoot{}
-\renewcommand{\headrulewidth}{0pt}
-\renewcommand{\footrulewidth}{0pt}
-\setlength{\footskip}{4.1pt}
-
-% Compact but readable one-page geometry.
-\addtolength{\oddsidemargin}{-0.62in}
-\addtolength{\evensidemargin}{-0.52in}
-\addtolength{\textwidth}{1.22in}
-\addtolength{\topmargin}{-0.72in}
-\addtolength{\textheight}{1.72in}
-
-\urlstyle{same}
-\raggedbottom
-\raggedright
-\setlength{\tabcolsep}{0in}
 \pdfgentounicode=1
-
-\titleformat{\section}
-  {\raggedright\large\bfseries}
-  {}{0em}{}[\color{black}\titlerule \vspace{-1pt}]
-\titlespacing*{\section}{0pt}{6pt}{3pt}
-
-\newcommand{\resumeItem}[1]{
-  \item\small{#1\vspace{0pt}}
-}
-\newcommand{\resumeSubheading}[4]{
-  \vspace{0pt}\item
-  \begin{tabular*}{1.0\textwidth}[t]{l@{\extracolsep{\fill}}r}
-    \textbf{#1} & \textbf{\small #2} \\
-    \textit{\small #3} & \textit{\small #4} \\
-  \end{tabular*}\vspace{-3pt}
-}
-\newcommand{\resumeProjectHeading}[2]{
-  \vspace{0pt}\item
-  \begin{tabular*}{1.0\textwidth}[t]{l@{\extracolsep{\fill}}r}
-    \textbf{#1} & \textbf{\small #2} \\
-  \end{tabular*}\vspace{-3pt}
-}
-\renewcommand\labelitemi{\texttt{-}}
-\renewcommand\labelitemii{\texttt{-}}
-\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0in,label={}]}
-\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
-\newcommand{\resumeItemListStart}{\begin{itemize}[leftmargin=0.20in,itemsep=1.0pt,topsep=1.8pt]}
-\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{0pt}}
-
-\hypersetup{
-  pdftitle={Matteo He - AI Safety and Interpretability CV},
-  pdfauthor={Matteo He},
-  pdfsubject={AI safety, alignment, interpretability, and research engineering}
-}
+\pagestyle{empty}
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\raggedright
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\titleformat{\section}{\large\bfseries}{}{0em}{}[\titlerule]
+\titlespacing*{\section}{0pt}{7pt}{4pt}
+\setlist[itemize]{leftmargin=0.15in,label=\textendash,itemsep=2pt,topsep=3pt,parsep=0pt,partopsep=0pt}
+\newcommand{\paper}[3]{\par\addvspace{7pt}\textbf{#1}\par{\fontsize{9.7}{11.3}\selectfont #2\par\textit{#3}\par}\nopagebreak}
+\newcommand{\position}[4]{\par\addvspace{4pt}\textbf{#1}\hfill #2\par\textit{#3}\hfill\textit{#4}\par\nopagebreak}
+\hypersetup{pdftitle={Matteo He - Research CV},pdfauthor={Matteo He},pdfsubject={Mechanistic interpretability research, readout methods, and evaluation}}
 
 \begin{document}
-
 \begin{center}
-  {\LARGE\bfseries Matteo He}\\[-1pt]
-  \textit{Research interests: AI Safety, Alignment, and Interpretability}\\[-1pt]
-  \small
-  \href{https://hematteo.github.io/\#contact}{Contact via website}\enspace\textbar\enspace
-  \href{https://linkedin.com/in/matteohe}{linkedin.com/in/matteohe}\enspace\textbar\enspace
-  Cambridge, UK\\[-2pt]
-  \href{https://github.com/hematteo}{github.com/hematteo}\enspace\textbar\enspace
-  \href{https://hematteo.github.io/}{hematteo.github.io}\enspace\textbar\enspace
-  \href{https://huggingface.co/hematteo}{huggingface.co/hematteo}
+{\LARGE\bfseries Matteo He}\par\vspace{2pt}
+\small
+\href{mailto:matteohe.research@gmail.com}{matteohe.research@gmail.com}\enspace\textbar\enspace
+\href{https://hematteo.github.io/}{hematteo.github.io}\enspace\textbar\enspace
+\href{https://github.com/hematteo}{github.com/hematteo}
 \end{center}
-
-\section{Research Profile}
-\small{Early-career researcher interested in the safety and alignment of advanced AI, including detecting hidden objectives, evaluating behavior under oversight, and mechanistic interpretability. Cambridge MPhil with Distinction and AI Alignment Fellowship. Dissertation work led to a first-author arXiv preprint and a related manuscript under review on language-model readouts, with public code and pretrained artifacts. Previously built ML-evaluation infrastructure at Amazon.}
+\vspace{-6pt}
+\fontsize{10.5}{12.5}\selectfont
 
 \section{Selected Research}
-\small{The two readout projects below arose from my Cambridge MPhil dissertation.}
-\resumeSubHeadingListStart
-  \resumeProjectHeading
-    {Sparse Readout Prism \href{https://arxiv.org/abs/2609.01936}{[arXiv:2609.01936]} \href{https://github.com/hematteo/sparse-readout-prism}{[code]} \href{https://huggingface.co/hematteo/sparse-readout-prism}{[models]}}
-    {First-author preprint; under review}
-  \resumeItemListStart
-    \resumeItem{Developed SRP to decompose selected logits into sparse feature contributions and explicit residuals. Across six readouts without softcaps, improved logit-difference coverage by \textbf{8.9--17.3 percentage points} over the strongest of six geometric baselines; coverage requires the correct sign and less than 50\% relative error.}
-    \resumeItem{Showed that fitted lenses could change their reported surface language while the dominant SRP feature remained stable in \textbf{77/80 prompts (96\%)}; reproduced the result with English-German and ridge-lens controls.}
-  \resumeItemListEnd
-
-  \resumeProjectHeading
-    {Learning to Read Out: Unembedding Dynamics \href{https://github.com/hematteo/learning-to-read-out}{[code]} \href{https://huggingface.co/hematteo/parameter-trajectory-crosscoders}{[artifacts]}}
-    {First-author submission; under review}
-  \resumeItemListStart
-    \resumeItem{Tracked how sparse output features form, reorganize, and become load-bearing across public pretraining checkpoints using trajectory crosscoders; separated hidden-state availability from native-readout expression with readout swaps, controlled probes, and ablations.}
-    \resumeItem{Released a tested checkpoint-analysis library with experiment-to-figure manifests, guided notebooks, reproducible configs, and pretrained parameter-trajectory crosscoders.}
-  \resumeItemListEnd
-
-  \resumeProjectHeading{Automated Interpretability of GPT-2 Attention Heads}{BSc dissertation, 2024}
-  \resumeItemListStart
-    \resumeItem{Built a PyTorch/Transformers explainer-simulator pipeline; improved distribution-based evaluation metrics by \textbf{25\%}, cut token errors from \textbf{366 to 157 (57\%)}, and generated high-fidelity explanations across \textbf{10+} syntactic attention heads.}
-  \resumeItemListEnd
-\resumeSubHeadingListEnd
-
-\section{Education \& Distinctions}
-\resumeSubHeadingListStart
-  \resumeSubheading
-    {University of Cambridge}{Cambridge, UK}
-    {MPhil in Advanced Computer Science, Distinction; AI Alignment Fellowship}{Oct 2025 - Jun 2026}
-  \resumeSubheading
-    {University of St Andrews}{St Andrews, UK}
-    {BSc (Hons) Computer Science and Mathematics, First Class; GPA 18/20 (90\%); Top Student Medal}{Sep 2021 - Jun 2024}
-\resumeSubHeadingListEnd
-
-\small{\textbf{GRE: 340/340} (Quantitative: 170/170; Verbal: 170/170). Dean's List in all three years at St Andrews.}
-
-\section{Selected Research \& ML Experience}
-\resumeSubHeadingListStart
-  \resumeSubheading
-    {Japanese Language Learning Platform}{Jun 2024 - Oct 2025}
-    {Founder \& ML/Software Engineer (platform now archived)}{Remote}
-  \resumeItemListStart
-    \resumeItem{Solo-built a privacy-preserving browser LLM platform serving \textbf{about 3K MAU}; moved inference on-device with WebGPU/WebLLM, cut p95 latency by \textbf{40\%}, and maintained \textbf{approximately 99.9\% uptime}.}
-  \resumeItemListEnd
-  \resumeSubheading
-    {Amazon, Alexa-AI (NLU)}{Jun 2023 - Sep 2023}
-    {Software Development Engineer Intern (ML Evaluation Infrastructure)}{London / Cambridge, UK}
-  \resumeItemListStart
-    \resumeItem{Built Python/AWS evaluation infrastructure for \textbf{20+ Applied Scientists}, processing \textbf{millions of utterances daily}; created failure-point analysis for model debugging, accelerating iteration by \textbf{15\%} and reducing manual validation by \textbf{40\%}.}
-  \resumeItemListEnd
-  \resumeProjectHeading{St Andrews Research Internships}{2022 - 2023}
-  \resumeItemListStart
-    \resumeItem{Improved dolphin-acoustics classification F1 from \textbf{0.48 to 0.86} and refactored a \textbf{5K+ line} Python research codebase; automated collection of \textbf{600+ hours} of solver metrics for energy-aware algorithm selection.}
-  \resumeItemListEnd
-\resumeSubHeadingListEnd
-
-\section{Technical Methods}
-\vspace{0pt}
-\begin{itemize}[leftmargin=0.15in,label={}]
-  \small{\item{
-  \textbf{Research:} mechanistic interpretability, readout auditing, sparse coding, representation analysis, LLM evaluation, readout swaps, ablations, reproducibility \\
-  \textbf{Technical:} Python, PyTorch, Transformers, TransformerLens, JAX, GPU training, AWS, distributed experiment pipelines \\
-  \textbf{Languages:} English, Italian, and Mandarin Chinese (native/bilingual); French and Spanish (professional)
-  }}
+\paper{Sparse Readout Prism: Explaining Logit-Lens Scores in Features Instead of Tokens}
+{\textbf{Matteo He}, William F. Shen, Xinchi Qiu, Nicholas D. Lane. 2026.}
+{First author; preprint under review\enspace\textbar\enspace\href{https://arxiv.org/abs/2609.01936}{arXiv:2609.01936}\enspace\textbar\enspace\href{https://github.com/hematteo/sparse-readout-prism}{Code}\enspace\textbar\enspace\href{https://huggingface.co/hematteo/sparse-readout-prism}{Dictionaries}}
+\begin{itemize}
+\item Showed that a lens's fitting corpus can change its reported language for identical hidden states in Qwen3.5-9B. Tested Jacobian lenses fitted on English and Chinese, with controls using English and German and ridge lenses.
+\item Developed SRP to decompose lens scores into shared feature contributions and explicit residuals by fitting sparse autoencoders to output weights. Tested predicted score changes by ablating features in the readout.
+\item Improved reconstruction coverage for logit differences by \textbf{8.9 to 17.3 percentage points} over the strongest of six geometric baselines across six readouts without softcaps. Coverage requires the correct sign and less than 50\% relative error.
 \end{itemize}
 
+\paper{Learning to Read Out: Unembedding Dynamics in Language Model Pretraining}
+{\textbf{Matteo He}, William F. Shen, Alex Iacob, Andrej Jovanovic, Xinchi Qiu, Nicholas D. Lane. 2026.}
+{First author; manuscript under review\enspace\textbar\enspace\href{https://github.com/hematteo/learning-to-read-out}{Code}}
+\begin{itemize}
+\item Showed why output scores can misdate capability acquisition during training: both hidden representations and the learned readout change. Designed linear probes and readout swaps to separate their contributions.
+\item Found subject--verb agreement linearly decodable in Pythia-6.9B several hundred steps before the model's readout expressed it. Gaps persisted at convergence on harder contrasts involving relative clauses.
+\item Developed trajectory crosscoders to track sparse readout features during pretraining in Pythia and OLMo-2-7B. Studied early readout reorganization through dictionary dynamics, lexical probes, and readout swaps.
+\item In control runs with 31M parameters and one seed per condition, each \(4\times\) increase in readout learning rate halved the reorganization step. Final validation losses agreed within 0.06 nats.
+\item Localized agreement scores to eight readout features. With Pythia-1B hidden states fixed at step 1000, ablating these features from the reconstructed terminal readout reduced agreement accuracy on held out examples from 90.0\% to 48.7\%; matched controls stayed at 90.0\%.
+\end{itemize}
+
+\par\addvspace{7pt}\textbf{Automating the Interpretability of Attention Heads in LLMs}\par
+\textit{BSc Computer Science dissertation, University of St Andrews}\hfill 2024
+\begin{itemize}
+\item Built a PyTorch and Transformers pipeline to generate and simulate explanations of GPT-2 attention heads. Compared predicted and observed attention using distributional errors and errors for individual tokens.
+\end{itemize}
+
+\section{Education}
+\position{University of Cambridge}{Oct 2025 - Jun 2026}{MPhil in Advanced Computer Science, Distinction; AI Alignment Fellowship}{ }
+\position{University of St Andrews}{Sep 2021 - Jun 2024}{BSc (Hons) Computer Science and Mathematics, First Class Honours}{ }
+Average \textbf{18/20}; Dean's List all three years.
+
+\section{Industry Experience}
+\position{Amazon, Alexa AI}{Jun 2023 - Sep 2023}{Software Development Engineer Intern, ML Evaluation Infrastructure}{ }
+Built Python and AWS evaluation pipelines processing millions of utterances daily for \textbf{20+ Applied Scientists}.
+
+\section{Selected Awards}
+\textbf{Top Student Medal:} Highest academic achievement in the Direct Entry Computer Science cohort.\par
+\textbf{GRE: 340/340}. \textbf{Challenge wins:} OxfordHack 2022 (Oxbotica); HackTheBurgh VIII (GitHub).
+
+\section{Technical Skills}
+\textbf{Research methods:} Sparse coding, linear probes, readout swaps, ablations, LLM evaluation.\par
+\textbf{Tools:} Python, PyTorch, Transformers, TransformerLens, JAX, GPU training, Git/Linux, AWS.\par
 \end{document}

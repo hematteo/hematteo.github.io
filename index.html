@@ -4,22 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Matteo He | AI Safety &amp; Interpretability Research</title>
-  <meta name="description" content="Matteo He is an early-career researcher interested in AI safety, alignment, and oversight. Cambridge MPhil with Distinction; selected research, engineering experience, and CV.">
+  <meta name="description" content="Matteo He is a researcher interested in AI safety, alignment, and oversight. Cambridge MPhil with Distinction; selected research, engineering experience, and CV.">
   <meta name="theme-color" content="#faf9f6">
   <link rel="icon" type="image/png" href="/research/prism-mark.png">
   <link rel="canonical" href="https://hematteo.github.io/">
   <meta property="og:type" content="profile">
-  <meta property="og:title" content="Matteo He — Research &amp; selected work">
+  <meta property="og:title" content="Matteo He | Research &amp; selected work">
   <meta property="og:description" content="AI safety, alignment, and interpretability. Selected research and engineering work from Matteo He, Cambridge MPhil with Distinction.">
   <meta property="og:url" content="https://hematteo.github.io/">
   <meta name="twitter:card" content="summary">
   <link rel="preload" href="/fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/src/profile.css">
+  <link rel="stylesheet" href="/src/homepage.css">
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"Person","name":"Matteo He","url":"https://hematteo.github.io/","sameAs":["https://github.com/hematteo","https://linkedin.com/in/matteohe","https://huggingface.co/hematteo"],"alumniOf":[{"@type":"CollegeOrUniversity","name":"University of Cambridge"},{"@type":"CollegeOrUniversity","name":"University of St Andrews"}],"knowsAbout":["Mechanistic interpretability","Machine learning","Language model evaluation"]}
   </script>
 </head>
-<body>
+<body class="profile-page">
   <a class="skip-link" href="#main">Skip to content</a>
   <div class="page">
     <header class="masthead">
@@ -27,7 +28,7 @@
       <nav aria-label="Main navigation">
         <a href="#research">Research</a>
         <a href="#about">Education</a>
-        <a href="#systems">Engineering</a>
+        <a href="#systems">Experience</a>
         <a href="/cv/matteo-he-research.pdf">CV <span class="file-type">PDF</span></a>
       </nav>
     </header>
@@ -37,66 +38,62 @@
         <div class="intro-main">
           <p class="eyebrow">AI safety · Alignment · Interpretability</p>
           <h1 id="name">Matteo He</h1>
-          <p class="research-statement">How can we understand and oversee increasingly capable AI systems?</p>
-          <p class="intro-description">I’m an early-career researcher interested in reducing the risks posed by advanced AI. I want to develop methods that help us detect hidden objectives, evaluate behavior under oversight, and understand when a model’s apparent cooperation is misleading.</p>
-          <p class="intro-description">My background combines mechanistic interpretability research with hands-on ML engineering. At Cambridge, my dissertation examined how readout methods shape what we infer about language models.</p>
+          <p class="research-statement">I’m a researcher interested in understanding AI systems and making their behavior easier to evaluate and oversee.</p>
+          <p class="intro-description">I completed an MPhil in Advanced Computer Science at Cambridge with Distinction. My dissertation examined how methods for reading model internals affect our conclusions about what they have learned.</p>
+          <p class="intro-availability">I’m seeking AI safety research fellowships and research scientist or research engineer roles. <a href="#contact">Get in touch →</a></p>
           <div class="profile-links" aria-label="Profile and contact links">
-            <a href="#contact">Contact</a>
+            <a href="mailto:matteohe.research@gmail.com">Email</a>
             <a href="https://github.com/hematteo">GitHub</a>
             <a href="https://huggingface.co/hematteo">Hugging Face</a>
             <a href="https://linkedin.com/in/matteohe">LinkedIn</a>
             <a href="/cv/matteo-he-research.pdf">Research CV</a>
           </div>
         </div>
-        <aside class="intro-aside" aria-label="Background and opportunities">
-          <p class="aside-label">Research meets engineering</p>
-          <p class="credential">First-author research<span>Public arXiv preprint<br>Related manuscript under review</span></p>
-          <p class="credential">Cambridge MPhil<span>Advanced Computer Science<br>Distinction, 2026</span></p>
-          <div class="availability">
-            <p>Seeking AI safety research fellowships and research scientist / research engineer roles.</p>
-            <a href="#contact">Get in touch</a>
-          </div>
-        </aside>
+
       </section>
 
       <section id="research" class="section" aria-labelledby="research-heading">
         <div class="section-heading">
           <h2 id="research-heading">Selected research</h2>
-          <span class="section-note">Questions, methods &amp; evidence</span>
         </div>
-        <p class="section-context">My Cambridge dissertation led to the two projects below on readout methods and training dynamics. They build on earlier work in automated interpretability at St Andrews.</p>
 
-        <article class="research-entry" id="sparse-readout-prism">
-          <div class="entry-number" aria-hidden="true">01</div>
+        <article class="cv-entry publication" id="sparse-readout-prism">
           <div class="entry-content">
-            <div class="paper-meta"><span>2026</span><span>First author</span><span>Preprint · Under review</span></div>
-            <h3><a href="https://arxiv.org/abs/2609.01936">Sparse Readout Prism</a></h3>
-            <p class="paper-subtitle">Explaining Logit-Lens Scores in Features Instead of Tokens</p>
+            <header class="entry-heading">
+              <div class="entry-title">
+                <h3><a href="https://arxiv.org/abs/2609.01936">Sparse Readout Prism</a></h3>
+                <p class="paper-subtitle">Explaining Logit-Lens Scores in Features Instead of Tokens</p>
+              </div>
+              <p class="entry-date">2026</p>
+            </header>
             <p class="authors"><strong>Matteo He</strong>, William F. Shen, Xinchi Qiu, Nicholas D. Lane</p>
-            <div class="paper-body featured-body">
-              <div>
-                <p class="paper-question">How do a lens’s fitting choices affect what it reports?</p>
-                <p>I found that English- and Chinese-fitted Jacobian lenses could report different languages for identical Qwen3.5-9B hidden states. Sparse Readout Prism instead decomposes lens scores through shared features of the model’s output weights, with explicit residuals and local readout-side ablations.</p>
+            <div class="paper-meta"><span>First author</span><span>Preprint · Under review</span></div>
+            <div class="publication-overview">
+            <div class="paper-body">
+                <p class="paper-question">What do token scores leave out about a model’s internal representations?</p>
+                <p>A lens translates model internals into token scores, but its fitting data can shape what it reports. In a controlled test, lenses fitted on English and Chinese reported different languages for the same hidden states. I developed Sparse Readout Prism to explain these scores through shared features of the output weights, with an explicit account of what remains unexplained.</p>
                 <div class="artifact-links">
                   <a href="https://arxiv.org/abs/2609.01936">Paper</a>
                   <a href="https://github.com/hematteo/sparse-readout-prism">Code</a>
                   <a href="https://huggingface.co/hematteo/sparse-readout-prism">Dictionaries</a>
                   <a href="/research/sparse-readout-prism.bib" download>BibTeX</a>
                 </div>
-              </div>
-              <figure class="paper-figure">
+              <a class="research-explorer-link" href="/research/prism/">Explore what token scores leave out →</a>
+            </div>
+              <figure class="paper-figure results-figure research-preview">
                 <a href="/research/sparse-readout-prism.png" class="figure-link" aria-label="View the Sparse Readout Prism method figure at full size">
                   <img src="/research/sparse-readout-prism.png" alt="Sparse Readout Prism decomposes a readout query into feature directions, then accounts for its score using signed contributions and a residual." width="1400" height="707" fetchpriority="high">
                 </a>
-                <figcaption>From readout weights to feature-level score accounting. <span>Click to enlarge.</span></figcaption>
+                <figcaption>How individual features contribute to a readout score. <span>Click to enlarge.</span></figcaption>
+
               </figure>
             </div>
             <details class="research-details">
               <summary>Method &amp; scope</summary>
               <div class="details-content">
-                <p>The method fits sparse autoencoders directly to LM-head weights and decomposes selected logits and margins into signed feature contributions. Across six readouts without softcaps, it improved logit-difference reconstruction coverage by 8.9–17.3 percentage points over the strongest of six geometric baselines. Coverage requires the correct sign and less than 50% relative error. Reconstruction, replacement, sign, residual, and confound checks bound what the explanation establishes.</p>
+                <p>The method fits sparse autoencoders directly to the model’s output weights and decomposes selected logits and margins into signed feature contributions. Across six readouts without softcaps, it improved reconstruction coverage for logit differences by 8.9 to 17.3 percentage points over the strongest of six geometric baselines. A reconstruction counts as covered when it has the correct sign and less than 50% relative error. I use reconstruction and replacement tests, alongside checks for sign errors, residuals, and confounds, to establish the explanation’s limits.</p>
                 <figure class="supporting-figure">
-                  <a href="/research/readout-features.png" class="figure-link" aria-label="View the readout-feature examples at full size"><img src="/research/readout-features.png" alt="Two paper examples show signed feature differences between insect and software senses of bug, and structure and network senses of bridge." width="1400" height="1145" loading="lazy"></a>
+                  <a href="/research/readout-features.png" class="figure-link" aria-label="View the readout feature examples at full size"><img src="/research/readout-features.png" alt="Two paper examples show signed feature differences between insect and software senses of bug, and structure and network senses of bridge." width="1400" height="1145" loading="lazy"></a>
                   <figcaption>Selected feature contrasts from the paper: “bug” and “bridge”.</figcaption>
                 </figure>
               </div>
@@ -104,98 +101,150 @@
           </div>
         </article>
 
-        <article class="research-entry" id="learning-to-read-out">
-          <div class="entry-number" aria-hidden="true">02</div>
+        <article class="cv-entry publication" id="learning-to-read-out">
           <div class="entry-content">
-            <div class="paper-meta"><span>2026</span><span>First author</span><span>Manuscript under review</span></div>
-            <h3><a href="https://github.com/hematteo/learning-to-read-out">Learning to Read Out</a></h3>
-            <p class="paper-subtitle">Unembedding Dynamics in Language Model Pretraining</p>
+            <header class="entry-heading">
+              <div class="entry-title">
+                <h3><a href="https://github.com/hematteo/learning-to-read-out">Learning to Read Out</a></h3>
+                <p class="paper-subtitle">Unembedding Dynamics in Language Model Pretraining</p>
+              </div>
+              <p class="entry-date">2026</p>
+            </header>
             <p class="authors"><strong>Matteo He</strong>, William F. Shen, Alex Iacob, Andrej Jovanovic, Xinchi Qiu, Nicholas D. Lane</p>
+            <div class="paper-meta"><span>First author</span><span>Manuscript under review</span></div>
+            <div class="publication-overview">
             <div class="paper-body">
-              <p class="paper-question">When is information available before the model’s own readout expresses it?</p>
-              <p>On Pythia-6.9B, I found subject–verb agreement linearly decodable from hidden states several hundred steps before native-readout expression; gaps persisted at convergence on harder relative-clause contrasts. This exposes a measurement confound in output-based capability timelines.</p>
+              <p class="paper-question">How does a model learn to express what its hidden states contain?</p>
+              <p>A model’s readout turns internal representations into predictions. I developed trajectory crosscoding to track how patterns in the readout change during training. Across four models, some patterns peaked early and faded, while others emerged later or persisted.</p>
+              <p>In grammar experiments, a separate classifier recovered information before the model’s own readout used it reliably. The gap persisted on harder examples, showing how predictions can give an incomplete picture of what a model has learned.</p>
               <div class="artifact-links">
                 <a href="https://github.com/hematteo/learning-to-read-out">Code</a>
                 <a href="https://github.com/hematteo/learning-to-read-out/tree/main/notebooks">Guided notebooks</a>
                 <a href="/research/learning-to-read-out.bib" download>BibTeX</a>
               </div>
+              <a class="research-explorer-link" href="/research/trajectories/">Explore how readout features develop during training →</a>
+            </div>
+            <figure class="paper-figure results-figure research-preview">
+              <a href="/research/trajectories/" aria-label="Explore feature trajectories across four models">
+                <img src="/research/trajectory-preview.png" alt="Measured feature trajectories in Pythia-1B, normalized to each feature’s peak, show different patterns of change during training. Open the explorer to inspect all four models." width="840" height="520" loading="lazy">
+              </a>
+              <figcaption>One model from the study: 1,200 sampled features, each scaled to its own peak. <a href="/research/trajectories/">Explore all four models →</a></figcaption>
+
+            </figure>
             </div>
             <details class="research-details">
               <summary>Method &amp; scope</summary>
-              <div class="details-content"><p>I extract output-weight snapshots over pretraining, fit trajectory crosscoders to their development, and combine readout swaps, linear probes, and feature ablations. On fixed Pythia-1B step-1000 hidden states, removing eight localized readout features from the reconstructed terminal readout reduced held-out agreement accuracy from 90.0% to 48.7%; matched controls stayed at 90.0%. In single-seed 31M-parameter control runs, each 4× increase in output-readout learning rate halved the reorganization step; final validation losses agreed within 0.06 nats.</p><p>The public release includes reusable analysis components, CPU-only examples, guided notebooks, and an experiment-to-figure manifest. The manuscript remains under review.</p></div>
+              <div class="details-content"><p>I tracked snapshots of the output weights during pretraining and fitted trajectory crosscoders to study how they changed. I tested the resulting features with readout swaps, linear probes, and ablations. On harder examples involving relative clauses, the gap between linear decodability and the model’s own readout persisted at convergence.</p>
+            <figure class="paper-figure results-figure">
+              <a href="/research/learning-to-read-out.png" class="figure-link" aria-label="View the Learning to Read Out results figure at full size">
+                <img src="/research/learning-to-read-out.png" alt="Subject–verb agreement results in Pythia-6.9B. Left: a probe of hidden states reaches high accuracy before the model’s own readout. Right: at convergence, probe accuracy remains at ceiling while the model’s readout falls behind on harder grammatical dependencies, with the largest gap at 25 percentage points." width="1596" height="473" loading="lazy">
+              </a>
+              <figcaption>Left: grammatical information becomes detectable before the model’s own readout uses it reliably. Right: the gap persists on harder examples, even at the end of training. SVA means subject–verb agreement. <span>Click to enlarge.</span></figcaption>
+            </figure>
+              <p>Using fixed hidden states from Pythia-1B at step 1000, removing eight localized features from the reconstructed final readout reduced agreement accuracy on held out examples from 90.0% to 48.7%. Matched controls stayed at 90.0%. In control runs with 31 million parameters and a single random seed, each 4× increase in the readout learning rate halved the training step at which reorganization occurred. Final validation losses agreed within 0.06 nats.</p><p>The public release includes reusable analysis tools, examples that run on a CPU, guided notebooks, and a manifest linking experiments to figures. The manuscript remains under review.</p></div>
             </details>
           </div>
         </article>
 
-        <article class="research-entry" id="attention-heads">
-          <div class="entry-number" aria-hidden="true">03</div>
+        <article class="cv-entry publication" id="attention-heads">
           <div class="entry-content">
-            <div class="paper-meta"><span>2024</span><span>Honours dissertation · St Andrews</span></div>
-            <h3>Automating the Interpretability of Attention Heads in LLMs</h3>
+            <header class="entry-heading">
+              <div class="entry-title">
+                <h3>Automating the Interpretability of Attention Heads in LLMs</h3>
+              </div>
+              <p class="entry-date">2024</p>
+            </header>
+            <p class="paper-meta">Honours dissertation · St Andrews</p>
             <div class="paper-body">
-              <p class="paper-question">Can language models generate and test explanations of attention-head behavior?</p>
-              <p>I built a GPT-2 interpretability pipeline using an LLM explainer and simulator to propose and evaluate functional explanations. The project improved distribution-based evaluation metrics by 25% and reduced token errors from 366 to 157 across the dissertation’s evaluation.</p>
+              <p class="paper-question">Can language models generate and test explanations of attention heads?</p>
+              <p>I built a GPT-2 interpretability pipeline that uses language models to explain attention patterns and simulate them from those explanations. Comparing the simulated patterns with observed attention tests whether an explanation predicts what a head does. The pipeline paired GPT-4 as an explainer with GPT-3.5 as a simulator.</p>
             </div>
             <details class="research-details">
               <summary>Approach &amp; evaluation</summary>
-              <div class="details-content"><p>The dissertation paired GPT-4 as an explainer with GPT-3.5 as a simulator, then compared predicted and observed attention through distributional and token-level errors. It generated high-fidelity explanations across at least ten syntactic attention heads. These results refer to the dissertation’s experimental setup.</p></div>
+              <div class="details-content"><p>The evaluation compared predicted and observed attention using errors across distributions and individual tokens. This tested whether the explanations could predict attention patterns within the dissertation’s experimental setup.</p></div>
             </details>
+          </div>
+        </article>
+
+      </section>
+
+      <section id="about" class="section education-section" aria-labelledby="about-heading">
+        <div class="section-heading"><h2 id="about-heading">Education &amp; distinctions</h2></div>
+        <article class="cv-entry">
+          <div class="entry-content">
+            <header class="entry-heading">
+              <div class="entry-title">
+                <h3>University of Cambridge</h3>
+              </div>
+              <p class="entry-date">2025–2026</p>
+            </header>
+            <p class="paper-meta">MPhil, Advanced Computer Science</p>
+            <div class="entry-description"><p><strong>Distinction</strong> · AI Alignment Fellowship</p></div>
+          </div>
+        </article>
+        <article class="cv-entry">
+          <div class="entry-content">
+            <header class="entry-heading">
+              <div class="entry-title">
+                <h3>University of St Andrews</h3>
+              </div>
+              <p class="entry-date">2021–2024</p>
+            </header>
+            <p class="paper-meta">BSc (Hons), Computer Science &amp; Mathematics</p>
+            <div class="entry-description"><p><strong>First Class</strong> · 18/20 average · Dean’s List in all three years</p><p>Top Student Medal for the highest academic achievement in the Direct Entry Computer Science cohort.</p></div>
+          </div>
+        </article>
+        <p class="academic-distinction"><strong>GRE: 340/340</strong><span>Quantitative Reasoning: 170/170 · Verbal Reasoning: 170/170</span></p>
+      </section>
+
+      <section id="systems" class="section" aria-labelledby="systems-heading">
+        <div class="section-heading"><h2 id="systems-heading">Experience &amp; projects</h2></div>
+        <article class="cv-entry" aria-labelledby="amazon-heading">
+          <div class="entry-content">
+            <header class="entry-heading">
+              <div class="entry-title">
+                <h3 id="amazon-heading">Amazon Alexa AI</h3>
+              </div>
+              <p class="entry-date">June–September 2023</p>
+            </header>
+            <p class="paper-meta">Software Development Engineer Intern</p>
+            <div class="entry-description">
+            <p>I built ML data and experiment infrastructure used by <strong>20+ Applied Scientists</strong>. The work supported faster dataset iteration and AWS pipelines processing <strong>millions of utterances daily</strong>.</p>
+            <p>My focus was infrastructure for model evaluation within the Alexa NLU team.</p>
+            </div>
+          </div>
+        </article>
+        <article class="cv-entry">
+          <div class="entry-content">
+            <header class="entry-heading">
+              <div class="entry-title">
+                <h3><a href="https://github.com/hematteo/vigil">vigil-gpu</a></h3>
+              </div>
+              <p class="entry-date">2026</p>
+            </header>
+            <p class="paper-meta">Open source · Python</p>
+            <div class="entry-description"><p>A terminal monitor for rented cloud GPUs. Tracks training logs and metrics across instances, with reconnecting SSH streams and alerts for stalled runs, NaNs, and loss plateaus.</p></div>
+            <div class="artifact-links"><a href="https://github.com/hematteo/vigil">Code</a><a href="https://pypi.org/project/vigil-gpu/">PyPI</a><a href="https://github.com/hematteo/vigil/blob/main/docs/demo.gif">Recorded demo</a><a href="https://github.com/hematteo/vigil#readme">Documentation</a></div>
+          </div>
+        </article>
+        <article class="cv-entry">
+          <div class="entry-content">
+            <header class="entry-heading">
+              <div class="entry-title">
+                <h3>LLMs in the browser</h3>
+              </div>
+              <p class="entry-date">2024–2025</p>
+            </header>
+            <p class="paper-meta">Independent project · Archived</p>
+            <div class="entry-description"><p>I built and operated a platform for learning Japanese that served approximately 3,000 monthly active users. WebGPU/WebLLM ran inference on users’ devices, eliminating server inference costs.</p></div>
+            <details class="system-details"><summary>Engineering scope</summary><p>I built and maintained the full system, including inference, frontend and backend, authentication, subscriptions, deployment, and monitoring. The platform is now archived and maintenance is paused.</p></details>
           </div>
         </article>
       </section>
 
-      <section id="about" class="section about" aria-labelledby="about-heading">
-        <div class="section-heading"><h2 id="about-heading">Education &amp; distinctions</h2></div>
-        <div class="about-grid">
-          <dl class="education">
-            <div><dt>University of Cambridge <span>2025–2026</span></dt><dd>MPhil, Advanced Computer Science<br><strong>Distinction</strong> · AI Alignment Fellowship</dd></div>
-            <div><dt>University of St Andrews <span>2021–2024</span></dt><dd>BSc (Hons), Computer Science &amp; Mathematics<br><strong>First Class</strong> · 18/20 average<br>Dean’s List in all three years</dd></div>
-          </dl>
-          <dl class="education distinctions">
-            <div><dt>Top Student Medal</dt><dd>Highest academic achievement in the Direct Entry Computer Science cohort at St Andrews.</dd></div>
-            <div><dt>GRE <strong>340/340</strong></dt><dd>Quantitative Reasoning: 170/170<br>Verbal Reasoning: 170/170</dd></div>
-          </dl>
-        </div>
-      </section>
-
-      <section id="systems" class="section" aria-labelledby="systems-heading">
-        <div class="section-heading"><h2 id="systems-heading">Research engineering</h2><span class="section-note">Tools, infrastructure &amp; products</span></div>
-        <div class="systems-grid">
-          <article class="system-entry">
-            <p class="paper-meta">Open source · Python · 2026</p>
-            <h3><a href="https://github.com/hematteo/vigil">vigil-gpu</a></h3>
-            <p>A terminal monitor for rented cloud GPUs. Tracks training logs and metrics across instances, with reconnecting SSH streams and alerts for stalled runs, NaNs, and loss plateaus.</p>
-            <div class="artifact-links"><a href="https://github.com/hematteo/vigil">Code</a><a href="https://pypi.org/project/vigil-gpu/">PyPI</a></div>
-          </article>
-          <article class="system-entry">
-            <p class="paper-meta">Solo-built product · 2024–2025 · Archived</p>
-            <h3>LLMs in the browser</h3>
-            <p>I built and operated a Japanese language-learning platform serving approximately 3,000 monthly active users. WebGPU/WebLLM ran inference on users’ devices, with zero server-side inference cost.</p>
-            <details class="system-details"><summary>Engineering scope</summary><p>End-to-end ownership of inference, frontend and backend, authentication, subscriptions, deployment, monitoring, and reliability. The platform is archived and maintenance is paused.</p></details>
-          </article>
-        </div>
-        <article class="amazon-entry"><p class="paper-meta">Amazon Alexa-AI · SDE intern · 2023</p><p>Built ML data and experiment infrastructure used by <strong>20+ Applied Scientists</strong>, supporting faster dataset iteration and AWS pipelines processing millions of utterances daily.</p></article>
-      </section>
-
       <section id="contact" class="contact" aria-labelledby="contact-heading">
-        <div><p class="eyebrow">AI safety roles · Fellowships · Collaborations</p><h2 id="contact-heading">Let’s talk about the work.</h2><p>I’d like to work with researchers developing better ways to evaluate, understand, and oversee advanced AI systems.</p><p><a href="https://linkedin.com/in/matteohe">Contact me on LinkedIn</a></p></div>
-        <div class="contact-form-panel" %CONTACT_VISIBILITY%>
-          <p class="form-preview-note" %CONTACT_PREVIEW_VISIBILITY%>Form preview — message delivery is not connected yet. Please use LinkedIn for now.</p>
-          <form class="contact-form" action="%CONTACT_ENDPOINT%" method="post">
-            <fieldset %CONTACT_DISABLED%>
-              <legend class="sr-only">Send Matteo a message</legend>
-              <label for="contact-name">Name</label>
-              <input id="contact-name" name="name" autocomplete="name" required maxlength="120">
-              <label for="contact-email">Your email</label>
-              <input id="contact-email" name="email" type="email" autocomplete="email" required maxlength="254">
-              <label for="contact-message">Message</label>
-              <textarea id="contact-message" name="message" rows="5" required minlength="20" maxlength="5000" placeholder="Tell me about the role, fellowship, or research you have in mind."></textarea>
-              <div hidden aria-hidden="true"><label>Leave this blank<input name="_gotcha" tabindex="-1" autocomplete="off"></label></div>
-              <button type="submit">Send message</button>
-            </fieldset>
-            <p class="form-note">Your message and reply address will be processed by <a href="https://formspree.io/legal/privacy-policy/">Formspree</a>. Sending continues to its verification and confirmation page.</p>
-          </form>
-        </div>
+        <div><h2 id="contact-heading">Contact</h2><p>For enquiries about research roles, fellowships, or collaborations.</p><p><a href="https://linkedin.com/in/matteohe">Contact me on LinkedIn</a></p></div>
+        <a class="contact-link" href="mailto:matteohe.research@gmail.com">matteohe.research@gmail.com</a>
       </section>
     </main>
     <footer><span>Matteo He <span class="footer-year">2026</span></span><div><a href="/cv/matteo-he-research.pdf">CV</a><a href="https://github.com/hematteo">GitHub</a><a href="/drawer/">The junk drawer</a><a href="#main">Back to top</a></div></footer>

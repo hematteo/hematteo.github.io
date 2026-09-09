@@ -12,23 +12,16 @@ The original interactive 3D **physics junk drawer** lives at `/drawer/`. Click a
 
 The homepage is semantic HTML with a locally hosted font. Paper summaries, links, and native expandable details work without JavaScript. A small module adds accessible figure enlargement; the 3D renderer loads only on `/drawer/`.
 
-- Edit profile content in `index.html` and styles in `src/profile.css`.
-- Figure enlargement: `src/profile.js`. The destination email is absent from the frontend, including encoded fragments. LinkedIn remains available without JavaScript.
+- Edit profile content in `index.html` and shared styles in `src/profile.css`, and homepage layout in `src/homepage.css`.
+- Figure enlargement: `src/profile.js`. Direct email and LinkedIn links work without JavaScript.
 - Public CV, citations, and research figures: `public/cv/` and `public/research/`.
-- Website CV source: `cv-source/matteo-he-research.tex`. Compile with `latexmk -pdf -outdir=/tmp/website-cv cv-source/matteo-he-research.tex`, then copy the PDF to `public/cv/`. Use the public version with website contact; application CVs retain direct contact details separately.
+- Website CV source: `cv-source/matteo-he-research.tex`. Compile with `latexmk -pdf -outdir=/tmp/website-cv cv-source/matteo-he-research.tex`, then copy the PDF to `public/cv/`. The public version uses the research contact address; application CVs are maintained separately.
 - Content provenance and publication-status rules: `CONTENT_SOURCES.md`.
-- The Vite build emits both `/index.html` and `/drawer/index.html`.
+- The Vite build emits the homepage, `/drawer/`, `/research/prism/`, and `/research/trajectories/`.
 
-## Contact form setup
+## Contact
 
-The local development preview includes a disabled form until delivery is configured. Production builds hide an unconfigured form and offer LinkedIn, so visitors cannot lose a message to a disconnected form.
-
-1. Create a Formspree form and verify its destination address in Formspree. Keep that address out of this repository.
-2. Enable CAPTCHA in the form's spam-protection settings; native form submission continues to the hosted verification/confirmation flow. Keep provider spam filtering enabled. The `_gotcha` honeypot is only a supplemental filter, not protection against capable agents.
-3. Put the opaque endpoint (`https://formspree.io/f/FORM_ID`) in `contact.config.json`, then restart Vite / rebuild. No API secret is needed or permitted here. Review provider quotas and spam controls in the account; no unlimited-delivery guarantee is assumed.
-4. Verify a real submission with user authorization before deployment: provider challenge, success confirmation, and arrival in the destination inbox. The current checks do not verify email delivery. Do not disable CAPTCHA to make automated checks pass.
-
-The form sends name, reply email, message, and a honeypot through Formspree. It exposes no destination address and sends no form data until submission. It uses a native POST, preserving functionality without JavaScript. The privacy notice links to the processor's policy. Existing public documents or git history can still contain older addresses; this change does not erase them. A dedicated contact alias can also isolate future correspondence from the main inbox.
+The homepage and public CV use `matteohe.research@gmail.com`, as requested by Matteo. Email links open the visitor's mail application. There is no contact form, third-party delivery service, or reveal interaction.
 
 ## The drawer
 

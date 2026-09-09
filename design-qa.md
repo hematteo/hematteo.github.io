@@ -2,7 +2,9 @@
 
 Date: 2026-09-08
 
-Current result: local form preparation and unconfigured fallback verified. Delivery and provider spam protection are pending account setup. Earlier verification records and captures refer to their respective revisions.
+Current contact approach: direct links to the user-supplied research email. The form and provider setup have been removed. Earlier verification records refer to their respective revisions.
+
+Latest verification: production build and all 20 smoke checks pass, including the research email link, no-JavaScript contact, and four viewport widths. Public CV rebuilt and its one-page render inspected with the new address. No email was sent and no public deployment was performed.
 
 ## Verified
 

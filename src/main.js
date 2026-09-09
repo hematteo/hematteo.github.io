@@ -12,52 +12,52 @@ function wakeRender (n = 60) { renderPending = Math.max(renderPending, n) }
 const ITEMS = [
   {
     id: 'punt', name: 'A punt', eyebrow: 'CAMBRIDGE · 2025–26',
-    story: 'MPhil in Advanced Computer Science at the University of Cambridge, with the AI Alignment Fellowship. Research on language model readout dynamics — how transformers learn to turn hidden states into words.',
+    story: 'MPhil in Advanced Computer Science at the University of Cambridge, with the AI Alignment Fellowship. My dissertation studied how transformers learn to turn hidden states into words.',
     link: null, sound: 'wood',
   },
   {
     id: 'plane', name: 'A paper airplane', eyebrow: 'PAPER · UNDER REVIEW',
-    story: '“Learning to Read Out: Unembedding Dynamics in Language Model Pretraining.” First-author, thesis-derived conference submission. Separates what a model knows from what it can natively say, across pretraining checkpoints.',
+    story: '“Learning to Read Out: Unembedding Dynamics in Language Model Pretraining.” I am first author on this manuscript, which grew out of my dissertation and is under review. It tracks when information becomes available in hidden states and when the model’s own readout begins to express it.',
     link: 'https://github.com/hematteo/learning-to-read-out', sound: 'paper',
   },
   {
     id: 'prism', name: 'A glass prism', eyebrow: 'PAPER · ARXIV:2609.01936 · UNDER REVIEW',
-    story: '“Sparse Readout Prism: Explaining Logit-Lens Scores in Features Instead of Tokens.” First-author preprint, arXiv:2609.01936. Splits a language model’s readout into sparse feature directions that explain any logit-lens score — a prism for logits.',
+    story: '“Sparse Readout Prism: Explaining Logit-Lens Scores in Features Instead of Tokens.” I am first author on this preprint, arXiv:2609.01936. The method decomposes readout scores into sparse feature contributions and an explicit residual.',
     link: 'https://arxiv.org/abs/2609.01936', sound: 'glass',
   },
   {
     id: 'joystick', name: 'A joystick', eyebrow: 'PAPER · IN PREPARATION',
-    story: 'Low-Bit Policy Networks for Reinforcement Learning — can ternary/BitNet-style policies act as training-time regularization for continuous control? First-author manuscript, public preprint on the way.',
+    story: 'Low-Bit Policy Networks for Reinforcement Learning. Can ternary policies based on BitNet regularize training for continuous control? I am first author on this manuscript, with a public preprint in preparation.',
     link: null, sound: 'plastic',
   },
   {
     id: 'mug', name: 'A coffee mug', eyebrow: 'FOUNDER · 2024–25',
-    story: 'Solo-built a Japanese learning platform to ~3K monthly active users: WebGPU LLM inference running in the browser (zero server inference cost), 99.9% uptime, payments, auth, the lot. Fueled by this mug. Careful — it spills.',
+    story: 'I built a platform for learning Japanese that served about 3,000 monthly active users. It ran LLM inference in the browser through WebGPU, with no server inference costs and approximately 99.9% uptime. I handled payments, authentication, and the rest. The platform is now archived. This mug helped fuel it, and it still spills.',
     link: null, sound: 'ceramic',
   },
   {
     id: 'keyboard', name: 'A keyboard', eyebrow: 'AMAZON ALEXA-AI · 2023',
-    story: 'SDE intern on Alexa NLU. Built data-analytics and experiment infrastructure used by 20+ Applied Scientists — millions of utterances a day, 15% faster model iteration, zero production incidents.',
+    story: 'As an SDE intern on Alexa NLU, I built data analysis and experiment infrastructure for 20+ Applied Scientists. It processed millions of utterances a day and helped speed up model iteration by 15%, with zero production incidents.',
     link: null, sound: 'plastic',
   },
   {
     id: 'gpu', name: 'A GPU', eyebrow: 'OPEN SOURCE · 2026',
-    story: 'vigil-gpu — a Python package on PyPI that babysits ML training jobs on rented cloud GPUs: async SSH log streaming, NaN/stall alerts, sparklines in the terminal, Slack webhooks.',
+    story: 'vigil-gpu is a Python package on PyPI that monitors ML training jobs on rented cloud GPUs. It streams logs over SSH, flags NaNs and stalled runs, plots metrics in the terminal, and sends alerts through Slack webhooks.',
     link: 'https://github.com/hematteo/vigil', sound: 'metal',
   },
   {
     id: 'dolphin', name: 'A dolphin', eyebrow: 'RESEARCH · ST ANDREWS',
-    story: 'Dolphin-acoustics classification: took detection F1 from 0.48 to 0.86 with signal processing and neural network work, and refactored the lab’s 5K-line research codebase so the next student didn’t suffer.',
+    story: 'I improved F1 for dolphin acoustic classification from 0.48 to 0.86 using signal processing and neural networks. I also refactored more than 5,000 lines of research code to make the next student’s work easier.',
     link: 'https://github.com/orgs/dolphin-acoustics-vip/repositories', sound: 'soft',
   },
   {
     id: 'trophy', name: 'A trophy', eyebrow: 'HACKATHONS',
-    story: 'First place at OxfordHack 2022 (Oxbotica autonomous-vehicles challenge) and first place at HackTheBurgh VIII (GitHub challenge). Both built in a weekend, both still fondly remembered.',
+    story: 'First place in the Oxbotica autonomous vehicles challenge at OxfordHack 2022 and the GitHub challenge at HackTheBurgh VIII. Both projects were built in a weekend and are still fondly remembered.',
     link: null, sound: 'metal',
   },
   {
     id: 'medal', name: 'A medal', eyebrow: 'ST ANDREWS · 2021–24',
-    story: 'Top Student Medal for the highest-achieving student in the cohort. First Class Honours in Computer Science & Mathematics, Dean’s List all three years, and a perfect 340/340 GRE.',
+    story: 'Top Student Medal for the highest academic achievement in the Direct Entry Computer Science cohort. First Class Honours in Computer Science and Mathematics, Dean’s List in all three years, and a perfect 340/340 GRE.',
     link: null, sound: 'metal',
   },
 ]
@@ -914,11 +914,11 @@ function showFinalCard () {
   openedViaKeyboard = false
   cardEyebrow.textContent = '10/10 · THE WHOLE DRAWER'
   cardTitle.textContent = 'That’s everything.'
-  cardBody.textContent = 'Ten objects, ten stories — you’ve rummaged through the entire drawer. Want the boring version too? There’s a normal, well-behaved CV below.'
+  cardBody.textContent = 'You’ve explored all ten objects and their stories. You can also read my CV below.'
   cardLink.hidden = true
   cardActions.hidden = false
   showCard()
-  srStatus.textContent = 'That is everything — all ten stories read. Links to the CV and GitHub are in the panel.'
+  srStatus.textContent = 'You’ve read all ten stories. Links to the CV and GitHub are in the panel.'
   fanfare()
 }
 counter.addEventListener('click', () => { if (completed) showFinalCard() })
@@ -1048,7 +1048,7 @@ function onTilt (e) {
 // device rotation changes the beta/gamma frame: recapture the neutral pose
 ;(screen.orientation || window).addEventListener?.('change', () => { tiltBase = null })
 addEventListener('orientationchange', () => { tiltBase = null })
-tiltBtn.setAttribute('aria-label', 'Tilt-to-slide gravity')
+tiltBtn.setAttribute('aria-label', 'Tilt your device to slide objects')
 tiltBtn.addEventListener('click', async () => {
   if (!tiltOn) {
     try {

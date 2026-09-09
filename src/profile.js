@@ -1,4 +1,16 @@
 // Progressive enhancement: figure links remain usable without JavaScript.
+const explorer = document.getElementById('trajectory-explorer')
+if (explorer) {
+  const observer = new IntersectionObserver(entries => {
+    if (!entries.some(entry => entry.isIntersecting)) return
+    observer.disconnect()
+    import('./trajectories.js').then(module => module.mountTrajectories(explorer)).catch(() => {
+      // The paper figure remains available if the interactive module cannot load.
+    })
+  }, { rootMargin: '300px' })
+  observer.observe(explorer)
+}
+
 const dialog = document.getElementById('figure-dialog')
 const expandedFigure = document.getElementById('expanded-figure')
 const description = document.getElementById('figure-description')
