@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { lightPath, inSpectrum, canPerch } from './src/discovery-rules.js'
+import { lightPath, inSpectrum, canPerch, windEligible } from './src/discovery-rules.js'
 const bounds = { xL: -5, xR: 5, zB: -4, zF: 4 }
 const source = { x: -2, y: 0, z: 0 }, prism = { x: 0, y: 0, z: 0 }
 test('light must be on, close enough and on the same level', () => {
@@ -29,4 +29,12 @@ test('perching requires colored paper, an upright mug and a gentle approach', ()
   assert.equal(canPerch(plane, mug, 0.2, true, 0.2), false)
   assert.equal(canPerch(plane, mug, 1, true, 8), false)
   assert.equal(canPerch({ ...plane, y: 3 }, mug, 1, true, 0.2), false)
+})
+
+test('GPU updraft requires upright fans and paper inside the lift zone', () => {
+  const gpu = { x: 0, y: 0, z: 0 }, plane = { x: 0.7, y: 0.5, z: 0 }
+  assert.equal(windEligible(gpu, plane, 1), true)
+  assert.equal(windEligible(gpu, plane, 0.2), false)
+  assert.equal(windEligible(gpu, { ...plane, x: 3 }, 1), false)
+  assert.equal(windEligible(gpu, { ...plane, y: 4 }, 1), false)
 })

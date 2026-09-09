@@ -74,15 +74,16 @@ try {
   check('hover tooltip shows', !tip.hidden && tip.text.length > 0, JSON.stringify(tip))
 
   // --- 3. examine all 10 -> completion funnel
-  for (let attempt = 0; attempt < 30; attempt++) {
-    const state = await page.evaluate(() => window.__jd.state())
-    const unseen = IDS.filter(id => !state.seen.includes(id))
-    if (!unseen.length) break
+  // Random piles and an airborne plane can cover other objects. Use the
+  // public keyboard path for story completion; pointer throw/tap have their
+  // own checks above and below.
+  for (let index = 0; index < 11; index++) {
     await page.keyboard.press('Escape')
-    await page.waitForTimeout(300)
-    const sp = await page.evaluate((id) => window.__jd.screenPos(id), unseen[0])
-    await page.mouse.click(sp.x, sp.y)
-    await page.waitForTimeout(350)
+    await page.waitForTimeout(250)
+    await page.locator('#scene').focus()
+    await page.keyboard.press('ArrowRight')
+    await page.keyboard.press('Enter')
+    await page.waitForTimeout(200)
   }
   let st = await page.evaluate(() => window.__jd.state())
   check('all 10 examined', st.seen.length === 10, st.seen.length + ' seen')
@@ -123,11 +124,14 @@ try {
   // --- 5. idle pause: after everything settles, sim goes inactive
   await page.mouse.move(100, 850)
   let idleSeen = false
-  for (let i = 0; i < 5 && !idleSeen; i++) {
-    await page.waitForTimeout(5000)
-    st = await page.evaluate(() => window.__jd.state())
-    idleSeen = !st.simActive && st.renderPending === 0
-  }
+  try {
+    await page.waitForFunction(() => {
+      const state = window.__jd.state()
+      return !state.simActive && state.renderPending === 0
+    }, null, { timeout: 30000 })
+    idleSeen = true
+  } catch { /* report the current state below */ }
+  st = await page.evaluate(() => window.__jd.state())
   check('idle pause engages', idleSeen, 'simActive=' + st.simActive + ' pending=' + st.renderPending)
 
   // --- 6. interaction wakes it back up
@@ -208,6 +212,31 @@ try {
     await discovery.locator('#dump').click()
     const reset = await discovery.evaluate(() => window.__jd.state().discoveries)
     check(`${label}: dump resets physics and keeps notes`, !reset.perched && !reset.colored && reset.found.length === 3)
+
+    // The second chain builds on retained discoveries, through the same UI.
+    await discovery.locator('#discoveries-toggle').click()
+    await discovery.locator('#discovery-arrange').click()
+    await discovery.waitForFunction(() => window.__jd.state().discoveries.found.includes(4), null, { timeout: 10000 })
+    await discovery.locator('#discoveries-toggle').click()
+    await discovery.locator('#discovery-arrange').click()
+    await discovery.waitForFunction(() => window.__jd.state().discoveries.flight.controlled, null, { timeout: 10000 })
+    let flight = await discovery.evaluate(() => window.__jd.state().discoveries)
+    check(label + ': all six discoveries work', flight.found.length === 6 && flight.flight.flying)
+    await discovery.getByRole('button', { name: 'Steer right', exact: true }).click()
+    await discovery.waitForTimeout(300)
+    flight = await discovery.evaluate(() => window.__jd.state().discoveries)
+    check(label + ': joystick steers the flight', flight.flight.steerX > 0)
+    await discovery.keyboard.press('w')
+    flight = await discovery.evaluate(() => window.__jd.state().discoveries)
+    check(label + ': WASD works from flight controls', flight.flight.steerZ < 0)
+    check(label + ': rainbow trail respects reduced motion', mobile ? flight.flight.trailPoints === 0 : flight.flight.trailPoints > 1)
+    await discovery.getByRole('button', { name: 'Land', exact: true }).click()
+    await discovery.waitForTimeout(3600)
+    flight = await discovery.evaluate(() => window.__jd.state().discoveries)
+    check(label + ': landing stops lift without automatically restarting', !flight.flight.flying && flight.flight.spool < 0.02)
+    await discovery.locator('#dump').click()
+    flight = await discovery.evaluate(() => window.__jd.state().discoveries)
+    check(label + ': reset clears flight and keeps six field notes', !flight.flight.flying && flight.flight.trailPoints === 0 && flight.found.length === 6)
     check(`${label}: no runtime errors`, discoveryErrors.length === 0, discoveryErrors.join(' | '))
     await discovery.close()
   }

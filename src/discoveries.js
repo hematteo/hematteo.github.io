@@ -1,3 +1,4 @@
+import { createFlight } from './flight.js'
 import * as THREE from 'three'
 import * as CANNON from 'cannon-es'
 import { lightPath, inSpectrum, canPerch } from './discovery-rules.js'
@@ -7,6 +8,9 @@ const NOTES = [
   ['One beam, many features', 'The prism separates a single beam into a spectrum. A little nod to Sparse Readout Prism: looking inside a score.', 'Bring the glass prism close to the little desk light.'],
   ['A different readout', 'The paper keeps the colors it passes through. Two papers, one conversation about what a readout reveals.', 'Now let the paper airplane catch the spectrum.'],
   ['A place to land', 'Research meets the mug that fueled a browser-based language-learning project. Even a paper needs a coffee break.', 'Bring the colored airplane gently beside the upright mug.'],
+  ['A little wind tunnel', 'The GPU lends its cooling fans to the paper. Move the GPU to move the updraft, or let the plane settle after its flight.', 'Bring the airplane beside the upright GPU. Its fans have another use.'],
+  ['Writing in light', 'The airplane carries the spectrum into the air, leaving a ribbon that fades behind it.', 'Send the colored airplane through the GPU’s updraft.'],
+  ['Three-way conversation', 'GPU for lift, paper for flight, joystick for direction. Use the on-screen controls or focus the drawer and press WASD.', 'Bring the joystick near the GPU while the airplane is flying.'],
 ]
 
 export function buildDeskLight () {
@@ -32,7 +36,7 @@ export function buildDeskLight () {
 
 export function createDiscoveries ({ scene, objects, bounds, grabbed, wake, reduced, announce, sound }) {
   const get = id => objects.find(o => o.item.id === id)
-  const light = get('light'), prism = get('prism'), plane = get('plane'), mug = get('mug')
+  const light = get('light'), prism = get('prism'), plane = get('plane'), mug = get('mug'), gpu = get('gpu'), joystick = get('joystick')
   const found = new Set()
   let interacted = false
   let on = true, path = null, colored = false, perched = false, cooldown = 0
@@ -85,10 +89,10 @@ export function createDiscoveries ({ scene, objects, bounds, grabbed, wake, redu
   const yAxis = new THREE.Vector3(0, 1, 0)
 
   function renderNotes () {
-    toggle.textContent = found.size ? `Discoveries ${found.size}/3` : 'Discoveries'
-    title.textContent = found.size === 3 ? 'A little world, connected.' : 'Some things belong together.'
-    clue.textContent = found.size === 3 ? 'Move them apart and bring them back. The paper remembers its colors until you dump the drawer again.' : NOTES[found.size][2]
-    list.replaceChildren(...[...found].map(id => {
+    toggle.textContent = found.size ? `Discoveries ${found.size}/${NOTES.length}` : 'Discoveries'
+    title.textContent = found.size === NOTES.length ? 'A little world, connected.' : 'Some things belong together.'
+    clue.textContent = found.size === NOTES.length ? 'Move them apart and bring them back. The paper remembers its colors until you dump the drawer again.' : NOTES[NOTES.findIndex((_, i) => !found.has(i))][2]
+    list.replaceChildren(...[...found].sort((a, b) => a - b).map(id => {
       const item = document.createElement('li')
       const heading = document.createElement('strong')
       heading.textContent = NOTES[id][0]
@@ -97,7 +101,7 @@ export function createDiscoveries ({ scene, objects, bounds, grabbed, wake, redu
       item.append(heading, detail)
       return item
     }))
-    arrangeButton.textContent = found.size === 3 ? 'Arrange them again' : 'Help me arrange this pair'
+    arrangeButton.textContent = found.size === NOTES.length ? 'Arrange them again' : 'Help me arrange this pair'
   }
   function discover (id) {
     if (found.has(id)) return
@@ -107,7 +111,7 @@ export function createDiscoveries ({ scene, objects, bounds, grabbed, wake, redu
     toast.hidden = false
     clearTimeout(toastTimer)
     toastTimer = setTimeout(() => { toast.hidden = true }, 4200)
-    announce(`Discovery ${found.size} of 3. ${NOTES[id][0]}. ${NOTES[id][1]}`)
+    announce(`Discovery ${found.size} of ${NOTES.length}. ${NOTES[id][0]}. ${NOTES[id][1]}`)
     sound()
   }
   function detach () {
@@ -133,13 +137,16 @@ export function createDiscoveries ({ scene, objects, bounds, grabbed, wake, redu
   function arrange () {
     interacted = true
     detach()
+    flight.reset()
+    const next = NOTES.findIndex((_, i) => !found.has(i))
+    const step = next < 0 ? NOTES.length : next
     const b = bounds(), cx = (b.xL + b.xR) / 2, cz = (b.zB + b.zF) / 2
     const horizontal = b.xR - b.xL > 8
     const along = horizontal ? [1, 0] : [0, 1]
     const origin = horizontal ? [cx - 1.5, cz] : [cx, cz - 1.5]
     const place = (o, distance) => setPosition(o, origin[0] + along[0] * distance, origin[1] + along[1] * distance)
     // Clear the small experiment area so a random pile cannot obstruct the pairing.
-    const participants = new Set(['light', 'prism', 'plane', 'mug'])
+    const participants = new Set(['light', 'prism', 'plane', 'mug', ...(step >= 3 ? ['gpu', 'joystick'] : [])])
     objects.filter(o => !participants.has(o.item.id)).forEach((o, i) => {
       const row = Math.floor(i / 3), col = i % 3
       setPosition(o, b.xL + 1 + col * (b.xR - b.xL - 2) / 2, b.zB + 0.9 + row * 1.2, 0.15)
@@ -147,12 +154,19 @@ export function createDiscoveries ({ scene, objects, bounds, grabbed, wake, redu
     on = true
     place(light, -1.2)
     place(prism, 0.5)
-    if (found.size === 0) {
+    if (step >= 3) {
+      setPosition(gpu, cx, cz + 0.3)
+      setPosition(plane, cx + 0.8, cz, 0.7)
+      setPosition(mug, cx - 1.4, cz + 2.5)
+      setPosition(joystick, cx - 1, step >= 5 ? cz + 0.9 : b.zB + 0.9)
+      colored = found.has(1)
+      flight.prepare()
+    } else if (step === 0) {
       setPosition(plane, cx + (horizontal ? 1.3 : 1.4), cz + (horizontal ? 2 : 0), 0.2)
       setPosition(mug, cx - (horizontal ? 0 : 1.5), cz + 2.1)
     } else {
       place(plane, 1.9)
-      if (found.size >= 2) {
+      if (step >= 2) {
         // Approach the rim from the wing side, without starting intersecting
         // collision shapes (the nose-side overlap used to tip the mobile mug).
         setPosition(mug, plane.body.position.x + 0.85, plane.body.position.z)
@@ -173,16 +187,19 @@ export function createDiscoveries ({ scene, objects, bounds, grabbed, wake, redu
   notes.addEventListener('keydown', e => { if (e.key === 'Escape') { e.stopPropagation(); closeNotes() } })
   arrangeButton.addEventListener('click', arrange)
   renderNotes()
+  const flight = createFlight({ scene, objects, bounds, grabbed, reduced, wake,
+    colored: () => colored, detach, discover })
 
   return {
     toggleLight () { interacted = true; on = !on; wake(120); announce(on ? 'Desk light on. Bring the prism closer.' : 'Desk light off.'); return on },
-    beforeGrab (o) { interacted = true; if (o === plane) detach() },
+    handleKey (ev) { return flight.handleKey(ev) },
+    beforeGrab (o) { interacted = true; flight.beforeGrab(o); if (o === plane) detach() },
     reset () {
-      detach(); interacted = false; colored = false; on = true; path = null; lightDwell = colorDwell = perchDwell = 0
+      flight.reset(); detach(); interacted = false; colored = false; on = true; path = null; lightDwell = colorDwell = perchDwell = 0
       cooldown = 2; wake(180)
     },
-    state () { return { found: [...found], lightOn: on, spectrum: !!path, colored, perched, tint } },
-    active () { return Math.abs(fade - (path ? 1 : 0)) > 0.005 || Math.abs(tint - (colored ? 1 : 0)) > 0.005 ||
+    state () { return { found: [...found], lightOn: on, spectrum: !!path, colored, perched, tint, flight: flight.state() } },
+    active () { return flight.active() || Math.abs(fade - (path ? 1 : 0)) > 0.005 || Math.abs(tint - (colored ? 1 : 0)) > 0.005 ||
       (lightDwell > 0 && lightDwell < 0.7) || (colorDwell > 0 && colorDwell < 0.7) || (perchDwell > 0 && perchDwell < 0.5) || (perched && perchTime < 1) },
     update (dt) {
       cooldown = Math.max(0, cooldown - dt)
@@ -226,7 +243,7 @@ export function createDiscoveries ({ scene, objects, bounds, grabbed, wake, redu
       paper.material.roughness = 0.65 - tint * 0.25
       mug.body.quaternion.vmult(axis, up)
       if (perched && (up.y < 0.8 || held === plane)) detach()
-      const nearMug = !perched && held !== plane && held !== mug && cooldown === 0 && canPerch(plane.body.position, mug.body.position, up.y, colored, plane.body.velocity.length())
+      const nearMug = !flight.isFlying() && !perched && held !== plane && held !== mug && cooldown === 0 && canPerch(plane.body.position, mug.body.position, up.y, colored, plane.body.velocity.length())
       perchDwell = nearMug ? Math.min(1, perchDwell + dt) : 0
       if (perchDwell >= 0.5 && !perched) {
         perched = true; perchTime = 0
@@ -237,6 +254,7 @@ export function createDiscoveries ({ scene, objects, bounds, grabbed, wake, redu
         plane.body.updateMassProperties()
         discover(2)
       }
+      flight.update(dt)
       if (perched) {
         perchTime = Math.min(1, perchTime + dt * 1.5)
         const progress = reduced ? 1 : perchTime * perchTime * (3 - 2 * perchTime)

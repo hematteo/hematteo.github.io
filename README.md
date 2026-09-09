@@ -96,3 +96,17 @@ switch the lamp. The lamp is a play prop; the ten research/career stories retain
 their separate completion counter. Reduced-motion mode keeps the same discoveries
 with immediate color and landing changes. **Dump again** resets the physical
 states while keeping the field notes for the current visit; no storage is used.
+
+### GPU flight chain and graphics
+
+Bring the paper beside an upright GPU to spin up its fans and lift the paper.
+A colored plane leaves a fading rainbow ribbon. Move the GPU to move the updraft;
+bring the joystick nearby for on-screen steering or WASD. Flights end after a
+short interval, or with **Land**. They restart only after another interaction.
+The Discoveries panel now has six entries and can arrange either chain.
+
+Reduced motion keeps the discoveries and controls, with immediate positioning
+and no spinning fans, animated wind or trails. The scene retains idle rendering.
+Beveled edges, articulated GPU fans, paper folds, hollow glazed ceramic,
+transmissive glass, soft shadows and warmer/cooler light separation refine the
+existing workshop rather than replacing its layout.

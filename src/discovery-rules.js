@@ -24,3 +24,8 @@ export function canPerch (plane, mug, upright, colored, speed) {
   return colored && upright > 0.8 && Math.hypot(plane.x - mug.x, plane.z - mug.z) < 0.95 &&
     Math.abs(plane.y - mug.y) < 1.3 && speed < 3
 }
+
+export function windEligible (gpu, plane, upright) {
+  return upright > 0.7 && Math.hypot(plane.x - gpu.x, plane.z - gpu.z) < 1.6 &&
+    plane.y - gpu.y > -0.3 && plane.y - gpu.y < 2.2
+}
