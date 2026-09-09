@@ -80,3 +80,19 @@ Pushing to `main` builds and deploys to GitHub Pages via [`.github/workflows/dep
 ## License
 
 [MIT](./LICENSE) © Matteo He
+
+### Connected discoveries
+
+In `/drawer/`, bring the little desk light and prism together to split a beam.
+Pass the existing paper airplane through that spectrum to color its wings, then
+bring it gently beside an upright mug to let it settle on the rim. The paper
+stays colored away from the light. Picking it up releases the perch; tipping the
+mug releases it too. Click the desk light to switch it off or on.
+
+The **Discoveries** button gives one hint at a time and optionally arranges the
+current pairing. Keyboard users can browse objects with arrow keys, move the
+selected object with **Shift + arrows**, and press **Enter** to read a story or
+switch the lamp. The lamp is a play prop; the ten research/career stories retain
+their separate completion counter. Reduced-motion mode keeps the same discoveries
+with immediate color and landing changes. **Dump again** resets the physical
+states while keeping the field notes for the current visit; no storage is used.

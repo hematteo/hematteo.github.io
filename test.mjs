@@ -155,6 +155,63 @@ try {
   check('mobile card is bottom sheet', sheet.left === 0 && sheet.right === 0 && sheet.bottom === 0, JSON.stringify(sheet))
   check('mobile no page errors', mobErrors.length === 0, mobErrors.join(' | '))
 
+  // Discoveries must work through their public controls on desktop and touch,
+  // including reduced motion. Debug hooks below only observe physical state.
+  for (const mobile of [false, true]) {
+    const discovery = await browser.newPage({
+      viewport: mobile ? { width: 390, height: 844 } : { width: 1400, height: 900 },
+      hasTouch: mobile, isMobile: mobile, reducedMotion: mobile ? 'reduce' : 'no-preference',
+    })
+    const discoveryErrors = []
+    discovery.on('pageerror', e => discoveryErrors.push(e.message))
+    await discovery.goto(BASE)
+    await discovery.waitForTimeout(2500)
+    const label = mobile ? 'touch / reduced motion' : 'desktop'
+    for (let step = 1; step <= 3; step++) {
+      await discovery.locator('#discoveries-toggle').click()
+      await discovery.locator('#discovery-arrange').click()
+      await discovery.waitForFunction(n => window.__jd.state().discoveries.found.length >= n, step, { timeout: 8000 })
+      check(`${label}: discovery ${step}`, true)
+    }
+    await discovery.waitForTimeout(1500)
+    const combined = await discovery.evaluate(() => window.__jd.state())
+    check(`${label}: colored paper perches`, combined.discoveries.colored && combined.discoveries.perched)
+    check(`${label}: discoveries do not count as CV stories`, combined.seen.length === 0 && !combined.completed)
+    const within = await discovery.evaluate(() => {
+      const rect = document.getElementById('discoveries-toggle').getBoundingClientRect()
+      return rect.left >= 0 && rect.right <= innerWidth && document.documentElement.scrollWidth === innerWidth
+    })
+    check(`${label}: controls fit viewport`, within)
+
+    // Move the paper using the accessible keyboard interaction: it must detach.
+    await discovery.locator('#scene').focus()
+    for (let i = 0; i < 12; i++) {
+      if (/paper airplane/.test(await discovery.locator('#tooltip').textContent())) break
+      await discovery.keyboard.press('ArrowRight')
+      await discovery.waitForTimeout(80)
+    }
+    for (let i = 0; i < 5; i++) await discovery.keyboard.press('Shift+ArrowDown')
+    const released = await discovery.evaluate(() => window.__jd.state().discoveries)
+    check(`${label}: moving paper releases perch, retains color`, !released.perched && released.colored)
+
+    // Browse to the light and switch it: discovery prop is not an eleventh story.
+    for (let i = 0; i < 12; i++) {
+      if (/desk light/.test(await discovery.locator('#tooltip').textContent())) break
+      await discovery.keyboard.press('ArrowRight')
+      await discovery.waitForTimeout(80)
+    }
+    await discovery.keyboard.press('Enter')
+    await discovery.waitForTimeout(150)
+    const dark = await discovery.evaluate(() => window.__jd.state().discoveries)
+    check(`${label}: light switch removes spectrum`, !dark.lightOn && !dark.spectrum)
+
+    await discovery.locator('#dump').click()
+    const reset = await discovery.evaluate(() => window.__jd.state().discoveries)
+    check(`${label}: dump resets physics and keeps notes`, !reset.perched && !reset.colored && reset.found.length === 3)
+    check(`${label}: no runtime errors`, discoveryErrors.length === 0, discoveryErrors.join(' | '))
+    await discovery.close()
+  }
+
   check('desktop no console errors', errors.length === 0, errors.join(' | '))
 } finally {
   if (browser) await browser.close()

@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import * as CANNON from 'cannon-es'
+import { buildDeskLight, createDiscoveries } from './discoveries.js'
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js'
 
 // idle-render bookkeeping — declared first because init-time callers
@@ -152,7 +153,8 @@ const COFFEE = M(0x4a2f1b, { roughness: 0.25 })
 const RED = M(0xe23d2e, { roughness: 0.45 })
 const RIBBON = M(0xa32638, { roughness: 0.7 })
 const DOLPHIN = M(0x7c93a6, { roughness: 0.5 })
-const GLASS = M(0xe4f2f5, { roughness: 0.08, metalness: 0.25, transparent: true, opacity: 0.78 })
+const GLASS = new THREE.MeshPhysicalMaterial({ color: 0xd7ecf0, roughness: 0.06, metalness: 0,
+  transmission: 0.92, thickness: 0.65, ior: 1.5, clearcoat: 1, flatShading: true })
 
 function box (mat, w, h, d, x = 0, y = 0, z = 0, rx = 0, ry = 0, rz = 0) {
   const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat)
@@ -456,6 +458,7 @@ function layoutWalls () {
 // ---------------------------------------------------------------- object builders
 
 const BUILDERS = {
+  light: buildDeskLight,
   punt () {
     const g = new THREE.Group()
     g.add(box(WOOD, 1.9, 0.07, 0.52, 0, 0.035, 0))          // floor
@@ -485,7 +488,12 @@ const BUILDERS = {
   },
   prism () {
     const g = new THREE.Group()
-    g.add(cyl(GLASS, 0.36, 0.36, 0.55, 0, 0.28, 0, 0, 0, 0, 3))
+    const glass = cyl(GLASS, 0.36, 0.36, 0.55, 0, 0.28, 0, 0, 0, 0, 3)
+    g.add(glass)
+    const edges = new THREE.LineSegments(new THREE.EdgesGeometry(glass.geometry),
+      new THREE.LineBasicMaterial({ color: 0xc8e9f2, transparent: true, opacity: 0.45 }))
+    edges.position.copy(glass.position)
+    g.add(edges)
     const body = new CANNON.Body({ mass: 0.9 })
     body.addShape(new CANNON.Cylinder(0.36, 0.36, 0.55, 3), new CANNON.Vec3(0, 0.28, 0))
     return { g, body }
@@ -635,7 +643,7 @@ const BUILDERS = {
 const objects = [] // { item, mesh, body }
 const byBodyId = new Map()
 
-for (const item of ITEMS) {
+for (const item of [...ITEMS, { id: 'light', name: 'A little desk light · click to switch', sound: 'metal', auxiliary: true }]) {
   const { g, body } = BUILDERS[item.id]()
   scene.add(g)
   g.visible = false
@@ -660,6 +668,7 @@ for (const item of ITEMS) {
 }
 
 function dump (first = false) {
+  if (!first) discoveries.reset()
   const { xL, xR, zB, zF } = bounds
   // center the pile where the *viewer* sees the middle of the mat
   const c = new THREE.Vector3()
@@ -674,6 +683,12 @@ function dump (first = false) {
       o.body.velocity.set(0, REDUCED ? 0 : -3, 0)
       o.body.angularVelocity.set(Math.random() * 3 - 1.5, Math.random() * 3 - 1.5, Math.random() * 3 - 1.5)
       o.body.quaternion.setFromEuler(Math.random() * 0.8 - 0.4, Math.random() * Math.PI * 2, Math.random() * 0.8 - 0.4)
+      if (o.item.id === 'light') {
+        o.body.position.set(xL + 1.1, 0.05, (zB + zF) / 2)
+        o.body.quaternion.set(0, 0, 0, 1)
+        o.body.velocity.set(0, 0, 0)
+        o.body.angularVelocity.set(0, 0, 0)
+      }
       o.body.wakeUp()
       if (!world.bodies.includes(o.body)) world.addBody(o.body)
     }
@@ -778,6 +793,7 @@ canvas.addEventListener('pointerdown', (ev) => {
   if (!hit) return
   canvas.setPointerCapture(ev.pointerId)
   grabbed = hit.o
+  discoveries.beforeGrab(grabbed)
   grabbed.body.wakeUp()
   dragY = Math.min(Math.max(hit.point.y, 1.2), 3)
   dragPlane.constant = -dragY
@@ -824,7 +840,7 @@ function release (ev) {
     const speed = v.length()
     if (speed > 13) v.scale(13 / speed, v)
     const quick = performance.now() - downAt < 300
-    if (!moved && quick) openCard(grabbed)
+    if (!moved && quick && ev.type !== 'pointercancel') openCard(grabbed)
     grabbed = null
   }
   if (IS_TOUCH) hoverObj = null // no lingering highlight after a tap
@@ -882,6 +898,7 @@ function closeCard () {
 }
 
 function openCard (o, viaKeyboard = false) {
+  if (o.item.auxiliary) { discoveries.toggleLight(); return }
   clearTimeout(finalTimer) // never yank a story out from under the reader
   finalTimer = null
   openedViaKeyboard = viaKeyboard
@@ -1005,7 +1022,22 @@ canvas.addEventListener('focus', () => {
 canvas.addEventListener('blur', () => wakeRender(30))
 canvas.addEventListener('keydown', (ev) => {
   const n = objects.length
-  if (ev.key === 'ArrowRight' || ev.key === 'ArrowDown') {
+  if (ev.shiftKey && ev.key.startsWith('Arrow') && kbIdx >= 0) {
+    const o = objects[kbIdx]
+    discoveries.beforeGrab(o)
+    const step = 0.3
+    if (ev.key === 'ArrowRight') o.body.position.x += step
+    if (ev.key === 'ArrowLeft') o.body.position.x -= step
+    if (ev.key === 'ArrowDown') o.body.position.z += step
+    if (ev.key === 'ArrowUp') o.body.position.z -= step
+    o.body.position.x = THREE.MathUtils.clamp(o.body.position.x, bounds.xL + o.radius, bounds.xR - o.radius)
+    o.body.position.z = THREE.MathUtils.clamp(o.body.position.z, bounds.zB + o.radius, bounds.zF - o.radius)
+    o.body.position.y = Math.max(o.body.position.y, 0.25)
+    o.body.velocity.set(0, 0, 0)
+    o.body.aabbNeedsUpdate = true
+    o.body.wakeUp()
+    wakeRender(120)
+  } else if (ev.key === 'ArrowRight' || ev.key === 'ArrowDown') {
     kbIdx = (kbIdx + 1) % n
   } else if (ev.key === 'ArrowLeft' || ev.key === 'ArrowUp') {
     kbIdx = (kbIdx - 1 + n) % n
@@ -1171,14 +1203,13 @@ function deactivateDrop (d) {
 
 const planeObj = objects.find(o => o.item.id === 'plane')
 const dolphinObj = objects.find(o => o.item.id === 'dolphin')
-const prismObj = objects.find(o => o.item.id === 'prism')
 
 // the paper airplane actually glides: lift + drag + nose-into-velocity while airborne
 const _fwd = new CANNON.Vec3()
 const _dir = new CANNON.Vec3()
 function updateGlide (dt) {
   const b = planeObj.body
-  if (grabbed === planeObj || !planeObj.mesh.visible) return
+  if (grabbed === planeObj || !planeObj.mesh.visible || discoveries.state().perched) return
   const v = b.velocity
   const hs = Math.hypot(v.x, v.z)
   if (b.position.y > 0.45 && hs > 1.4) {
@@ -1221,47 +1252,9 @@ function maybeFlop () {
   wakeRender(180)
 }
 
-// the prism casts a little rainbow on the mat while at rest
-const rainbow = (() => {
-  const c = document.createElement('canvas')
-  c.width = 256; c.height = 128
-  const g = c.getContext('2d')
-  const colors = ['#ff5a4e', '#ffa14e', '#ffe14e', '#6fd66f', '#5aa8ff', '#9d6fff']
-  const bandW = 256 / colors.length
-  colors.forEach((col, i) => {
-    const grad = g.createLinearGradient(0, 128, 0, 0)
-    grad.addColorStop(0, col + 'cc')
-    grad.addColorStop(1, col + '00')
-    g.fillStyle = grad
-    g.fillRect(i * bandW, 0, bandW + 1, 128)
-  })
-  const tex = new THREE.CanvasTexture(c)
-  tex.colorSpace = THREE.SRGBColorSpace
-  const m = new THREE.Mesh(
-    new THREE.PlaneGeometry(0.9, 1.3),
-    new THREE.MeshBasicMaterial({ map: tex, transparent: true, opacity: 0, depthWrite: false }),
-  )
-  m.rotation.x = -Math.PI / 2
-  m.position.y = 0.015
-  scene.add(m)
-  return m
-})()
-function updateRainbow (dt) {
-  const b = prismObj.body
-  const still = b.velocity.lengthSquared() < 0.02 && prismObj.mesh.visible && grabbed !== prismObj
-  const goal = still ? 0.5 : 0
-  const mat = rainbow.material
-  rainbow.userData.animating = Math.abs(goal - mat.opacity) > 0.01
-  mat.opacity += (goal - mat.opacity) * Math.min(dt * 2.2, 1)
-  if (mat.opacity > 0.01) {
-    // fan out on the far side of the prism from the light
-    const dx = b.position.x - 5, dz = b.position.z - 4
-    const len = Math.hypot(dx, dz) || 1
-    rainbow.position.x = b.position.x + (dx / len) * 0.95
-    rainbow.position.z = b.position.z + (dz / len) * 0.95
-    rainbow.rotation.z = -Math.atan2(dz, dx) + Math.PI / 2
-  }
-}
+// Discoveries use the same scene and rigid bodies as normal dragging.
+const discoveries = createDiscoveries({ scene, objects, bounds: () => bounds, grabbed: () => grabbed,
+  wake: wakeRender, reduced: REDUCED, announce: message => { srStatus.textContent = message }, sound: ping })
 
 // ---------------------------------------------------------------- audio (all synthesized)
 
@@ -1372,6 +1365,20 @@ function resize () {
   camera.lookAt(0, 0, 0.2)
   camera.updateProjectionMatrix()
   layoutWalls()
+  // A phone rotation can put settled objects outside the new, narrower tray.
+  for (const o of objects) {
+    if (!o.mesh.visible) continue
+    const p = o.body.position
+    const x = THREE.MathUtils.clamp(p.x, bounds.xL + o.radius, bounds.xR - o.radius)
+    const z = THREE.MathUtils.clamp(p.z, bounds.zB + o.radius, bounds.zF - o.radius)
+    if (x !== p.x || z !== p.z) {
+      discoveries.beforeGrab(o)
+      p.set(x, Math.max(p.y, 0.3), z)
+      o.body.velocity.set(0, 0, 0)
+      o.body.aabbNeedsUpdate = true
+      o.body.wakeUp()
+    }
+  }
 }
 addEventListener('resize', resize)
 resize()
@@ -1401,7 +1408,7 @@ document.addEventListener('visibilitychange', () => {
 //  callers like resize()/applyTheme() run before this point)
 function simActive () {
   if (grabbed || confetti.length) return true
-  if (ring.userData.animating || rainbow.userData.animating) return true
+  if (ring.userData.animating || discoveries.active()) return true
   for (const d of drops) if (d.active) return true
   for (const o of objects) {
     if (o.mesh.visible && o.body.sleepState !== CANNON.Body.SLEEPING) return true
@@ -1438,7 +1445,7 @@ function tick () {
   }
   updateCoffee(dt)
   updateConfetti(dt)
-  updateRainbow(dt)
+  discoveries.update(dt)
   updateHighlight(dt)
   if (!REDUCED) {
     const zoomOut = innerWidth / innerHeight < 0.9 ? 1.35 : 1
@@ -1471,6 +1478,7 @@ window.__jd = {
       finalShown,
       renderPending,
       simActive: simActive(),
+      discoveries: discoveries.state(),
       gravity: { x: world.gravity.x, y: world.gravity.y, z: world.gravity.z },
     }
   },

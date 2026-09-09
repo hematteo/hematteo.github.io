@@ -255,13 +255,48 @@
     #card { transition: none; }
     #hint { transition: none; }
   }
+
+  #discovery-ui { position: absolute; top: 98px; right: 22px; z-index: 6; }
+  #discoveries-toggle, #discovery-arrange {
+    color: var(--ink); background: var(--pill); border: 1px solid rgba(244,246,243,.3);
+    border-radius: 999px; padding: 9px 14px; font: 0.7rem ui-monospace, monospace;
+    cursor: pointer; backdrop-filter: blur(10px); min-height: 38px;
+  }
+  #discoveries-toggle::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #e6c58c; margin-right: 8px; }
+  #discovery-notes { width: min(330px, calc(100vw - 32px)); margin-top: 10px; padding: 24px;
+    background: var(--panel); color: var(--ink); border: 1px solid rgba(244,246,243,.2); border-radius: 14px; backdrop-filter: blur(16px);
+    max-height: calc(100dvh - 175px); overflow: auto; box-shadow: 0 12px 40px #0004; }
+  #discovery-close { position: absolute; right: 8px; top: 54px; width: 40px; height: 40px; color: var(--ink-dim); border: 0; background: transparent; font-size: 24px; cursor: pointer; }
+  .discovery-kicker { color: #e6c58c; font: 0.64rem ui-monospace, monospace; letter-spacing: .16em; }
+  #discovery-title { font-size: 1.2rem; line-height: 1.25; font-weight: 600; margin: 10px 20px 16px 0; }
+  #discovery-clue { font-size: .85rem; line-height: 1.6; color: var(--ink); margin-bottom: 16px; }
+  #discovery-list { list-style: none; padding: 0; }
+  #discovery-list li { border-top: 1px solid #ffffff20; padding: 14px 0; }
+  #discovery-list strong { display: block; font-size: .8rem; color: #e6c58c; margin-bottom: 5px; font-weight: 500; }
+  #discovery-list span { font-size: .77rem; line-height: 1.55; color: var(--ink-dim); display: block; }
+  #discovery-arrange { border-radius: 7px; text-align: left; padding: 12px; width: 100%; }
+  .discovery-help { margin-top: 14px; font-size: .66rem; line-height: 1.6; color: var(--ink-dim); }
+  #discovery-toast { position: absolute; bottom: 78px; left: 50%; transform: translateX(-50%); padding: 12px 20px;
+    width: max-content; max-width: calc(100vw - 32px); color: #f6e6c9; background: var(--panel); border: 1px solid #e6c58c55;
+    border-radius: 10px; font: .8rem ui-monospace, monospace; text-align: center; pointer-events: none; }
+  #discovery-ui button:focus-visible { outline: 2px solid #e6c58c; outline-offset: 3px; }
+  #discovery-ui button:hover { border-color: #e6c58c; }
+  @media (max-width: 640px) {
+    #discovery-ui { top: 122px; right: 16px; }
+    .controls:has(#tilt:not([hidden])) ~ #discovery-ui { top: 170px; }
+    .controls:has(#tilt:not([hidden])) ~ #discovery-ui #discovery-notes { max-height: calc(100dvh - 258px); }
+    #discoveries-toggle { min-height: 44px; }
+    #discovery-notes { max-height: calc(100dvh - 210px); }
+    #hint { font-size: .58rem; padding: 10px; width: max-content; max-width: calc(100vw - 24px); white-space: normal; text-align: center; }
+    #discovery-toast { bottom: 115px; font-size: .72rem; }
+  }
 </style>
 </head>
 <body>
 <div id="app">
   <canvas id="scene" tabindex="0" role="application" aria-label="Interactive pile of objects. Drag to throw, click to read." aria-describedby="kbd-help"></canvas>
   <div id="sr-status" class="sr-only" role="status" aria-live="polite"></div>
-  <p id="kbd-help" class="sr-only">Use the arrow keys to browse the objects, Enter to read an object's story, Escape to close it.</p>
+  <p id="kbd-help" class="sr-only">Use the arrow keys to browse the objects, Enter to read an object's story, Escape to close it. Hold Shift with arrow keys to move the selected object. The desk light switches on or off with Enter. Open Discoveries for hints or help arranging a pair.</p>
   <div id="vignette"></div>
 
   <header>
@@ -277,7 +312,20 @@
   </div>
   <button id="counter" class="mono" aria-live="polite" disabled>0/10 examined</button>
 
-  <div id="hint" aria-hidden="true">drag to throw &nbsp;·&nbsp; click to read</div>
+  <div id="discovery-ui">
+    <button id="discoveries-toggle" type="button" aria-expanded="false" aria-controls="discovery-notes">Discoveries</button>
+    <section id="discovery-notes" aria-labelledby="discovery-title" hidden>
+      <button id="discovery-close" type="button" aria-label="Close discoveries">×</button>
+      <p class="discovery-kicker">FIELD NOTES</p>
+      <h2 id="discovery-title">Some things belong together.</h2>
+      <ol id="discovery-list"></ol>
+      <p id="discovery-clue"></p>
+      <button id="discovery-arrange" type="button">Help me arrange this pair</button>
+      <p class="discovery-help">Drag objects together. Click the little light to switch it.<br>Keyboard: arrow keys to browse, Shift + arrows to move.</p>
+    </section>
+  </div>
+  <div id="discovery-toast" role="status" hidden></div>
+  <div id="hint" aria-hidden="true">drag to throw &nbsp;·&nbsp; click to read &nbsp;·&nbsp; bring things together</div>
   <div id="tooltip" hidden></div>
 
   <aside id="card" hidden tabindex="-1">
