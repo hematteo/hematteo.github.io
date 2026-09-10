@@ -80,3 +80,54 @@ Pushing to `main` builds and deploys to GitHub Pages via [`.github/workflows/dep
 ## License
 
 [MIT](./LICENSE) © Matteo He
+
+### Connected discoveries
+
+In `/drawer/`, bring the little desk light and prism together to split a beam.
+Pass the existing paper airplane through that spectrum to color its wings, then
+bring it gently beside an upright mug to let it settle on the rim. The paper
+stays colored away from the light. Picking it up releases the perch; tipping the
+mug releases it too. Click the desk light to switch it off or on.
+
+The **Discoveries** button gives one hint at a time and optionally arranges the
+current pairing. Keyboard users can browse objects with arrow keys, move the
+selected object with **Shift + arrows**, and press **Enter** to read a story or
+switch the lamp. The lamp is a play prop; the ten research/career stories retain
+their separate completion counter. Reduced-motion mode keeps the same discoveries
+with immediate color and landing changes. **Dump again** resets the physical
+states while keeping the field notes for the current visit; no storage is used.
+
+### GPU flight chain and graphics
+
+Bring the paper beside an upright GPU to spin up its fans and lift the paper.
+A colored plane leaves a fading rainbow ribbon. Move the GPU to move the updraft;
+bring the joystick nearby for three discrete steering actions: left, neutral, right (A / S / D). The joystick can also launch the plane without the GPU. Flights end after a
+short interval, or with **Land**. They restart only after another interaction.
+The Discoveries panel has eleven entries and a picker for trying any pairing.
+
+Reduced motion keeps the discoveries and controls, with immediate positioning
+and no spinning fans, animated wind or trails. The scene retains idle rendering.
+Beveled edges, articulated GPU fans, paper folds, hollow glazed ceramic,
+transmissive glass, soft shadows and warmer/cooler light separation refine the
+existing workshop rather than replacing its layout.
+
+### More combinations
+
+- Tap the dolphin to send a visible acoustic pulse. Nearby objects reflect it;
+  the dolphin turns toward returning echoes. Repeat from its story card.
+- GPU + keyboard runs a deliberately fictional training sequence across the keycaps.
+  A plateau lights the GPU’s vigil indicator amber. **Resume run** completes it;
+  separating the pair disconnects it.
+- The prism leaves one white residual beside its spectrum. Rest the paper over
+  its tip to pin it; pick up or move the paper to let it escape.
+- Bring the dolphin alongside the punt to board. It follows the boat, adds weight,
+  and jumps out if the boat moves too abruptly. **Nudge the boat** in its story
+  card is an accessible way to try that response.
+- The trophy reflects the lamp according to its orientation. Select any object
+  and press **R** to rotate it (Shift + R reverses); the trophy’s story card also
+  offers a turn button. A reflected beam can power the prism’s spectrum.
+
+Echoes, boarding, fan activity and the released thread finish their animations
+and allow rendering to sleep. Reduced motion preserves every discovery while
+suppressing spinning, hopping, trails and traveling pulses. All physical states
+reset on **Dump again**, while the eleven field notes remain for this visit.

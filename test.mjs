@@ -74,15 +74,16 @@ try {
   check('hover tooltip shows', !tip.hidden && tip.text.length > 0, JSON.stringify(tip))
 
   // --- 3. examine all 10 -> completion funnel
-  for (let attempt = 0; attempt < 30; attempt++) {
-    const state = await page.evaluate(() => window.__jd.state())
-    const unseen = IDS.filter(id => !state.seen.includes(id))
-    if (!unseen.length) break
+  // Random piles and an airborne plane can cover other objects. Use the
+  // public keyboard path for story completion; pointer throw/tap have their
+  // own checks above and below.
+  for (let index = 0; index < 11; index++) {
     await page.keyboard.press('Escape')
-    await page.waitForTimeout(300)
-    const sp = await page.evaluate((id) => window.__jd.screenPos(id), unseen[0])
-    await page.mouse.click(sp.x, sp.y)
-    await page.waitForTimeout(350)
+    await page.waitForTimeout(250)
+    await page.locator('#scene').focus()
+    await page.keyboard.press('ArrowRight')
+    await page.keyboard.press('Enter')
+    await page.waitForTimeout(200)
   }
   let st = await page.evaluate(() => window.__jd.state())
   check('all 10 examined', st.seen.length === 10, st.seen.length + ' seen')
@@ -123,11 +124,14 @@ try {
   // --- 5. idle pause: after everything settles, sim goes inactive
   await page.mouse.move(100, 850)
   let idleSeen = false
-  for (let i = 0; i < 5 && !idleSeen; i++) {
-    await page.waitForTimeout(5000)
-    st = await page.evaluate(() => window.__jd.state())
-    idleSeen = !st.simActive && st.renderPending === 0
-  }
+  try {
+    await page.waitForFunction(() => {
+      const state = window.__jd.state()
+      return !state.simActive && state.renderPending === 0
+    }, null, { timeout: 30000 })
+    idleSeen = true
+  } catch { /* report the current state below */ }
+  st = await page.evaluate(() => window.__jd.state())
   check('idle pause engages', idleSeen, 'simActive=' + st.simActive + ' pending=' + st.renderPending)
 
   // --- 6. interaction wakes it back up
@@ -154,6 +158,160 @@ try {
   check('mobile tap opens card', sheet.open)
   check('mobile card is bottom sheet', sheet.left === 0 && sheet.right === 0 && sheet.bottom === 0, JSON.stringify(sheet))
   check('mobile no page errors', mobErrors.length === 0, mobErrors.join(' | '))
+
+  // Discoveries must work through their public controls on desktop and touch,
+  // including reduced motion. Debug hooks below only observe physical state.
+  for (const mobile of [false, true]) {
+    const discovery = await browser.newPage({
+      viewport: mobile ? { width: 390, height: 844 } : { width: 1400, height: 900 },
+      hasTouch: mobile, isMobile: mobile, reducedMotion: mobile ? 'reduce' : 'no-preference',
+    })
+    const discoveryErrors = []
+    discovery.on('pageerror', e => discoveryErrors.push(e.message))
+    await discovery.goto(BASE)
+    await discovery.waitForTimeout(2500)
+    const label = mobile ? 'touch / reduced motion' : 'desktop'
+    for (let step = 1; step <= 3; step++) {
+      await discovery.locator('#discoveries-toggle').click()
+      await discovery.locator('#discovery-arrange').click()
+      await discovery.waitForFunction(n => window.__jd.state().discoveries.found.length >= n, step, { timeout: 8000 })
+      check(`${label}: discovery ${step}`, true)
+    }
+    await discovery.waitForTimeout(1500)
+    const combined = await discovery.evaluate(() => window.__jd.state())
+    check(`${label}: colored paper perches`, combined.discoveries.colored && combined.discoveries.perched)
+    check(`${label}: discoveries do not count as CV stories`, combined.seen.length === 0 && !combined.completed)
+    const within = await discovery.evaluate(() => {
+      const rect = document.getElementById('discoveries-toggle').getBoundingClientRect()
+      return rect.left >= 0 && rect.right <= innerWidth && document.documentElement.scrollWidth === innerWidth
+    })
+    check(`${label}: controls fit viewport`, within)
+
+    // Move the paper using the accessible keyboard interaction: it must detach.
+    await discovery.locator('#scene').focus()
+    for (let i = 0; i < 12; i++) {
+      if (/paper airplane/.test(await discovery.locator('#tooltip').textContent())) break
+      await discovery.keyboard.press('ArrowRight')
+      await discovery.waitForTimeout(80)
+    }
+    for (let i = 0; i < 5; i++) await discovery.keyboard.press('Shift+ArrowDown')
+    const released = await discovery.evaluate(() => window.__jd.state().discoveries)
+    check(`${label}: moving paper releases perch, retains color`, !released.perched && released.colored)
+
+    // Browse to the light and switch it: discovery prop is not an eleventh story.
+    for (let i = 0; i < 12; i++) {
+      if (/desk light/.test(await discovery.locator('#tooltip').textContent())) break
+      await discovery.keyboard.press('ArrowRight')
+      await discovery.waitForTimeout(80)
+    }
+    await discovery.keyboard.press('Enter')
+    await discovery.waitForTimeout(150)
+    const dark = await discovery.evaluate(() => window.__jd.state().discoveries)
+    check(`${label}: light switch removes spectrum`, !dark.lightOn && !dark.spectrum)
+
+    await discovery.locator('#dump').click()
+    const reset = await discovery.evaluate(() => window.__jd.state().discoveries)
+    check(`${label}: dump resets physics and keeps notes`, !reset.perched && !reset.colored && reset.found.length === 3)
+
+    // The second chain builds on retained discoveries, through the same UI.
+    await discovery.locator('#discoveries-toggle').click()
+    await discovery.locator('#discovery-arrange').click()
+    await discovery.waitForFunction(() => window.__jd.state().discoveries.found.includes(4), null, { timeout: 10000 })
+    await discovery.locator('#discoveries-toggle').click()
+    await discovery.locator('#discovery-arrange').click()
+    await discovery.waitForFunction(() => window.__jd.state().discoveries.flight.controlled, null, { timeout: 10000 })
+    let flight = await discovery.evaluate(() => window.__jd.state().discoveries)
+    check(label + ': all six discoveries work', [0,1,2,3,4,5].every(id => flight.found.includes(id)) && flight.flight.flying)
+    await discovery.getByRole('button', { name: 'Steer right', exact: true }).click()
+    await discovery.waitForTimeout(300)
+    flight = await discovery.evaluate(() => window.__jd.state().discoveries)
+    check(label + ': joystick steers the flight', flight.flight.steerX > 0)
+    await discovery.getByRole('button', { name: 'Steer right', exact: true }).click()
+    check(label + ': repeated steering stays in the right state', await discovery.evaluate(() => window.__jd.state().discoveries.flight.steerX === 1))
+    await discovery.keyboard.press('w')
+    flight = await discovery.evaluate(() => window.__jd.state().discoveries)
+    check(label + ': neutral steering is a discrete action', flight.flight.steerX === 0 && flight.flight.steerZ === 0)
+    check(label + ': rainbow trail respects reduced motion', mobile ? flight.flight.trailPoints === 0 : flight.flight.trailPoints > 1)
+    await discovery.getByRole('button', { name: 'Land', exact: true }).click()
+    await discovery.waitForTimeout(3600)
+    flight = await discovery.evaluate(() => window.__jd.state().discoveries)
+    check(label + ': landing stops lift without automatically restarting', !flight.flight.flying && flight.flight.spool < 0.02)
+    await discovery.locator('#dump').click()
+    flight = await discovery.evaluate(() => window.__jd.state().discoveries)
+    check(label + ': reset clears flight and keeps six field notes', !flight.flight.flying && flight.flight.trailPoints === 0 && [0,1,2,3,4,5].every(id => flight.found.includes(id)))
+    async function pair (id) {
+      await discovery.locator('#discoveries-toggle').click()
+      await discovery.locator('#discovery-choice').selectOption(String(id))
+      await discovery.locator('#discovery-arrange').click()
+      await discovery.waitForFunction(id => window.__jd.state().discoveries.found.includes(id), id, { timeout: 10000 })
+    }
+    async function selectObject (name) {
+      await discovery.locator('#scene').focus()
+      for (let i = 0; i < 12; i++) {
+        if ((await discovery.locator('#tooltip').textContent()).toLowerCase().includes(name)) return
+        await discovery.keyboard.press('ArrowRight'); await discovery.waitForTimeout(80)
+      }
+      throw new Error('Could not select ' + name)
+    }
+    await pair(6)
+    check(label + ': obstacles return visible echoes', (await discovery.evaluate(() => window.__jd.state().discoveries.world.echoReturns)) > 0)
+    await selectObject('dolphin'); await discovery.keyboard.press('Enter')
+    await discovery.locator('#card-play').click()
+    check(label + ': dolphin can emit another pulse', await discovery.evaluate(() => window.__jd.state().discoveries.world.echoActive))
+    await pair(7)
+    check(label + ': toy run plateaus for attention', await discovery.evaluate(() => window.__jd.state().discoveries.world.training === 'stalled'))
+    await discovery.locator('#training-resume').click()
+    await discovery.waitForFunction(() => window.__jd.state().discoveries.world.training === 'complete')
+    check(label + ': toy run resumes and converges', true)
+    await selectObject('gpu')
+    for (let i = 0; i < 8; i++) await discovery.keyboard.press('Shift+ArrowLeft')
+    await discovery.waitForFunction(() => window.__jd.state().discoveries.world.training === 'idle')
+    check(label + ': separating GPU disconnects training', true)
+    await pair(8)
+    check(label + ': paper pins the residual thread', await discovery.evaluate(() => window.__jd.state().discoveries.world.pinned))
+    await selectObject('paper airplane')
+    for (let i = 0; i < 4; i++) await discovery.keyboard.press('Shift+ArrowDown')
+    check(label + ': moving paper releases residual', !await discovery.evaluate(() => window.__jd.state().discoveries.world.pinned))
+    await pair(9)
+    await discovery.waitForFunction(() => !window.__jd.state().discoveries.world.boarding)
+    check(label + ': dolphin rides the punt', await discovery.evaluate(() => window.__jd.state().discoveries.world.riding))
+    await selectObject('punt'); await discovery.keyboard.press('Enter'); await discovery.locator('#card-play').click()
+    await discovery.waitForFunction(() => !window.__jd.state().discoveries.world.riding)
+    check(label + ': sudden boat motion ejects passenger', true)
+    await pair(10)
+    check(label + ': trophy redirects light into prism', await discovery.evaluate(() => window.__jd.state().discoveries.world.reflectedTarget === 'prism' && window.__jd.state().discoveries.spectrum))
+    await selectObject('trophy')
+    for (let i = 0; i < 3; i++) await discovery.keyboard.press('r')
+    await discovery.waitForTimeout(100)
+    check(label + ': rotating trophy steers reflection', await discovery.evaluate(() => window.__jd.state().discoveries.world.reflectedTarget !== 'prism'))
+    await selectObject('desk light'); await discovery.keyboard.press('Enter')
+    await discovery.waitForTimeout(100)
+    check(label + ': switching off removes reflected light', await discovery.evaluate(() => window.__jd.state().discoveries.world.reflectedTarget === null && !window.__jd.state().discoveries.spectrum))
+    await discovery.locator('#dump').click()
+    const finalWorld = await discovery.evaluate(() => window.__jd.state().discoveries)
+    check(label + ': reset clears all new states and preserves eleven notes', finalWorld.found.length === 11 && !finalWorld.world.riding && !finalWorld.world.pinned && !finalWorld.world.echoActive && finalWorld.world.training === 'idle')
+    check(label + ': all controls fit the viewport', await discovery.evaluate(() => document.documentElement.scrollWidth <= innerWidth))
+    await pair(5)
+    await discovery.waitForFunction(() => window.__jd.state().discoveries.flight.controlled)
+    await discovery.locator('#flight-land').click()
+    await selectObject('gpu')
+    for (let i = 0; i < 12; i++) await discovery.keyboard.press('Shift+ArrowRight')
+    await selectObject('paper airplane')
+    const shift = await discovery.evaluate(() => {
+      const stick = window.__jd.pos('joystick'), plane = window.__jd.pos('plane')
+      return { x: stick.x + 0.7 - plane.x, z: stick.z + 0.4 - plane.z }
+    })
+    for (let i = 0; i < Math.round(Math.abs(shift.x) / 0.3); i++) await discovery.keyboard.press(shift.x > 0 ? 'Shift+ArrowRight' : 'Shift+ArrowLeft')
+    for (let i = 0; i < Math.round(Math.abs(shift.z) / 0.3); i++) await discovery.keyboard.press(shift.z > 0 ? 'Shift+ArrowDown' : 'Shift+ArrowUp')
+    await discovery.waitForFunction(() => window.__jd.state().discoveries.flight.controlled, null, { timeout: 15000 })
+    check(label + ': joystick launches paper independently after cooldown', await discovery.evaluate(() => {
+      const p = window.__jd.pos('plane'), g = window.__jd.pos('gpu')
+      return Math.hypot(p.x - g.x, p.z - g.z) > 2
+    }))
+    await discovery.locator('#flight-land').click()
+    check(`${label}: no runtime errors`, discoveryErrors.length === 0, discoveryErrors.join(' | '))
+    await discovery.close()
+  }
 
   check('desktop no console errors', errors.length === 0, errors.join(' | '))
 } finally {

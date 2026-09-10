@@ -1,5 +1,8 @@
 import * as THREE from 'three'
+import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
+import { createContactShadows } from './graphics.js'
 import * as CANNON from 'cannon-es'
+import { buildDeskLight, createDiscoveries } from './discoveries.js'
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js'
 
 // idle-render bookkeeping — declared first because init-time callers
@@ -80,10 +83,10 @@ const THEMES = {
     hemiI: 0.7, sunI: 1.5, sunC: 0xfff4e0, spotI: 0,
   },
   dark: {
-    mat: '#23262b', matBorder: '#1c1f23', grid: '#383e46', gridBold: '#4a525c', label: '#5a636e',
+    mat: '#243431', matBorder: '#1b2826', grid: '#354943', gridBold: '#50665d', label: '#789086',
     bg: '#241a10', hemi: 0x8a93a8, ground: 0x2e2115,
     desk: '#4a3521', deskGrain: '#3c2a18', deskDark: '#31220f', tray: '#332412', trayEdge: '#41301a',
-    hemiI: 0.22, sunI: 0.35, sunC: 0xbfd0ff, spotI: 2.6,
+    hemiI: 0.36, sunI: 0.9, sunC: 0xbfd0ff, spotI: 2.2,
   },
 }
 
@@ -93,9 +96,10 @@ const canvas = document.getElementById('scene')
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true })
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2))
 renderer.shadowMap.enabled = true
-renderer.shadowMap.type = THREE.PCFSoftShadowMap
+renderer.shadowMap.type = THREE.VSMShadowMap
 renderer.outputColorSpace = THREE.SRGBColorSpace
 renderer.toneMapping = THREE.ACESFilmicToneMapping
+renderer.toneMappingExposure = 1.08
 
 const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100)
@@ -112,8 +116,14 @@ sun.shadow.mapSize.set(2048, 2048)
 sun.shadow.camera.left = -11; sun.shadow.camera.right = 11
 sun.shadow.camera.top = 11; sun.shadow.camera.bottom = -11
 sun.shadow.camera.far = 40
-sun.shadow.bias = -0.0004
+sun.shadow.bias = -0.00025
+sun.shadow.normalBias = 0.025
+sun.shadow.radius = 4
+sun.shadow.blurSamples = 8
 scene.add(sun)
+const fill = new THREE.DirectionalLight(0x99d9ec, 0.65)
+fill.position.set(-6, 7, -4)
+scene.add(fill)
 
 // desk lamp for the dark theme
 const lamp = new THREE.SpotLight(0xffc98a, 0)
@@ -124,6 +134,8 @@ lamp.decay = 0
 lamp.castShadow = true
 lamp.shadow.mapSize.set(1024, 1024)
 lamp.shadow.bias = -0.0005
+lamp.shadow.radius = 3
+lamp.shadow.blurSamples = 8
 scene.add(lamp)
 scene.add(lamp.target)
 
@@ -132,13 +144,13 @@ scene.add(lamp.target)
   const pmrem = new THREE.PMREMGenerator(renderer)
   scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture
   pmrem.dispose()
-  if ('environmentIntensity' in scene) scene.environmentIntensity = 0.45
+  if ('environmentIntensity' in scene) scene.environmentIntensity = 0.8
 }
 
 // ---------------------------------------------------------------- materials & mesh helpers
 
-// flat shading everywhere: one coherent low-poly look
-const M = (color, opt = {}) => new THREE.MeshStandardMaterial({ color, roughness: 0.6, metalness: 0.05, flatShading: true, ...opt })
+// Beveled edges catch the desk lighting; folds retain their sharp normals.
+const M = (color, opt = {}) => new THREE.MeshStandardMaterial({ color, roughness: 0.5, metalness: 0.05, flatShading: false, ...opt })
 const BRASS = M(0xc9a227, { metalness: 0.85, roughness: 0.32 })
 const WOOD = M(0x8b5e34, { roughness: 0.8 })
 const WOOD_DK = M(0x6e4525, { roughness: 0.85 })
@@ -147,15 +159,16 @@ const DARK = M(0x2a2d33, { roughness: 0.55 })
 const KEYCAP = M(0xd8d5cc, { roughness: 0.7 })
 const PCB = M(0x1f6b3a, { roughness: 0.55 })
 const SILVER = M(0xb8bcc2, { metalness: 0.8, roughness: 0.4 })
-const CERAMIC = M(0xefece4, { roughness: 0.35 })
-const COFFEE = M(0x4a2f1b, { roughness: 0.25 })
+const CERAMIC = new THREE.MeshPhysicalMaterial({ color: 0xf5eee1, roughness: 0.22, clearcoat: 0.8 })
+const COFFEE = new THREE.MeshPhysicalMaterial({ color: 0x352015, roughness: 0.12, clearcoat: 1 })
 const RED = M(0xe23d2e, { roughness: 0.45 })
 const RIBBON = M(0xa32638, { roughness: 0.7 })
 const DOLPHIN = M(0x7c93a6, { roughness: 0.5 })
-const GLASS = M(0xe4f2f5, { roughness: 0.08, metalness: 0.25, transparent: true, opacity: 0.78 })
+const GLASS = new THREE.MeshPhysicalMaterial({ color: 0xf2fbff, roughness: 0.035, metalness: 0,
+  transmission: 0.98, thickness: 0.8, ior: 1.52, envMapIntensity: 1.6, clearcoat: 1, flatShading: true })
 
 function box (mat, w, h, d, x = 0, y = 0, z = 0, rx = 0, ry = 0, rz = 0) {
-  const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat)
+  const m = new THREE.Mesh(new RoundedBoxGeometry(w, h, d, 2, Math.min(w, h, d, 0.16) * 0.22), mat)
   m.position.set(x, y, z); m.rotation.set(rx, ry, rz)
   m.castShadow = true; m.receiveShadow = true
   return m
@@ -456,6 +469,7 @@ function layoutWalls () {
 // ---------------------------------------------------------------- object builders
 
 const BUILDERS = {
+  light: buildDeskLight,
   punt () {
     const g = new THREE.Group()
     g.add(box(WOOD, 1.9, 0.07, 0.52, 0, 0.035, 0))          // floor
@@ -472,20 +486,29 @@ const BUILDERS = {
   plane () {
     const g = new THREE.Group()
     const geo = new THREE.BufferGeometry()
-    const N = [0, 0.05, -0.7], L = [-0.5, 0.14, 0.55], R = [0.5, 0.14, 0.55], C = [0, 0.06, 0.55], K = [0, -0.2, 0.42]
-    geo.setAttribute('position', new THREE.Float32BufferAttribute([...N, ...L, ...C, ...N, ...C, ...R, ...N, ...C, ...K], 3))
+    const N = [0, 0.1, -0.78], L = [-0.56, 0.02, 0.55], R = [0.56, 0.02, 0.55]
+    const IL = [-0.085, 0.19, 0.55], IR = [0.085, 0.19, 0.55], C = [0, 0.07, 0.55], K = [0, -0.17, 0.45]
+    geo.setAttribute('position', new THREE.Float32BufferAttribute([...N, ...L, ...IL, ...N, ...IL, ...C,
+      ...N, ...C, ...IR, ...N, ...IR, ...R, ...N, ...C, ...K], 3))
     geo.computeVertexNormals()
     const m = new THREE.Mesh(geo, PAPER)
     m.castShadow = true; m.receiveShadow = true
     m.position.y = 0.2
     g.add(m)
+    const folds = new THREE.LineSegments(new THREE.EdgesGeometry(geo, 12), new THREE.LineBasicMaterial({ color: 0x9a9384, transparent: true, opacity: 0.25 }))
+    folds.position.y = 0.201; g.add(folds)
     const body = new CANNON.Body({ mass: 0.3, angularDamping: 0.4 })
     body.addShape(new CANNON.Box(new CANNON.Vec3(0.48, 0.14, 0.62)), new CANNON.Vec3(0, 0.16, -0.05))
     return { g, body }
   },
   prism () {
     const g = new THREE.Group()
-    g.add(cyl(GLASS, 0.36, 0.36, 0.55, 0, 0.28, 0, 0, 0, 0, 3))
+    const glass = cyl(GLASS, 0.36, 0.36, 0.55, 0, 0.28, 0, 0, 0, 0, 3)
+    g.add(glass)
+    const edges = new THREE.LineSegments(new THREE.EdgesGeometry(glass.geometry),
+      new THREE.LineBasicMaterial({ color: 0xc8e9f2, transparent: true, opacity: 0.45 }))
+    edges.position.copy(glass.position)
+    g.add(edges)
     const body = new CANNON.Body({ mass: 0.9 })
     body.addShape(new CANNON.Cylinder(0.36, 0.36, 0.55, 3), new CANNON.Vec3(0, 0.28, 0))
     return { g, body }
@@ -493,10 +516,11 @@ const BUILDERS = {
   joystick () {
     const g = new THREE.Group()
     g.add(box(DARK, 0.6, 0.2, 0.6, 0, 0.1, 0))
-    g.add(cyl(SILVER, 0.05, 0.05, 0.38, -0.08, 0.39, 0, 0, 0, 0, 12))
-    const ball = new THREE.Mesh(new THREE.SphereGeometry(0.14, 20, 14), RED)
-    ball.position.set(-0.08, 0.6, 0); ball.castShadow = true
-    g.add(ball)
+    const stick = new THREE.Group(); stick.name = 'stick'; stick.position.set(-0.08, 0.22, 0)
+    stick.add(cyl(SILVER, 0.05, 0.05, 0.38, 0, 0.17, 0, 0, 0, 0, 16))
+    const ball = new THREE.Mesh(new THREE.SphereGeometry(0.14, 24, 18), RED)
+    ball.position.y = 0.38; ball.castShadow = true
+    stick.add(ball); g.add(stick)
     g.add(cyl(RED, 0.07, 0.07, 0.05, 0.17, 0.22, 0.12, 0, 0, 0, 14))
     const body = new CANNON.Body({ mass: 1.0 })
     body.addShape(new CANNON.Box(new CANNON.Vec3(0.3, 0.1, 0.3)), new CANNON.Vec3(0, 0.1, 0))
@@ -505,11 +529,13 @@ const BUILDERS = {
   },
   mug () {
     const g = new THREE.Group()
-    g.add(cyl(CERAMIC, 0.28, 0.25, 0.44, 0, 0.22, 0))
+    const profile = [[0, 0.025], [0.22, 0.025], [0.25, 0.06], [0.275, 0.4], [0.28, 0.435], [0.27, 0.45], [0.24, 0.435], [0.215, 0.1], [0, 0.1]]
+    const cup = new THREE.Mesh(new THREE.LatheGeometry(profile.map(([r, y]) => new THREE.Vector2(r, y)), 40), CERAMIC)
+    cup.castShadow = cup.receiveShadow = true; g.add(cup)
     const inner = cyl(COFFEE, 0.24, 0.24, 0.02, 0, 0.38, 0)
     inner.name = 'coffee-surface'
     g.add(inner)
-    const handle = new THREE.Mesh(new THREE.TorusGeometry(0.15, 0.045, 10, 20, Math.PI), CERAMIC)
+    const handle = new THREE.Mesh(new THREE.TorusGeometry(0.15, 0.04, 12, 32), CERAMIC)
     handle.position.set(0.29, 0.22, 0); handle.rotation.z = -Math.PI / 2; handle.castShadow = true
     g.add(handle)
     const body = new CANNON.Body({ mass: 0.9 })
@@ -541,10 +567,22 @@ const BUILDERS = {
     const g = new THREE.Group()
     g.add(box(PCB, 1.3, 0.05, 0.6, 0, 0.16, 0))
     g.add(box(DARK, 1.24, 0.22, 0.56, 0, 0.31, 0))
-    g.add(cyl(M(0x1a1c20), 0.2, 0.2, 0.05, -0.3, 0.43, 0, 0, 0, 0, 20))
-    g.add(cyl(M(0x1a1c20), 0.2, 0.2, 0.05, 0.3, 0.43, 0, 0, 0, 0, 20))
-    g.add(cyl(SILVER, 0.05, 0.05, 0.03, -0.3, 0.46, 0, 0, 0, 0, 12))
-    g.add(cyl(SILVER, 0.05, 0.05, 0.03, 0.3, 0.46, 0, 0, 0, 0, 12))
+    const fanMat = M(0x3f4950, { metalness: 0.5, roughness: 0.3 })
+    for (const [index, x] of [-0.3, 0.3].entries()) {
+      g.add(cyl(M(0x0d1318), 0.215, 0.215, 0.025, x, 0.432, 0, 0, 0, 0, 32))
+      const rotor = new THREE.Group(); rotor.name = index ? 'fan-right' : 'fan-left'; rotor.position.set(x, 0.453, 0)
+      for (let i = 0; i < 9; i++) {
+        const blade = box(fanMat, 0.065, 0.015, 0.13, 0, 0, 0.12, 0, 0.3, 0.15)
+        const pivot = new THREE.Group(); pivot.rotation.y = i * Math.PI * 2 / 9; pivot.add(blade); rotor.add(pivot)
+      }
+      rotor.add(cyl(SILVER, 0.047, 0.047, 0.025, 0, 0.016, 0, 0, 0, 0, 20))
+      g.add(rotor)
+      const rim = new THREE.Mesh(new THREE.TorusGeometry(0.218, 0.012, 8, 40), SILVER)
+      rim.rotation.x = Math.PI / 2; rim.position.set(x, 0.452, 0); g.add(rim)
+    }
+    for (let i = 0; i < 11; i++) g.add(box(SILVER, 0.035, 0.12, 0.018, -0.5 + i * 0.1, 0.28, 0.285))
+    const led = box(new THREE.MeshStandardMaterial({ color: 0xa4e6c8, emissive: 0x58c797, emissiveIntensity: 0.4 }), 0.18, 0.018, 0.018, 0.35, 0.38, 0.287)
+    led.name = 'gpu-led'; g.add(led)
     g.add(box(SILVER, 0.05, 0.4, 0.56, -0.67, 0.26, 0))
     g.add(box(BRASS, 0.5, 0.04, 0.06, 0.2, 0.12, 0.28))   // pcie fingers
     const body = new CANNON.Body({ mass: 1.2 })
@@ -635,7 +673,7 @@ const BUILDERS = {
 const objects = [] // { item, mesh, body }
 const byBodyId = new Map()
 
-for (const item of ITEMS) {
+for (const item of [...ITEMS, { id: 'light', name: 'A little desk light · click to switch', sound: 'metal', auxiliary: true }]) {
   const { g, body } = BUILDERS[item.id]()
   scene.add(g)
   g.visible = false
@@ -660,6 +698,7 @@ for (const item of ITEMS) {
 }
 
 function dump (first = false) {
+  if (!first) discoveries.reset()
   const { xL, xR, zB, zF } = bounds
   // center the pile where the *viewer* sees the middle of the mat
   const c = new THREE.Vector3()
@@ -674,6 +713,12 @@ function dump (first = false) {
       o.body.velocity.set(0, REDUCED ? 0 : -3, 0)
       o.body.angularVelocity.set(Math.random() * 3 - 1.5, Math.random() * 3 - 1.5, Math.random() * 3 - 1.5)
       o.body.quaternion.setFromEuler(Math.random() * 0.8 - 0.4, Math.random() * Math.PI * 2, Math.random() * 0.8 - 0.4)
+      if (o.item.id === 'light') {
+        o.body.position.set(xL + 1.1, 0.05, (zB + zF) / 2)
+        o.body.quaternion.set(0, 0, 0, 1)
+        o.body.velocity.set(0, 0, 0)
+        o.body.angularVelocity.set(0, 0, 0)
+      }
       o.body.wakeUp()
       if (!world.bodies.includes(o.body)) world.addBody(o.body)
     }
@@ -778,6 +823,7 @@ canvas.addEventListener('pointerdown', (ev) => {
   if (!hit) return
   canvas.setPointerCapture(ev.pointerId)
   grabbed = hit.o
+  discoveries.beforeGrab(grabbed)
   grabbed.body.wakeUp()
   dragY = Math.min(Math.max(hit.point.y, 1.2), 3)
   dragPlane.constant = -dragY
@@ -824,7 +870,7 @@ function release (ev) {
     const speed = v.length()
     if (speed > 13) v.scale(13 / speed, v)
     const quick = performance.now() - downAt < 300
-    if (!moved && quick) openCard(grabbed)
+    if (!moved && quick && ev.type !== 'pointercancel') openCard(grabbed)
     grabbed = null
   }
   if (IS_TOUCH) hoverObj = null // no lingering highlight after a tap
@@ -882,6 +928,7 @@ function closeCard () {
 }
 
 function openCard (o, viaKeyboard = false) {
+  if (o.item.auxiliary) { discoveries.toggleLight(); return }
   clearTimeout(finalTimer) // never yank a story out from under the reader
   finalTimer = null
   openedViaKeyboard = viaKeyboard
@@ -889,6 +936,12 @@ function openCard (o, viaKeyboard = false) {
   cardTitle.textContent = o.item.name
   cardBody.textContent = o.item.story
   cardActions.hidden = true
+  const play = document.getElementById('card-play')
+  const actions = { dolphin: 'Send an echo', keyboard: 'Check the toy run', punt: 'Nudge the boat', trophy: 'Turn the reflector' }
+  play.hidden = !actions[o.item.id]
+  play.textContent = actions[o.item.id] || ''
+  play.onclick = () => { closeCard(); discoveries.action(o.item.id) }
+  if (o.item.id === 'dolphin') discoveries.action('dolphin')
   if (o.item.link) {
     cardLink.href = o.item.link
     cardLink.hidden = false
@@ -909,6 +962,7 @@ function openCard (o, viaKeyboard = false) {
 }
 
 function showFinalCard () {
+  document.getElementById('card-play').hidden = true
   finalShown = true
   finalTimer = null
   openedViaKeyboard = false
@@ -1004,8 +1058,28 @@ canvas.addEventListener('focus', () => {
 })
 canvas.addEventListener('blur', () => wakeRender(30))
 canvas.addEventListener('keydown', (ev) => {
+  if (discoveries.handleKey(ev)) return
   const n = objects.length
-  if (ev.key === 'ArrowRight' || ev.key === 'ArrowDown') {
+  if (ev.key.toLowerCase() === 'r' && kbIdx >= 0) {
+    const o = objects[kbIdx]; discoveries.beforeGrab(o)
+    o.body.quaternion.mult(new CANNON.Quaternion().setFromAxisAngle(new CANNON.Vec3(0, 1, 0), (ev.shiftKey ? -1 : 1) * Math.PI / 12), o.body.quaternion)
+    o.body.aabbNeedsUpdate = true; o.body.wakeUp(); wakeRender(180)
+  } else if (ev.shiftKey && ev.key.startsWith('Arrow') && kbIdx >= 0) {
+    const o = objects[kbIdx]
+    discoveries.beforeGrab(o)
+    const step = 0.3
+    if (ev.key === 'ArrowRight') o.body.position.x += step
+    if (ev.key === 'ArrowLeft') o.body.position.x -= step
+    if (ev.key === 'ArrowDown') o.body.position.z += step
+    if (ev.key === 'ArrowUp') o.body.position.z -= step
+    o.body.position.x = THREE.MathUtils.clamp(o.body.position.x, bounds.xL + o.radius, bounds.xR - o.radius)
+    o.body.position.z = THREE.MathUtils.clamp(o.body.position.z, bounds.zB + o.radius, bounds.zF - o.radius)
+    o.body.position.y = Math.max(o.body.position.y, 0.25)
+    o.body.velocity.set(0, 0, 0)
+    o.body.aabbNeedsUpdate = true
+    o.body.wakeUp()
+    wakeRender(120)
+  } else if (ev.key === 'ArrowRight' || ev.key === 'ArrowDown') {
     kbIdx = (kbIdx + 1) % n
   } else if (ev.key === 'ArrowLeft' || ev.key === 'ArrowUp') {
     kbIdx = (kbIdx - 1 + n) % n
@@ -1171,14 +1245,13 @@ function deactivateDrop (d) {
 
 const planeObj = objects.find(o => o.item.id === 'plane')
 const dolphinObj = objects.find(o => o.item.id === 'dolphin')
-const prismObj = objects.find(o => o.item.id === 'prism')
 
 // the paper airplane actually glides: lift + drag + nose-into-velocity while airborne
 const _fwd = new CANNON.Vec3()
 const _dir = new CANNON.Vec3()
 function updateGlide (dt) {
   const b = planeObj.body
-  if (grabbed === planeObj || !planeObj.mesh.visible) return
+  if (grabbed === planeObj || !planeObj.mesh.visible || discoveries.state().perched || discoveries.state().flight.flying) return
   const v = b.velocity
   const hs = Math.hypot(v.x, v.z)
   if (b.position.y > 0.45 && hs > 1.4) {
@@ -1205,7 +1278,7 @@ function maybeFlop () {
   const now = performance.now()
   if (now < nextFlop) return
   nextFlop = now + 10000 + Math.random() * 10000
-  if (REDUCED || document.hidden) return
+  if (REDUCED || document.hidden || discoveries.dolphinBusy()) return
   const b = dolphinObj.body
   if (grabbed === dolphinObj || !dolphinObj.mesh.visible) return
   if (b.velocity.lengthSquared() > 0.1) return // only flop from rest
@@ -1221,47 +1294,11 @@ function maybeFlop () {
   wakeRender(180)
 }
 
-// the prism casts a little rainbow on the mat while at rest
-const rainbow = (() => {
-  const c = document.createElement('canvas')
-  c.width = 256; c.height = 128
-  const g = c.getContext('2d')
-  const colors = ['#ff5a4e', '#ffa14e', '#ffe14e', '#6fd66f', '#5aa8ff', '#9d6fff']
-  const bandW = 256 / colors.length
-  colors.forEach((col, i) => {
-    const grad = g.createLinearGradient(0, 128, 0, 0)
-    grad.addColorStop(0, col + 'cc')
-    grad.addColorStop(1, col + '00')
-    g.fillStyle = grad
-    g.fillRect(i * bandW, 0, bandW + 1, 128)
-  })
-  const tex = new THREE.CanvasTexture(c)
-  tex.colorSpace = THREE.SRGBColorSpace
-  const m = new THREE.Mesh(
-    new THREE.PlaneGeometry(0.9, 1.3),
-    new THREE.MeshBasicMaterial({ map: tex, transparent: true, opacity: 0, depthWrite: false }),
-  )
-  m.rotation.x = -Math.PI / 2
-  m.position.y = 0.015
-  scene.add(m)
-  return m
-})()
-function updateRainbow (dt) {
-  const b = prismObj.body
-  const still = b.velocity.lengthSquared() < 0.02 && prismObj.mesh.visible && grabbed !== prismObj
-  const goal = still ? 0.5 : 0
-  const mat = rainbow.material
-  rainbow.userData.animating = Math.abs(goal - mat.opacity) > 0.01
-  mat.opacity += (goal - mat.opacity) * Math.min(dt * 2.2, 1)
-  if (mat.opacity > 0.01) {
-    // fan out on the far side of the prism from the light
-    const dx = b.position.x - 5, dz = b.position.z - 4
-    const len = Math.hypot(dx, dz) || 1
-    rainbow.position.x = b.position.x + (dx / len) * 0.95
-    rainbow.position.z = b.position.z + (dz / len) * 0.95
-    rainbow.rotation.z = -Math.atan2(dz, dx) + Math.PI / 2
-  }
-}
+// Discoveries use the same scene and rigid bodies as normal dragging.
+const discoveries = createDiscoveries({ scene, objects, bounds: () => bounds, grabbed: () => grabbed,
+  wake: wakeRender, reduced: REDUCED, announce: message => { srStatus.textContent = message }, sound: ping })
+
+const updateContactShadows = createContactShadows(scene, objects)
 
 // ---------------------------------------------------------------- audio (all synthesized)
 
@@ -1372,6 +1409,20 @@ function resize () {
   camera.lookAt(0, 0, 0.2)
   camera.updateProjectionMatrix()
   layoutWalls()
+  // A phone rotation can put settled objects outside the new, narrower tray.
+  for (const o of objects) {
+    if (!o.mesh.visible) continue
+    const p = o.body.position
+    const x = THREE.MathUtils.clamp(p.x, bounds.xL + o.radius, bounds.xR - o.radius)
+    const z = THREE.MathUtils.clamp(p.z, bounds.zB + o.radius, bounds.zF - o.radius)
+    if (x !== p.x || z !== p.z) {
+      discoveries.beforeGrab(o)
+      p.set(x, Math.max(p.y, 0.3), z)
+      o.body.velocity.set(0, 0, 0)
+      o.body.aabbNeedsUpdate = true
+      o.body.wakeUp()
+    }
+  }
 }
 addEventListener('resize', resize)
 resize()
@@ -1401,7 +1452,7 @@ document.addEventListener('visibilitychange', () => {
 //  callers like resize()/applyTheme() run before this point)
 function simActive () {
   if (grabbed || confetti.length) return true
-  if (ring.userData.animating || rainbow.userData.animating) return true
+  if (ring.userData.animating || discoveries.active()) return true
   for (const d of drops) if (d.active) return true
   for (const o of objects) {
     if (o.mesh.visible && o.body.sleepState !== CANNON.Body.SLEEPING) return true
@@ -1438,8 +1489,9 @@ function tick () {
   }
   updateCoffee(dt)
   updateConfetti(dt)
-  updateRainbow(dt)
+  discoveries.update(dt)
   updateHighlight(dt)
+  updateContactShadows()
   if (!REDUCED) {
     const zoomOut = innerWidth / innerHeight < 0.9 ? 1.35 : 1
     camera.position.x = CAM_BASE.x * zoomOut + px * 0.35
@@ -1471,6 +1523,11 @@ window.__jd = {
       finalShown,
       renderPending,
       simActive: simActive(),
+      motion: objects.filter(o => o.mesh.visible && o.body.sleepState !== CANNON.Body.SLEEPING).map(o => ({
+        id: o.item.id, speed: o.body.velocity.length(), spin: o.body.angularVelocity.length(), y: o.body.position.y,
+      })),
+      activeEffects: { highlight: ring.userData.animating, discoveries: discoveries.active(), drops: drops.filter(d => d.active).length },
+      discoveries: discoveries.state(),
       gravity: { x: world.gravity.x, y: world.gravity.y, z: world.gravity.z },
     }
   },
