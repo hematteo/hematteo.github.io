@@ -62,6 +62,7 @@
   --pen:#d62828;
   --shadow:rgba(0,0,0,.18);
   --backdrop:rgba(0,0,0,.6);
+  --plate-filter:none;
   /* plots drawn by the site (Figure 1 replay, trajectory explorer); peak colour is viridis over log peak step
      in both themes, so a curve's colour means the same thing day and night */
   --plot-grid:#e6e6e6;
@@ -106,6 +107,7 @@
       --plot-title:#d8d5ce;
       --plot-cursor:#b3b0a8;
       --plot-alpha:1.6;
+    --plate-filter:brightness(.88);
   }
 }
 :root[data-theme="dark"] {
@@ -137,9 +139,12 @@
     --plot-title:#d8d5ce;
     --plot-cursor:#b3b0a8;
     --plot-alpha:1.6;
+    --plate-filter:brightness(.88);
 }
 
 ::selection {background:var(--select);}
+/* the paper's PNG figures stay white plates; at night they are dimmed so they do not glare */
+img {filter:var(--plate-filter);}
 
 /* src/theme.js: a plain boxed word in the nav, like the links beside it */
 .theme-toggle {

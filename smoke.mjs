@@ -58,6 +58,24 @@ try {
   await page.locator('.footnote-ref').hover()
   await page.waitForTimeout(500)
   check('footnote preview appears', (await page.locator('#ref-preview').textContent()).includes('Correspondence'))
+
+  // Sparse Readout Prism figure: plays once, settles, and pairs each arrow with its bar on hover
+  const srp = page.locator('main .srp-figure')
+  await srp.scrollIntoViewIfNeeded()
+  await page.waitForTimeout(2600)
+  check('prism figure plays once and settles', await srp.evaluate(el => !el.classList.contains('armed') &&
+    [...el.querySelectorAll('.srp-bar, .srp-arrow')].every(e => getComputedStyle(e).transform === 'none')))
+  const orangeBar = await page.locator('main .srp-bar[data-k="3"]').boundingBox()
+  await page.mouse.move(orangeBar.x + orangeBar.width / 2, orangeBar.y + orangeBar.height / 2)
+  await page.waitForTimeout(250)
+  check('hovering a bar highlights its arrow', await srp.evaluate(el => el.dataset.focus === '3' &&
+    getComputedStyle(el.querySelector('.srp-arrow[data-k="3"]')).opacity === '1' &&
+    Number(getComputedStyle(el.querySelector('.srp-arrow[data-k="0"]')).opacity) < 0.5))
+  await page.mouse.move(5, 5)
+  const still = await browser.newPage({ reducedMotion: 'reduce' })
+  await still.goto(BASE)
+  check('prism figure is complete with reduced motion', await still.locator('.srp-figure').evaluate(el => !el.classList.contains('armed')))
+  await still.close()
   await page.mouse.move(0, 0)
   check('footnote preview closes', await page.locator('#ref-preview').isHidden())
   await page.locator('#learning-to-read-out').scrollIntoViewIfNeeded()
@@ -73,6 +91,8 @@ try {
   await page.locator('.masthead .theme-toggle').click()
   let t = await theme()
   check('theme toggle switches to dark', t.attr === 'dark' && t.bg !== 'rgb(255, 255, 255)', JSON.stringify(t))
+  const grid = await page.locator('.replay-grid').first().evaluate(el => getComputedStyle(el).stroke)
+  check('Figure 1 recolours for dark', grid !== 'rgb(230, 230, 230)', grid)
   await page.reload()
   t = await theme()
   check('dark choice survives a reload', t.attr === 'dark' && t.bg !== 'rgb(255, 255, 255)', JSON.stringify(t))
@@ -81,7 +101,8 @@ try {
   check('dark choice carries to the research pages', t.attr === 'dark' && t.bg !== 'rgb(255, 255, 255)', JSON.stringify(t))
   await page.locator('.masthead .theme-toggle').click()
   t = await theme()
-  check('theme toggle switches back to light', t.attr === 'light' && t.bg === 'rgb(255, 255, 255)', JSON.stringify(t))
+  const stored = await page.evaluate(() => localStorage.getItem('theme'))
+  check('choosing the system theme clears the stored choice', t.attr === undefined && stored === null && t.bg === 'rgb(255, 255, 255)', JSON.stringify({ ...t, stored }))
   await page.goto(BASE)
   check('homepage does not link to the drawer', await page.locator('a[href^="/drawer"]').count() === 0)
   await page.goto(BASE + 'drawer/')

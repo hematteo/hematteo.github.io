@@ -20,7 +20,7 @@ function entryPreview (entry) {
     card.append(line)
   }
   const figure = entry.querySelector('.research-preview')
-  const native = figure?.querySelector('svg.native-figure')
+  const native = figure?.querySelector('svg.native-figure, svg.replay-figure')
   const thumbnail = figure?.dataset.thumbnail || figure?.querySelector('img')?.src
   if (native) {
     const copy = native.cloneNode(true)
