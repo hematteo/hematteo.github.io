@@ -128,6 +128,7 @@ main {counter-reset:sec fig;}
 .paper-body p,.entry-description p,.details-content p {text-align:justify;hyphens:auto;}
 .paper-body p + p {margin-top:10px;}
 .paper-body .paper-question {font-style:italic;text-align:left;margin-bottom:-2px;}
+.paper-question i {font-style:normal;} /* a title inside the italic question is set upright */
 .cv-entry > .entry-content > .paper-body {margin-top:16px;}
 .artifact-links {
   display:flex;
