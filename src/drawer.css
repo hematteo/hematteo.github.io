@@ -1,0 +1,303 @@
+/* The drawer is the desk under the paper: every control is a slip of that paper,
+   set in the same Latin Modern with the same hyperref link boxes. */
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; }
+:root {
+  --paper: #fffdf7;
+  --ink: #1b1a17;
+  --ink-dim: #5d5850;
+  --rule: #e4ded0;
+  --pen: #d62828;
+  --hover: #ffe8e8;
+  --slip-shadow: 0 1px 1px rgba(40, 30, 15, 0.2), 0 8px 22px rgba(40, 30, 15, 0.22);
+  --vig: 0.22;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #ece6d8;
+    --rule: #d3ccbb;
+    --slip-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 10px 26px rgba(0, 0, 0, 0.45);
+    --vig: 0.32;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #ece6d8;
+  --rule: #d3ccbb;
+  --slip-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 10px 26px rgba(0, 0, 0, 0.45);
+  --vig: 0.32;
+}
+
+body {
+  font-family: var(--tex);
+  color: var(--ink);
+  background: #23262b;
+  -webkit-font-smoothing: antialiased;
+}
+html.js, html.js body { height: 100%; overflow: hidden; }
+html:not(.js) #app { display: none; }
+
+button { font: inherit; color: inherit; }
+button:focus-visible, select:focus-visible, #scene:focus-visible, #card:focus-visible {
+  outline: 2px solid var(--pen); outline-offset: 2px;
+}
+
+#app { position: fixed; inset: 0; }
+#scene { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+#vignette {
+  position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse 78% 68% at 50% 44%, transparent 48%, rgba(8, 5, 2, var(--vig)) 100%);
+}
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* shared slip-of-paper surface */
+.slip, .toolbar, #tooltip, #hint, .dock-panel, #card, #discovery-notes {
+  background: var(--paper); color: var(--ink);
+  box-shadow: var(--slip-shadow);
+}
+.slip a, .toolbar button, #tooltip, #hint, .dock-panel, #card-eyebrow, .discovery-kicker, .discovery-help,
+#discovery-choice, #discovery-arrange, .slip-progress, #inventory .kicker, #inventory .eyebrow, #inventory-close {
+  font-family: var(--tex-mono);
+}
+
+/* ---------------------------------------------------------------- title slip */
+
+.slip {
+  position: absolute; top: 18px; left: 18px; z-index: 4;
+  max-width: 330px; padding: 14px 18px 11px;
+  transform: rotate(-0.7deg);
+}
+.slip h1 { font-size: 1.6rem; font-weight: 700; line-height: 1.1; }
+.slip-sub { margin-top: 4px; font-size: 0.98rem; line-height: 1.35; }
+.slip-progress {
+  display: block; margin-top: 7px; padding: 0;
+  background: none; border: 0;
+  font-size: 0.74rem; color: var(--ink-dim);
+}
+.slip-progress:not([disabled]) { color: var(--pen); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.slip-progress[disabled] { cursor: default; }
+.slip footer {
+  display: flex; flex-wrap: wrap; gap: 4px 14px;
+  margin-top: 9px; padding-top: 8px; border-top: 1px solid var(--rule);
+}
+.slip footer a { font-size: 0.72rem; color: var(--ink-dim); box-shadow: none; padding: 0; }
+.slip footer a:hover { color: var(--pen); background: none; animation: none; }
+.slip footer a[href="/"] { color: var(--ink); }
+
+/* ---------------------------------------------------------------- toolbar */
+
+.toolbar {
+  position: absolute; top: 18px; right: 18px; z-index: 6;
+  display: flex; align-items: stretch;
+}
+.toolbar > button, #discoveries-toggle {
+  background: none; border: 0; border-left: 1px solid var(--rule);
+  padding: 10px 13px; min-height: 40px;
+  font-size: 0.72rem; letter-spacing: 0.02em; cursor: pointer;
+}
+.toolbar > button:first-child { border-left: 0; }
+.toolbar > button:hover, #discoveries-toggle:hover, #discoveries-toggle[aria-expanded="true"], #list-toggle[aria-expanded="true"] {
+  background: var(--hover);
+}
+#discovery-ui { position: relative; display: flex; }
+#discoveries-toggle::before {
+  content: ''; display: inline-block; width: 6px; height: 6px; margin-right: 7px;
+  border-radius: 50%; background: var(--pen); vertical-align: 1px;
+}
+
+/* ---------------------------------------------------------------- lab notebook */
+
+#discovery-notes {
+  position: absolute; top: calc(100% + 10px); right: 0;
+  width: min(340px, calc(100vw - 32px));
+  max-height: calc(100dvh - 90px); overflow: auto;
+  padding: 22px 20px 18px 42px;
+  /* ruled notebook page with a red margin line */
+  background:
+    linear-gradient(to right, transparent 29px, rgba(214, 40, 40, 0.45) 29px 30px, transparent 30px),
+    repeating-linear-gradient(to bottom, transparent 0 23px, rgba(90, 130, 170, 0.14) 23px 24px),
+    var(--paper);
+}
+#discovery-close {
+  position: absolute; right: 6px; top: 6px; width: 40px; height: 40px;
+  border: 0; background: transparent; color: var(--ink-dim); font-size: 22px; cursor: pointer;
+}
+#discovery-close:hover { color: var(--pen); }
+.discovery-kicker { color: var(--ink-dim); font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase; }
+#discovery-title { font-size: 1.25rem; line-height: 1.25; font-weight: 700; margin: 8px 26px 12px 0; }
+#discovery-clue { font-size: 0.98rem; font-style: italic; line-height: 1.45; margin-bottom: 14px; }
+#discovery-list { list-style: none; padding: 0; margin-bottom: 12px; counter-reset: note; }
+#discovery-list li { counter-increment: note; border-top: 1px solid var(--rule); padding: 10px 0; }
+#discovery-list strong { display: block; font-size: 0.98rem; margin-bottom: 3px; }
+#discovery-list strong::before { content: counter(note) '. '; color: var(--pen); }
+#discovery-list span { display: block; font-size: 0.9rem; line-height: 1.45; color: var(--ink-dim); }
+.discovery-help { display: block; margin-top: 12px; font-size: 0.66rem; line-height: 1.6; color: var(--ink-dim); }
+#discovery-choice {
+  width: 100%; min-height: 40px; margin: 6px 0 10px; padding: 8px;
+  background: #fff; color: var(--ink); border: 1px solid var(--rule); border-radius: 0; font-size: 0.72rem;
+}
+#discovery-arrange, #card-play, #training-resume {
+  min-height: 40px; padding: 8px 12px; cursor: pointer;
+  background: none; border: 1px solid var(--pen); border-radius: 0;
+  font-family: var(--tex-mono); font-size: 0.72rem; color: var(--ink);
+}
+#discovery-arrange { width: 100%; text-align: left; }
+#discovery-arrange:hover, #card-play:hover, #training-resume:hover { background: var(--hover); }
+
+/* ---------------------------------------------------------------- dock: one stack, bottom centre */
+
+#dock {
+  position: absolute; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom)); z-index: 6;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  width: max-content; max-width: calc(100vw - 24px);
+  pointer-events: none;
+}
+#dock > * { pointer-events: auto; }
+.dock-panel { padding: 11px 14px; font-size: 0.74rem; text-align: center; }
+.dock-panel[hidden] { display: none; }
+#hint {
+  pointer-events: none;
+  padding: 9px 16px; max-height: 80px;
+  font-size: 0.72rem; letter-spacing: 0.03em; white-space: nowrap;
+  transition: opacity 0.6s ease, max-height 0s 0.6s, padding 0s 0.6s;
+}
+#hint.gone { opacity: 0; max-height: 0; padding-block: 0; overflow: hidden; margin-top: -10px; }
+#discovery-toast { border-left: 3px solid var(--pen); }
+#flight-status { font-size: 0.66rem; color: var(--ink-dim); margin-bottom: 8px; }
+#flight-controls > div { display: flex; gap: 5px; justify-content: center; }
+#flight-controls button {
+  height: 44px; min-width: 44px; cursor: pointer;
+  background: none; border: 1px solid var(--rule); border-radius: 0; font-size: 18px;
+}
+#flight-controls button:hover { background: var(--hover); }
+#flight-controls button[aria-pressed="true"] { border-color: var(--pen); background: var(--hover); }
+#flight-land { padding: 0 12px; font-family: var(--tex-mono); font-size: 0.74rem !important; }
+#training-controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center; }
+#training-controls[hidden] { display: none; }
+
+/* ---------------------------------------------------------------- hover label */
+
+#tooltip {
+  position: absolute; z-index: 5; pointer-events: none;
+  font-size: 0.7rem; padding: 4px 9px;
+  transform: translateY(-100%); white-space: nowrap;
+}
+#tooltip[hidden] { display: none; }
+
+/* ---------------------------------------------------------------- story card: a pinned index card */
+
+#card {
+  position: absolute; left: 18px; bottom: 18px; z-index: 7;
+  width: min(390px, calc(100vw - 36px));
+  padding: 20px 24px 18px;
+  opacity: 0; transform: translateY(14px) rotate(0deg);
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+#card.open { opacity: 1; transform: translateY(0) rotate(-0.6deg); }
+#card::before {
+  /* pushpin */
+  content: ''; position: absolute; top: -7px; left: 50%; width: 14px; height: 14px; margin-left: -7px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ff8a80, var(--pen) 55%, #8e1616);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.35);
+}
+#card-eyebrow { font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-dim); }
+#card h2 {
+  margin: 6px -24px 0; padding: 0 24px 9px;
+  font-size: 1.4rem; font-weight: 700; line-height: 1.2; text-wrap: balance;
+  border-bottom: 1px solid rgba(214, 40, 40, 0.55);
+}
+#card p#card-body { margin-top: 12px; font-size: 1.02rem; line-height: 1.45; }
+#card-play { margin-top: 14px; }
+.card-links { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 14px; font-size: 0.95rem; }
+.card-links a[hidden] { display: none; }
+#card-paper { box-shadow: 0 0 0 1px var(--link); }
+#card-paper:hover { background: var(--hover); }
+#card-paper::before { content: 'In the paper: '; color: var(--ink-dim); }
+#card-link::after, #card-actions a[target]::after { content: ' ↗'; }
+#card-actions { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 14px; font-size: 0.95rem; }
+#card-actions[hidden] { display: none; }
+#card-close {
+  position: absolute; top: 8px; right: 8px; padding: 6px 9px;
+  background: none; border: 0; color: var(--ink-dim); font-size: 1.05rem; line-height: 1; cursor: pointer;
+}
+#card-close:hover { color: var(--pen); }
+
+/* one thing at a time: the card owns the bottom of the screen when there is no room for both */
+@media (max-width: 1180px) {
+  #app:has(#card.open) #dock { visibility: hidden; }
+}
+
+/* ---------------------------------------------------------------- inventory: list view and no-WebGL page */
+
+#inventory { font-size: 1.05rem; line-height: 1.45; }
+#inventory .sheet {
+  position: relative; max-width: 44rem; margin: 5vh auto; padding: 44px 52px 36px;
+  background: #fff; color: #000; box-shadow: var(--slip-shadow);
+}
+#inventory .kicker { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-dim); }
+#inventory h2 { font-size: 1.7rem; margin-top: 4px; }
+.inventory-lede { margin-top: 10px; }
+#inventory ol { list-style: none; padding: 0; margin-top: 22px; counter-reset: item; }
+#inventory li { counter-increment: item; padding: 16px 0; border-top: 1px solid #e5e5e5; }
+#inventory .eyebrow { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-dim); }
+#inventory h3 { font-size: 1.15rem; margin-top: 3px; }
+#inventory h3::before { content: 'A.' counter(item) '\2003'; }
+#inventory .story { margin-top: 4px; }
+#inventory .refs { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 8px; font-size: 0.95rem; }
+#inventory a[data-paper] { box-shadow: 0 0 0 1px var(--link); }
+#inventory-close {
+  position: absolute; top: 14px; right: 14px; padding: 8px 12px; cursor: pointer;
+  background: none; border: 1px solid var(--pen); font-size: 0.72rem;
+}
+#inventory-close:hover { background: var(--hover); }
+
+html:not(.js) body { background: #f3f1ec; }
+html:not(.js) #inventory-close { display: none; }
+html.js .no-scene { display: none; }
+html.js #inventory {
+  position: fixed; inset: 0; z-index: 20; overflow: auto;
+  background: rgba(15, 12, 8, 0.55); padding: 0 12px;
+}
+html.js #inventory:not(.open) { display: none; }
+
+/* ---------------------------------------------------------------- phones */
+
+@media (max-width: 640px) {
+  .toolbar { top: 12px; left: 12px; right: 12px; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; }
+  .toolbar > button, #discoveries-toggle { min-height: 44px; padding: 6px 4px; font-size: 0.64rem; line-height: 1.2; }
+  #discoveries-toggle { width: 100%; border-left: 1px solid var(--rule); }
+  #discoveries-toggle::before { display: none; }
+  #discovery-ui { position: static; }
+  #discovery-notes { right: 0; width: 100%; max-height: calc(100dvh - 80px); }
+
+  .slip { top: 66px; left: 12px; max-width: calc(100vw - 24px); padding: 10px 14px 9px; }
+  .slip h1 { font-size: 1.3rem; }
+  .slip-sub { display: none; }
+  .slip-progress { margin-top: 3px; }
+  .slip footer a { padding: 6px 0; }
+  .slip footer { margin-top: 6px; padding-top: 2px; }
+
+  #dock { bottom: calc(14px + env(safe-area-inset-bottom)); }
+  #hint { font-size: 0.66rem; white-space: normal; text-align: center; }
+
+  #card {
+    left: 0; right: 0; bottom: 0; width: auto;
+    padding: 26px 22px calc(18px + env(safe-area-inset-bottom));
+  }
+  #card.open { transform: none; }
+  #card::before { top: 9px; width: 40px; height: 4px; margin-left: -20px; border-radius: 2px; background: var(--rule); box-shadow: none; }
+  #card h2 { margin-inline: -22px; padding-inline: 22px; }
+  #card-close { padding: 12px 14px; font-size: 1.2rem; }
+  .card-links a, #card-actions a { padding-block: 6px; }
+  #app:has(#card.open) #dock { visibility: hidden; }
+
+  #inventory .sheet { margin: 12px auto; padding: 56px 20px 24px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #card, #hint { transition: none; }
+}

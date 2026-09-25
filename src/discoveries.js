@@ -98,7 +98,7 @@ export function createDiscoveries ({ scene, objects, bounds, grabbed, wake, redu
   const yAxis = new THREE.Vector3(0, 1, 0)
 
   function renderNotes () {
-    toggle.textContent = found.size ? `Discoveries ${found.size}/${NOTES.length}` : 'Discoveries'
+    toggle.textContent = found.size ? `Notebook ${found.size}/${NOTES.length}` : 'Notebook'
     title.textContent = found.size === NOTES.length ? 'A little world, connected.' : 'Some things belong together.'
     clue.textContent = found.size === NOTES.length ? 'Move them apart and bring them back. The paper remembers its colors until you dump the drawer again.' : NOTES[NOTES.findIndex((_, i) => !found.has(i))][2]
     if (choice.value !== 'next') clue.textContent = NOTES[Number(choice.value)][2]

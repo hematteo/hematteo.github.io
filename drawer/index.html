@@ -21,340 +21,72 @@
   <meta name="twitter:title" content="Matteo He — Junk Drawer">
   <meta name="twitter:description" content="My CV, dumped in a drawer. Ten accomplishments as real 3D objects you can grab, throw, and read.">
   <meta name="twitter:image" content="https://hematteo.github.io/og.png">
-<style>
-  *, *::before, *::after { box-sizing: border-box; }
-  * { margin: 0; }
-  :root {
-    --ink: #f4f6f3;
-    --ink-dim: rgba(244, 246, 243, 0.62);
-    --accent: #ff6a3d;
-    --panel: rgba(20, 18, 12, 0.85);
-    --panel-ink: #f4f6f3;
-    --panel-dim: rgba(244, 246, 243, 0.6);
-    --pill: rgba(20, 18, 12, 0.55);
-    --vig: 0.22;
-    --hud-ink: #241a0e;
-    --hud-dim: rgba(36, 26, 14, 0.85);
-    --hud-shadow: 0 1px 6px rgba(255, 244, 220, 0.35);
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --panel: rgba(10, 8, 5, 0.88);
-      --pill: rgba(10, 8, 5, 0.6);
-      --vig: 0.32;
-      --hud-ink: #f4f6f3;
-      --hud-dim: rgba(244, 246, 243, 0.62);
-      --hud-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
-    }
-  }
-  :root[data-theme="light"] {
-    --panel: rgba(20, 18, 12, 0.85);
-    --pill: rgba(20, 18, 12, 0.55);
-    --vig: 0.22;
-    --hud-ink: #241a0e;
-    --hud-dim: rgba(36, 26, 14, 0.85);
-    --hud-shadow: 0 1px 6px rgba(255, 244, 220, 0.35);
-  }
-  :root[data-theme="dark"] {
-    --panel: rgba(10, 8, 5, 0.88);
-    --pill: rgba(10, 8, 5, 0.6);
-    --vig: 0.32;
-    --hud-ink: #f4f6f3;
-    --hud-dim: rgba(244, 246, 243, 0.62);
-    --hud-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
-  }
-  html, body { height: 100%; overflow: hidden; }
-  body {
-    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-    -webkit-font-smoothing: antialiased;
-    background: #23262b;
-  }
-  #app { position: fixed; inset: 0; }
-  #scene { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
-  #vignette {
-    position: absolute; inset: 0; pointer-events: none;
-    background: radial-gradient(ellipse 78% 68% at 50% 44%, transparent 48%, rgba(8, 5, 2, var(--vig)) 100%);
-  }
-
-  .mono { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
-  .sr-only {
-    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
-  }
-  #tooltip {
-    position: absolute; z-index: 5; pointer-events: none;
-    background: var(--panel); color: var(--panel-ink);
-    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-    font-size: 0.7rem; letter-spacing: 0.04em;
-    padding: 5px 10px; border-radius: 8px;
-    border: 1px solid rgba(244,246,243,0.14);
-    transform: translateY(-100%);
-    white-space: nowrap;
-  }
-  #tooltip[hidden] { display: none; }
-
-  header {
-    position: absolute; top: 20px; left: 22px;
-    color: var(--hud-ink); pointer-events: none;
-    text-shadow: var(--hud-shadow);
-    max-width: min(44ch, 62vw);
-  }
-  header h1 {
-    font-size: clamp(1.5rem, 3.4vw, 2.2rem);
-    font-weight: 800; letter-spacing: -0.03em; line-height: 1;
-    text-transform: uppercase;
-  }
-  header p {
-    margin-top: 8px;
-    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-    font-size: clamp(0.68rem, 1.4vw, 0.8rem);
-    color: var(--hud-dim);
-    letter-spacing: 0.02em;
-    line-height: 1.5;
-  }
-  header p b { color: var(--accent); font-weight: 600; }
-
-  .controls {
-    position: absolute; top: 20px; right: 22px;
-    display: flex; gap: 8px;
-  }
-  .controls button, #counter {
-    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-    font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase;
-  }
-  .controls button {
-    background: var(--pill); color: var(--ink);
-    border: 1px solid rgba(244,246,243,0.25);
-    border-radius: 999px; padding: 8px 14px;
-    cursor: pointer; backdrop-filter: blur(6px);
-  }
-  .controls button:hover { border-color: var(--accent); color: var(--accent); }
-  .controls button:focus-visible, #card a:focus-visible, #card button:focus-visible,
-  #counter:focus-visible, #scene:focus-visible {
-    outline: 2px solid var(--accent); outline-offset: 2px;
-  }
-
-  #counter {
-    position: absolute; right: 22px; top: 62px;
-    color: var(--hud-dim); text-align: right;
-    text-shadow: var(--hud-shadow);
-    background: none; border: 0; padding: 4px 0;
-  }
-  #counter[disabled] { pointer-events: none; }
-  #counter:not([disabled]) {
-    cursor: pointer; color: var(--accent);
-    background: var(--pill); padding: 7px 13px; border-radius: 999px;
-    border: 1px solid rgba(244,246,243,0.2);
-    text-shadow: none; backdrop-filter: blur(6px);
-  }
-  #counter:not([disabled]):hover { text-decoration: underline; }
-
-  #hint {
-    position: absolute; bottom: 22px; left: 50%; transform: translateX(-50%);
-    background: var(--pill); color: var(--ink);
-    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-    font-size: 0.72rem; letter-spacing: 0.06em;
-    padding: 9px 18px; border-radius: 999px;
-    border: 1px solid rgba(244,246,243,0.18);
-    backdrop-filter: blur(6px);
-    pointer-events: none;
-    transition: opacity 0.6s ease;
-    white-space: nowrap;
-  }
-  #hint.gone { opacity: 0; }
-
-  #card {
-    position: absolute; left: 22px; bottom: 22px;
-    width: min(370px, calc(100vw - 44px));
-    background: var(--panel); color: var(--panel-ink);
-    border: 1px solid rgba(244,246,243,0.14);
-    border-radius: 14px;
-    padding: 20px 22px 18px;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 12px 40px rgba(0,0,0,0.35);
-    opacity: 0; transform: translateY(14px);
-    transition: opacity 0.22s ease, transform 0.22s ease;
-  }
-  #card.open { opacity: 1; transform: translateY(0); }
-  #card-eyebrow {
-    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-    font-size: 0.66rem; letter-spacing: 0.14em;
-    color: var(--accent);
-  }
-  #card h2 {
-    margin-top: 6px;
-    font-size: 1.3rem; font-weight: 750; letter-spacing: -0.02em;
-    text-wrap: balance;
-  }
-  #card p {
-    margin-top: 10px;
-    font-size: 0.86rem; line-height: 1.55;
-    color: var(--panel-dim);
-  }
-  #card-link[hidden] { display: none; }
-  #card-link {
-    display: inline-block; margin-top: 12px;
-    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-    font-size: 0.72rem; letter-spacing: 0.06em;
-    color: var(--accent); text-decoration: none;
-    border-bottom: 1px solid var(--accent);
-    padding-bottom: 1px;
-  }
-  #card-close {
-    position: absolute; top: 10px; right: 10px;
-    background: none; border: 0; color: var(--panel-dim);
-    font-size: 1.05rem; line-height: 1; cursor: pointer;
-    padding: 6px 8px; border-radius: 8px;
-  }
-  #card-close:hover { color: var(--panel-ink); }
-  #card-actions { display: flex; gap: 16px; margin-top: 14px; flex-wrap: wrap; }
-  #card-actions[hidden] { display: none; }
-  #card-actions a {
-    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-    font-size: 0.72rem; letter-spacing: 0.06em;
-    color: var(--accent); text-decoration: none;
-    border-bottom: 1px solid var(--accent);
-    padding-bottom: 1px;
-  }
-
-  footer {
-    position: absolute; bottom: 22px; right: 22px;
-    display: flex; gap: 14px;
-  }
-  footer a {
-    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-    font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--hud-dim); text-decoration: none;
-    text-shadow: var(--hud-shadow);
-  }
-  footer a:hover { color: var(--accent); }
-
-  @media (max-width: 640px) {
-    footer { left: 16px; right: auto; bottom: 64px; }
-    .controls { flex-direction: column; align-items: flex-end; gap: 7px; }
-    .controls button { padding: 11px 16px; }
-    header { max-width: calc(100vw - 160px); }
-    #counter { top: auto; bottom: 76px; right: 16px; }
-    #card-close { padding: 12px 14px; font-size: 1.2rem; }
-    #card {
-      left: 0; right: 0; bottom: 0; width: auto;
-      border-radius: 18px 18px 0 0;
-      border-left: 0; border-right: 0; border-bottom: 0;
-      padding: 26px 22px calc(18px + env(safe-area-inset-bottom));
-    }
-    #card::before {
-      content: ""; position: absolute; top: 9px; left: 50%;
-      width: 40px; height: 4px; border-radius: 2px;
-      transform: translateX(-50%);
-      background: rgba(244, 246, 243, 0.3);
-    }
-    #card-actions a, #card-link { padding: 8px 0; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    #card { transition: none; }
-    #hint { transition: none; }
-  }
-
-  #discovery-ui { position: absolute; top: 98px; right: 22px; z-index: 6; }
-  #discoveries-toggle, #discovery-arrange {
-    color: var(--ink); background: var(--pill); border: 1px solid rgba(244,246,243,.3);
-    border-radius: 999px; padding: 9px 14px; font: 0.7rem ui-monospace, monospace;
-    cursor: pointer; backdrop-filter: blur(10px); min-height: 38px;
-  }
-  #discoveries-toggle::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #e6c58c; margin-right: 8px; }
-  #discovery-notes { width: min(330px, calc(100vw - 32px)); margin-top: 10px; padding: 24px;
-    background: var(--panel); color: var(--ink); border: 1px solid rgba(244,246,243,.2); border-radius: 14px; backdrop-filter: blur(16px);
-    max-height: calc(100dvh - 175px); overflow: auto; box-shadow: 0 12px 40px #0004; }
-  #discovery-close { position: absolute; right: 8px; top: 54px; width: 40px; height: 40px; color: var(--ink-dim); border: 0; background: transparent; font-size: 24px; cursor: pointer; }
-  .discovery-kicker { color: #e6c58c; font: 0.64rem ui-monospace, monospace; letter-spacing: .16em; }
-  #discovery-title { font-size: 1.2rem; line-height: 1.25; font-weight: 600; margin: 10px 20px 16px 0; }
-  #discovery-clue { font-size: .85rem; line-height: 1.6; color: var(--ink); margin-bottom: 16px; }
-  #discovery-list { list-style: none; padding: 0; }
-  #discovery-list li { border-top: 1px solid #ffffff20; padding: 14px 0; }
-  #discovery-list strong { display: block; font-size: .8rem; color: #e6c58c; margin-bottom: 5px; font-weight: 500; }
-  #discovery-list span { font-size: .77rem; line-height: 1.55; color: var(--ink-dim); display: block; }
-  #discovery-arrange { border-radius: 7px; text-align: left; padding: 12px; width: 100%; }
-  .discovery-help { margin-top: 14px; font-size: .66rem; line-height: 1.6; color: var(--ink-dim); }
-  #discovery-toast { position: absolute; bottom: 78px; left: 50%; transform: translateX(-50%); padding: 12px 20px;
-    width: max-content; max-width: calc(100vw - 32px); color: #f6e6c9; background: var(--panel); border: 1px solid #e6c58c55;
-    border-radius: 10px; font: .8rem ui-monospace, monospace; text-align: center; pointer-events: none; }
-  #discovery-ui button:focus-visible { outline: 2px solid #e6c58c; outline-offset: 3px; }
-  #discovery-ui button:hover { border-color: #e6c58c; }
-  @media (max-width: 640px) {
-    #discovery-ui { top: 122px; right: 16px; }
-    .controls:has(#tilt:not([hidden])) ~ #discovery-ui { top: 170px; }
-    .controls:has(#tilt:not([hidden])) ~ #discovery-ui #discovery-notes { max-height: calc(100dvh - 258px); }
-    #discoveries-toggle { min-height: 44px; }
-    #discovery-notes { max-height: calc(100dvh - 210px); }
-    #hint { font-size: .58rem; padding: 10px; width: max-content; max-width: calc(100vw - 24px); white-space: normal; text-align: center; }
-    #discovery-toast { bottom: 115px; font-size: .72rem; }
-  }
-
-  #flight-controls { position: absolute; left: 50%; bottom: 96px; transform: translateX(-50%); z-index: 7;
-    padding: 14px; border: 1px solid #c7e5d950; border-radius: 12px; background: var(--panel); color: var(--ink); backdrop-filter: blur(12px); }
-  #flight-controls p { font: .65rem ui-monospace, monospace; color: #c7e5d9; margin-bottom: 9px; text-align: center; }
-  #flight-controls > div { display: flex; gap: 5px; }
-  #flight-controls button { height: 44px; min-width: 44px; border: 1px solid #ffffff25; border-radius: 7px;
-    background: #ffffff08; color: var(--ink); font-size: 18px; cursor: pointer; }
-  #flight-controls button:hover { background: #ffffff20; }
-  #flight-controls button:focus-visible { outline: 2px solid #a6e2c7; outline-offset: 2px; }
-  #flight-land { padding: 0 12px; font: .75rem ui-monospace, monospace; }
-  #app:has(#flight-controls:not([hidden])) #discovery-toast { bottom: 208px; }
-  @media (max-width: 640px) { #flight-controls { bottom: 126px; padding: 10px; } #app:has(#flight-controls:not([hidden])) #discovery-toast { bottom: 228px; } }
-  #discovery-choice { width:100%; min-height:44px; margin:6px 0 10px; padding:8px; background:#203b32; color:#e9f1e8; border:1px solid #ffffff30; border-radius:6px; }
-  #training-controls { position:absolute; bottom:155px; left:20px; max-width:calc(100% - 40px); padding:12px; background:#10291fee; color:#e0e8dd; border:1px solid #bcd5bd30; border-radius:9px; font:11px ui-monospace,monospace; z-index:6; }
-  #training-resume, #card-play { min-height:44px; margin:8px; padding:8px 14px; border:1px solid #b9d5be50; border-radius:6px; color:#e2efd9; background:#355348; cursor:pointer; }
-  #flight-controls button[aria-pressed="true"] { background:#537862; }
-  @media(max-width:640px) { #training-controls { bottom:220px; left:12px; } }
-</style>
+  <script>
+    // The 3D drawer needs WebGL. Without it (or without JavaScript) the inventory below is the page.
+    (() => {
+      try {
+        const c = document.createElement('canvas')
+        if (c.getContext('webgl2') || c.getContext('webgl')) document.documentElement.classList.add('js')
+      } catch {}
+    })()
+  </script>
+  <link rel="stylesheet" href="/src/latex.css">
+  <link rel="stylesheet" href="/src/drawer.css">
 </head>
 <body>
 <div id="app">
   <canvas id="scene" tabindex="0" role="application" aria-label="Interactive pile of objects. Drag to throw, click to read." aria-describedby="kbd-help"></canvas>
   <div id="sr-status" class="sr-only" role="status" aria-live="polite"></div>
-  <p id="kbd-help" class="sr-only">Use the arrow keys to browse the objects, Enter to read an object's story, Escape to close it. Hold Shift with arrow keys to move the selected object. The desk light switches on or off with Enter. Open Discoveries for hints or help arranging a pair.</p>
+  <p id="kbd-help" class="sr-only">Use the arrow keys to browse the objects, Enter to read an object's story, Escape to close it. Hold Shift with arrow keys to move the selected object. The desk light switches on or off with Enter. Open the notebook for hints or help arranging a pair.</p>
   <div id="vignette"></div>
 
-  <header>
+  <div class="slip" id="title-slip">
     <h1>Matteo He</h1>
-    <p>ML researcher &amp; engineer, Cambridge.<br>
-    Everything I've made, dumped in a drawer. <b>Grab something.</b></p>
-  </header>
+    <p class="slip-sub"><i>Everything I’ve made, dumped in a drawer.</i> Grab something.</p>
+    <button id="counter" class="slip-progress" aria-live="polite" disabled>0/10 objects read</button>
+    <footer>
+      <a href="/">← The paper</a>
+      <a href="https://github.com/hematteo" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://linkedin.com/in/matteohe" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="/#contact">Contact</a>
+    </footer>
+  </div>
 
-  <div class="controls">
+  <div class="toolbar" role="toolbar" aria-label="Drawer controls">
     <button id="dump" type="button">Dump again</button>
     <button id="mute" type="button" aria-pressed="false">Sound on</button>
     <button id="tilt" type="button" aria-pressed="false" hidden>Tilt off</button>
-  </div>
-  <button id="counter" class="mono" aria-live="polite" disabled>0/10 examined</button>
-
-  <div id="discovery-ui">
-    <button id="discoveries-toggle" type="button" aria-expanded="false" aria-controls="discovery-notes">Discoveries</button>
-    <section id="discovery-notes" aria-labelledby="discovery-title" hidden>
-      <button id="discovery-close" type="button" aria-label="Close discoveries">×</button>
-      <p class="discovery-kicker">FIELD NOTES</p>
-      <h2 id="discovery-title">Some things belong together.</h2>
-      <ol id="discovery-list"></ol>
-      <p id="discovery-clue"></p>
-      <label for="discovery-choice" class="discovery-help">Try an interaction</label>
-      <select id="discovery-choice"><option value="next">Next discovery</option></select>
-      <button id="discovery-arrange" type="button">Help me arrange this pair</button>
-      <p class="discovery-help">Drag objects together. Click the little light to switch it.<br>Keyboard: arrow keys to browse, Shift + arrows to move; R to rotate.</p>
-    </section>
-  </div>
-  <section id="flight-controls" aria-label="Airplane flight controls" hidden>
-    <p id="flight-status">Three actions · A / S / D</p>
-    <div>
-      <button type="button" data-steer="-1,0" aria-label="Steer left">←</button>
-      <button type="button" data-steer="0,0" aria-label="Neutral steering">•</button>
-      <button type="button" data-steer="1,0" aria-label="Steer right">→</button>
-      <button type="button" id="flight-land">Land</button>
+    <button id="list-toggle" type="button" aria-controls="inventory" aria-expanded="false">List</button>
+    <div id="discovery-ui">
+      <button id="discoveries-toggle" type="button" aria-expanded="false" aria-controls="discovery-notes">Notebook</button>
+      <section id="discovery-notes" aria-labelledby="discovery-title" hidden>
+        <button id="discovery-close" type="button" aria-label="Close notebook">×</button>
+        <p class="discovery-kicker">Lab notebook · experiments</p>
+        <h2 id="discovery-title">Some things belong together.</h2>
+        <ol id="discovery-list"></ol>
+        <p id="discovery-clue"></p>
+        <label for="discovery-choice" class="discovery-help">Try an interaction</label>
+        <select id="discovery-choice"><option value="next">Next discovery</option></select>
+        <button id="discovery-arrange" type="button">Help me arrange this pair</button>
+        <p class="discovery-help">Drag objects together. Click the little light to switch it.<br>Keyboard: arrow keys to browse, Shift + arrows to move; R to rotate.</p>
+      </section>
     </div>
-  </section>
-  <section id="training-controls" hidden aria-label="Toy training run"><span id="training-status" role="status"></span><button id="training-resume" type="button" hidden>Resume run</button></section>
-  <div id="discovery-toast" role="status" hidden></div>
-  <div id="hint" aria-hidden="true">drag to throw &nbsp;·&nbsp; click to read &nbsp;·&nbsp; bring things together</div>
+  </div>
+
+  <div id="dock">
+    <section id="flight-controls" class="dock-panel" aria-label="Airplane flight controls" hidden>
+      <p id="flight-status">Three actions · A / S / D</p>
+      <div>
+        <button type="button" data-steer="-1,0" aria-label="Steer left">←</button>
+        <button type="button" data-steer="0,0" aria-label="Neutral steering">•</button>
+        <button type="button" data-steer="1,0" aria-label="Steer right">→</button>
+        <button type="button" id="flight-land">Land</button>
+      </div>
+    </section>
+    <section id="training-controls" class="dock-panel" hidden aria-label="Toy training run"><span id="training-status" role="status"></span><button id="training-resume" type="button" hidden>Resume run</button></section>
+    <div id="discovery-toast" class="dock-panel" role="status" hidden></div>
+    <div id="hint" aria-hidden="true">drag to throw &nbsp;·&nbsp; click to read &nbsp;·&nbsp; bring things together</div>
+  </div>
   <div id="tooltip" hidden></div>
 
   <aside id="card" hidden tabindex="-1">
@@ -363,21 +95,89 @@
     <h2 id="card-title"></h2>
     <p id="card-body"></p>
     <button id="card-play" type="button" hidden></button>
-    <a id="card-link" href="#" target="_blank" rel="noopener">view on github ↗</a>
+    <p class="card-links">
+      <a id="card-paper" href="/" hidden></a>
+      <a id="card-link" href="#" target="_blank" rel="noopener"></a>
+    </p>
     <div id="card-actions" hidden>
-      <a href="/cv/matteo-he-research.pdf">research CV ↗</a>
-      <a href="https://github.com/hematteo" target="_blank" rel="noopener">github ↗</a>
+      <a href="/cv/matteo-he-research.pdf">Research CV</a>
+      <a href="/">The paper</a>
+      <a href="https://github.com/hematteo" target="_blank" rel="noopener">GitHub</a>
     </div>
   </aside>
-
-  <footer>
-    <a href="/">Research profile</a>
-    <a href="https://github.com/hematteo" target="_blank" rel="noopener">GitHub</a>
-    <a href="https://linkedin.com/in/matteohe" target="_blank" rel="noopener">LinkedIn</a>
-    <a href="/#contact">Contact</a>
-  </footer>
 </div>
 
-<script type="module" src="/src/main.js"></script>
+<section id="inventory" aria-labelledby="inventory-title">
+  <div class="sheet">
+    <button id="inventory-close" type="button">Back to the drawer</button>
+    <p class="kicker">Appendix A</p>
+    <h2 id="inventory-title">Contents of the drawer</h2>
+    <p class="inventory-lede">Matteo He. Ten objects, each standing for something I’ve made or done. <span class="no-scene">The interactive 3D drawer needs JavaScript and WebGL, so here is what’s inside. </span><a href="/">Back to the paper</a>.</p>
+    <ol>
+      <li data-id="punt">
+        <p class="eyebrow">Cambridge · 2025–26</p>
+        <h3>A punt</h3>
+        <p class="story">MPhil in Advanced Computer Science at the University of Cambridge, with the AI Alignment Fellowship. My dissertation studied how transformers learn to turn hidden states into words.</p>
+        <p class="refs"><a href="/#about" data-paper>Education &amp; distinctions</a></p>
+      </li>
+      <li data-id="plane">
+        <p class="eyebrow">Paper · NeurIPS 2026</p>
+        <h3>A paper airplane</h3>
+        <p class="story">“Learning to Read Out: Unembedding Dynamics in Language Model Pretraining.” My first-author paper was accepted to NeurIPS 2026. It asks when grammatical information appears inside a language model and when the model learns to use it in its next-word predictions.</p>
+        <p class="refs"><a href="/#learning-to-read-out" data-paper>Learning to Read Out</a> <a href="https://github.com/hematteo/learning-to-read-out" data-ext>Code on GitHub</a></p>
+      </li>
+      <li data-id="prism">
+        <p class="eyebrow">Paper · arXiv:2609.01936 · Under review</p>
+        <h3>A glass prism</h3>
+        <p class="story">“Sparse Readout Prism: Explaining Logit-Lens Scores in Features Instead of Tokens.” I am first author on this preprint, arXiv:2609.01936. The method decomposes readout scores into sparse feature contributions and an explicit residual.</p>
+        <p class="refs"><a href="/#sparse-readout-prism" data-paper>Sparse Readout Prism</a> <a href="https://arxiv.org/abs/2609.01936" data-ext>arXiv:2609.01936</a></p>
+      </li>
+      <li data-id="joystick">
+        <p class="eyebrow">Paper · In preparation</p>
+        <h3>A joystick</h3>
+        <p class="story">Low-Bit Policy Networks for Reinforcement Learning. Can ternary policies based on BitNet regularize training for continuous control? I am first author on this manuscript, with a public preprint in preparation.</p>
+      </li>
+      <li data-id="mug">
+        <p class="eyebrow">Founder · 2024–25</p>
+        <h3>A coffee mug</h3>
+        <p class="story">I built a platform for learning Japanese that served about 3,000 monthly active users. It ran LLM inference in the browser through WebGPU, with no server inference costs and approximately 99.9% uptime. I handled payments, authentication, and the rest. The platform is now archived. This mug helped fuel it, and it still spills.</p>
+        <p class="refs"><a href="/#systems" data-paper>Experience &amp; projects</a></p>
+      </li>
+      <li data-id="keyboard">
+        <p class="eyebrow">Amazon Alexa-AI · 2023</p>
+        <h3>A keyboard</h3>
+        <p class="story">As an SDE intern on Alexa NLU, I built data analysis and experiment infrastructure for 20+ Applied Scientists. It processed millions of utterances a day and helped speed up model iteration by 15%, with zero production incidents.</p>
+        <p class="refs"><a href="/#systems" data-paper>Experience &amp; projects</a></p>
+      </li>
+      <li data-id="gpu">
+        <p class="eyebrow">Open source · 2026</p>
+        <h3>A GPU</h3>
+        <p class="story">vigil-gpu is a Python package on PyPI that monitors ML training jobs on rented cloud GPUs. It streams logs over SSH, flags NaNs and stalled runs, plots metrics in the terminal, and sends alerts through Slack webhooks.</p>
+        <p class="refs"><a href="/#systems" data-paper>Experience &amp; projects</a> <a href="https://github.com/hematteo/vigil" data-ext>vigil on GitHub</a></p>
+      </li>
+      <li data-id="dolphin">
+        <p class="eyebrow">Research · St Andrews</p>
+        <h3>A dolphin</h3>
+        <p class="story">I improved F1 for dolphin acoustic classification from 0.48 to 0.86 using signal processing and neural networks. I also refactored more than 5,000 lines of research code to make the next student’s work easier.</p>
+        <p class="refs"><a href="https://github.com/orgs/dolphin-acoustics-vip/repositories" data-ext>Project repositories</a></p>
+      </li>
+      <li data-id="trophy">
+        <p class="eyebrow">Hackathons</p>
+        <h3>A trophy</h3>
+        <p class="story">First place in the Oxbotica autonomous vehicles challenge at OxfordHack 2022 and the GitHub challenge at HackTheBurgh VIII. Both projects were built in a weekend and are still fondly remembered.</p>
+      </li>
+      <li data-id="medal">
+        <p class="eyebrow">St Andrews · 2021–24</p>
+        <h3>A medal</h3>
+        <p class="story">Top Student Medal for the highest academic achievement in the Direct Entry Computer Science cohort. First Class Honours in Computer Science and Mathematics, Dean’s List in all three years, and a perfect 340/340 GRE.</p>
+        <p class="refs"><a href="/#about" data-paper>Education &amp; distinctions</a></p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<script type="module">
+  if (document.documentElement.classList.contains('js')) import('/src/main.js')
+</script>
 </body>
 </html>

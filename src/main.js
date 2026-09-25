@@ -1,8 +1,8 @@
 import * as THREE from 'three'
-import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
 import { createContactShadows } from './graphics.js'
 import * as CANNON from 'cannon-es'
-import { buildDeskLight, createDiscoveries } from './discoveries.js'
+import { createDiscoveries } from './discoveries.js'
+import { M, SILVER, COFFEE, box, cyl, BUILDERS } from './objects.js'
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js'
 
 // idle-render bookkeeping — declared first because init-time callers
@@ -12,58 +12,18 @@ function wakeRender (n = 60) { renderPending = Math.max(renderPending, n) }
 
 // ---------------------------------------------------------------- items
 
-const ITEMS = [
-  {
-    id: 'punt', name: 'A punt', eyebrow: 'CAMBRIDGE · 2025–26',
-    story: 'MPhil in Advanced Computer Science at the University of Cambridge, with the AI Alignment Fellowship. My dissertation studied how transformers learn to turn hidden states into words.',
-    link: null, sound: 'wood',
-  },
-  {
-    id: 'plane', name: 'A paper airplane', eyebrow: 'PAPER · NEURIPS 2026',
-    story: '“Learning to Read Out: Unembedding Dynamics in Language Model Pretraining.” My first-author paper was accepted to NeurIPS 2026. It asks when grammatical information appears inside a language model and when the model learns to use it in its next-word predictions.',
-    link: 'https://github.com/hematteo/learning-to-read-out', sound: 'paper',
-  },
-  {
-    id: 'prism', name: 'A glass prism', eyebrow: 'PAPER · ARXIV:2609.01936 · UNDER REVIEW',
-    story: '“Sparse Readout Prism: Explaining Logit-Lens Scores in Features Instead of Tokens.” I am first author on this preprint, arXiv:2609.01936. The method decomposes readout scores into sparse feature contributions and an explicit residual.',
-    link: 'https://arxiv.org/abs/2609.01936', sound: 'glass',
-  },
-  {
-    id: 'joystick', name: 'A joystick', eyebrow: 'PAPER · IN PREPARATION',
-    story: 'Low-Bit Policy Networks for Reinforcement Learning. Can ternary policies based on BitNet regularize training for continuous control? I am first author on this manuscript, with a public preprint in preparation.',
-    link: null, sound: 'plastic',
-  },
-  {
-    id: 'mug', name: 'A coffee mug', eyebrow: 'FOUNDER · 2024–25',
-    story: 'I built a platform for learning Japanese that served about 3,000 monthly active users. It ran LLM inference in the browser through WebGPU, with no server inference costs and approximately 99.9% uptime. I handled payments, authentication, and the rest. The platform is now archived. This mug helped fuel it, and it still spills.',
-    link: null, sound: 'ceramic',
-  },
-  {
-    id: 'keyboard', name: 'A keyboard', eyebrow: 'AMAZON ALEXA-AI · 2023',
-    story: 'As an SDE intern on Alexa NLU, I built data analysis and experiment infrastructure for 20+ Applied Scientists. It processed millions of utterances a day and helped speed up model iteration by 15%, with zero production incidents.',
-    link: null, sound: 'plastic',
-  },
-  {
-    id: 'gpu', name: 'A GPU', eyebrow: 'OPEN SOURCE · 2026',
-    story: 'vigil-gpu is a Python package on PyPI that monitors ML training jobs on rented cloud GPUs. It streams logs over SSH, flags NaNs and stalled runs, plots metrics in the terminal, and sends alerts through Slack webhooks.',
-    link: 'https://github.com/hematteo/vigil', sound: 'metal',
-  },
-  {
-    id: 'dolphin', name: 'A dolphin', eyebrow: 'RESEARCH · ST ANDREWS',
-    story: 'I improved F1 for dolphin acoustic classification from 0.48 to 0.86 using signal processing and neural networks. I also refactored more than 5,000 lines of research code to make the next student’s work easier.',
-    link: 'https://github.com/orgs/dolphin-acoustics-vip/repositories', sound: 'soft',
-  },
-  {
-    id: 'trophy', name: 'A trophy', eyebrow: 'HACKATHONS',
-    story: 'First place in the Oxbotica autonomous vehicles challenge at OxfordHack 2022 and the GitHub challenge at HackTheBurgh VIII. Both projects were built in a weekend and are still fondly remembered.',
-    link: null, sound: 'metal',
-  },
-  {
-    id: 'medal', name: 'A medal', eyebrow: 'ST ANDREWS · 2021–24',
-    story: 'Top Student Medal for the highest academic achievement in the Direct Entry Computer Science cohort. First Class Honours in Computer Science and Mathematics, Dean’s List in all three years, and a perfect 340/340 GRE.',
-    link: null, sound: 'metal',
-  },
-]
+// Stories live in the page's inventory (the list view and no-WebGL page); only sounds are set here.
+const ITEM_SOUNDS = { punt: 'wood', plane: 'paper', prism: 'glass', joystick: 'plastic', mug: 'ceramic', keyboard: 'plastic', gpu: 'metal', dolphin: 'soft', trophy: 'metal', medal: 'metal' }
+const ref = a => a && { href: a.getAttribute('href'), label: a.textContent }
+const ITEMS = [...document.querySelectorAll('#inventory li[data-id]')].map(li => ({
+  id: li.dataset.id,
+  name: li.querySelector('h3').textContent,
+  eyebrow: li.querySelector('.eyebrow').textContent,
+  story: li.querySelector('.story').textContent,
+  link: ref(li.querySelector('a[data-ext]')),
+  paper: ref(li.querySelector('a[data-paper]')),
+  sound: ITEM_SOUNDS[li.dataset.id],
+}))
 
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches
 const IS_TOUCH = matchMedia('(pointer: coarse)').matches
@@ -145,39 +105,6 @@ scene.add(lamp.target)
   scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture
   pmrem.dispose()
   if ('environmentIntensity' in scene) scene.environmentIntensity = 0.8
-}
-
-// ---------------------------------------------------------------- materials & mesh helpers
-
-// Beveled edges catch the desk lighting; folds retain their sharp normals.
-const M = (color, opt = {}) => new THREE.MeshStandardMaterial({ color, roughness: 0.5, metalness: 0.05, flatShading: false, ...opt })
-const BRASS = M(0xc9a227, { metalness: 0.85, roughness: 0.32 })
-const WOOD = M(0x8b5e34, { roughness: 0.8 })
-const WOOD_DK = M(0x6e4525, { roughness: 0.85 })
-const PAPER = M(0xf7f5ef, { roughness: 0.9, side: THREE.DoubleSide, flatShading: true })
-const DARK = M(0x2a2d33, { roughness: 0.55 })
-const KEYCAP = M(0xd8d5cc, { roughness: 0.7 })
-const PCB = M(0x1f6b3a, { roughness: 0.55 })
-const SILVER = M(0xb8bcc2, { metalness: 0.8, roughness: 0.4 })
-const CERAMIC = new THREE.MeshPhysicalMaterial({ color: 0xf5eee1, roughness: 0.22, clearcoat: 0.8 })
-const COFFEE = new THREE.MeshPhysicalMaterial({ color: 0x352015, roughness: 0.12, clearcoat: 1 })
-const RED = M(0xe23d2e, { roughness: 0.45 })
-const RIBBON = M(0xa32638, { roughness: 0.7 })
-const DOLPHIN = M(0x7c93a6, { roughness: 0.5 })
-const GLASS = new THREE.MeshPhysicalMaterial({ color: 0xf2fbff, roughness: 0.035, metalness: 0,
-  transmission: 0.98, thickness: 0.8, ior: 1.52, envMapIntensity: 1.6, clearcoat: 1, flatShading: true })
-
-function box (mat, w, h, d, x = 0, y = 0, z = 0, rx = 0, ry = 0, rz = 0) {
-  const m = new THREE.Mesh(new RoundedBoxGeometry(w, h, d, 2, Math.min(w, h, d, 0.16) * 0.22), mat)
-  m.position.set(x, y, z); m.rotation.set(rx, ry, rz)
-  m.castShadow = true; m.receiveShadow = true
-  return m
-}
-function cyl (mat, rT, rB, h, x = 0, y = 0, z = 0, rx = 0, ry = 0, rz = 0, seg = 24) {
-  const m = new THREE.Mesh(new THREE.CylinderGeometry(rT, rB, h, seg), mat)
-  m.position.set(x, y, z); m.rotation.set(rx, ry, rz)
-  m.castShadow = true; m.receiveShadow = true
-  return m
 }
 
 // ------------------------------------------------ desk, cutting mat, tray, props
@@ -466,208 +393,6 @@ function layoutWalls () {
   walls[3].position.set(cx, 8, zF + WALL_T); walls[3].quaternion.set(0, 0, 0, 1)
 }
 
-// ---------------------------------------------------------------- object builders
-
-const BUILDERS = {
-  light: buildDeskLight,
-  punt () {
-    const g = new THREE.Group()
-    g.add(box(WOOD, 1.9, 0.07, 0.52, 0, 0.035, 0))          // floor
-    g.add(box(WOOD_DK, 1.9, 0.18, 0.06, 0, 0.13, 0.23))     // rails
-    g.add(box(WOOD_DK, 1.9, 0.18, 0.06, 0, 0.13, -0.23))
-    g.add(box(WOOD_DK, 0.1, 0.18, 0.52, 0.9, 0.13, 0))      // ends
-    g.add(box(WOOD_DK, 0.1, 0.18, 0.52, -0.9, 0.13, 0))
-    g.add(box(WOOD, 0.34, 0.05, 0.4, 0.35, 0.16, 0))        // seat
-    g.add(cyl(WOOD_DK, 0.035, 0.035, 1.8, 0, 0.26, 0.05, 0, 0.18, Math.PI / 2, 10)) // pole (fits the hull)
-    const body = new CANNON.Body({ mass: 2.2 })
-    body.addShape(new CANNON.Box(new CANNON.Vec3(0.95, 0.11, 0.27)), new CANNON.Vec3(0, 0.11, 0))
-    return { g, body }
-  },
-  plane () {
-    const g = new THREE.Group()
-    const geo = new THREE.BufferGeometry()
-    const N = [0, 0.1, -0.78], L = [-0.56, 0.02, 0.55], R = [0.56, 0.02, 0.55]
-    const IL = [-0.085, 0.19, 0.55], IR = [0.085, 0.19, 0.55], C = [0, 0.07, 0.55], K = [0, -0.17, 0.45]
-    geo.setAttribute('position', new THREE.Float32BufferAttribute([...N, ...L, ...IL, ...N, ...IL, ...C,
-      ...N, ...C, ...IR, ...N, ...IR, ...R, ...N, ...C, ...K], 3))
-    geo.computeVertexNormals()
-    const m = new THREE.Mesh(geo, PAPER)
-    m.castShadow = true; m.receiveShadow = true
-    m.position.y = 0.2
-    g.add(m)
-    const folds = new THREE.LineSegments(new THREE.EdgesGeometry(geo, 12), new THREE.LineBasicMaterial({ color: 0x9a9384, transparent: true, opacity: 0.25 }))
-    folds.position.y = 0.201; g.add(folds)
-    const body = new CANNON.Body({ mass: 0.3, angularDamping: 0.4 })
-    body.addShape(new CANNON.Box(new CANNON.Vec3(0.48, 0.14, 0.62)), new CANNON.Vec3(0, 0.16, -0.05))
-    return { g, body }
-  },
-  prism () {
-    const g = new THREE.Group()
-    const glass = cyl(GLASS, 0.36, 0.36, 0.55, 0, 0.28, 0, 0, 0, 0, 3)
-    g.add(glass)
-    const edges = new THREE.LineSegments(new THREE.EdgesGeometry(glass.geometry),
-      new THREE.LineBasicMaterial({ color: 0xc8e9f2, transparent: true, opacity: 0.45 }))
-    edges.position.copy(glass.position)
-    g.add(edges)
-    const body = new CANNON.Body({ mass: 0.9 })
-    body.addShape(new CANNON.Cylinder(0.36, 0.36, 0.55, 3), new CANNON.Vec3(0, 0.28, 0))
-    return { g, body }
-  },
-  joystick () {
-    const g = new THREE.Group()
-    g.add(box(DARK, 0.6, 0.2, 0.6, 0, 0.1, 0))
-    const stick = new THREE.Group(); stick.name = 'stick'; stick.position.set(-0.08, 0.22, 0)
-    stick.add(cyl(SILVER, 0.05, 0.05, 0.38, 0, 0.17, 0, 0, 0, 0, 16))
-    const ball = new THREE.Mesh(new THREE.SphereGeometry(0.14, 24, 18), RED)
-    ball.position.y = 0.38; ball.castShadow = true
-    stick.add(ball); g.add(stick)
-    g.add(cyl(RED, 0.07, 0.07, 0.05, 0.17, 0.22, 0.12, 0, 0, 0, 14))
-    const body = new CANNON.Body({ mass: 1.0 })
-    body.addShape(new CANNON.Box(new CANNON.Vec3(0.3, 0.1, 0.3)), new CANNON.Vec3(0, 0.1, 0))
-    body.addShape(new CANNON.Sphere(0.14), new CANNON.Vec3(-0.08, 0.6, 0))
-    return { g, body }
-  },
-  mug () {
-    const g = new THREE.Group()
-    const profile = [[0, 0.025], [0.22, 0.025], [0.25, 0.06], [0.275, 0.4], [0.28, 0.435], [0.27, 0.45], [0.24, 0.435], [0.215, 0.1], [0, 0.1]]
-    const cup = new THREE.Mesh(new THREE.LatheGeometry(profile.map(([r, y]) => new THREE.Vector2(r, y)), 40), CERAMIC)
-    cup.castShadow = cup.receiveShadow = true; g.add(cup)
-    const inner = cyl(COFFEE, 0.24, 0.24, 0.02, 0, 0.38, 0)
-    inner.name = 'coffee-surface'
-    g.add(inner)
-    const handle = new THREE.Mesh(new THREE.TorusGeometry(0.15, 0.04, 12, 32), CERAMIC)
-    handle.position.set(0.29, 0.22, 0); handle.rotation.z = -Math.PI / 2; handle.castShadow = true
-    g.add(handle)
-    const body = new CANNON.Body({ mass: 0.9 })
-    body.addShape(new CANNON.Cylinder(0.28, 0.25, 0.44, 12), new CANNON.Vec3(0, 0.22, 0))
-    body.addShape(new CANNON.Box(new CANNON.Vec3(0.09, 0.16, 0.05)), new CANNON.Vec3(0.36, 0.22, 0))
-    return { g, body }
-  },
-  keyboard () {
-    const g = new THREE.Group()
-    g.add(box(DARK, 1.5, 0.1, 0.58, 0, 0.05, 0))
-    const cap = new THREE.BoxGeometry(0.1, 0.05, 0.1)
-    const inst = new THREE.InstancedMesh(cap, KEYCAP, 41)
-    const d = new THREE.Object3D()
-    let k = 0
-    for (let r = 0; r < 4; r++) for (let c = 0; c < 10; c++) {
-      d.position.set(-0.62 + c * 0.138 + r * 0.014, 0.125, -0.185 + r * 0.125)
-      d.updateMatrix(); inst.setMatrixAt(k++, d.matrix)
-    }
-    d.position.set(0.05, 0.125, 0.235); d.scale.set(4.2, 1, 1); d.updateMatrix()
-    inst.setMatrixAt(40, d.matrix)
-    d.scale.set(1, 1, 1)
-    inst.castShadow = true
-    g.add(inst)
-    const body = new CANNON.Body({ mass: 1.6 })
-    body.addShape(new CANNON.Box(new CANNON.Vec3(0.75, 0.08, 0.29)), new CANNON.Vec3(0, 0.08, 0))
-    return { g, body }
-  },
-  gpu () {
-    const g = new THREE.Group()
-    g.add(box(PCB, 1.3, 0.05, 0.6, 0, 0.16, 0))
-    g.add(box(DARK, 1.24, 0.22, 0.56, 0, 0.31, 0))
-    const fanMat = M(0x3f4950, { metalness: 0.5, roughness: 0.3 })
-    for (const [index, x] of [-0.3, 0.3].entries()) {
-      g.add(cyl(M(0x0d1318), 0.215, 0.215, 0.025, x, 0.432, 0, 0, 0, 0, 32))
-      const rotor = new THREE.Group(); rotor.name = index ? 'fan-right' : 'fan-left'; rotor.position.set(x, 0.453, 0)
-      for (let i = 0; i < 9; i++) {
-        const blade = box(fanMat, 0.065, 0.015, 0.13, 0, 0, 0.12, 0, 0.3, 0.15)
-        const pivot = new THREE.Group(); pivot.rotation.y = i * Math.PI * 2 / 9; pivot.add(blade); rotor.add(pivot)
-      }
-      rotor.add(cyl(SILVER, 0.047, 0.047, 0.025, 0, 0.016, 0, 0, 0, 0, 20))
-      g.add(rotor)
-      const rim = new THREE.Mesh(new THREE.TorusGeometry(0.218, 0.012, 8, 40), SILVER)
-      rim.rotation.x = Math.PI / 2; rim.position.set(x, 0.452, 0); g.add(rim)
-    }
-    for (let i = 0; i < 11; i++) g.add(box(SILVER, 0.035, 0.12, 0.018, -0.5 + i * 0.1, 0.28, 0.285))
-    const led = box(new THREE.MeshStandardMaterial({ color: 0xa4e6c8, emissive: 0x58c797, emissiveIntensity: 0.4 }), 0.18, 0.018, 0.018, 0.35, 0.38, 0.287)
-    led.name = 'gpu-led'; g.add(led)
-    g.add(box(SILVER, 0.05, 0.4, 0.56, -0.67, 0.26, 0))
-    g.add(box(BRASS, 0.5, 0.04, 0.06, 0.2, 0.12, 0.28))   // pcie fingers
-    const body = new CANNON.Body({ mass: 1.2 })
-    body.addShape(new CANNON.Box(new CANNON.Vec3(0.68, 0.16, 0.3)), new CANNON.Vec3(0, 0.28, 0))
-    return { g, body }
-  },
-  dolphin () {
-    const g = new THREE.Group()
-    const D2 = M(0x7c93a6, { roughness: 0.5, side: THREE.DoubleSide })
-    // body: lathe profile, nose to tail along X
-    const prof = [
-      [0.01, -0.78], [0.06, -0.7], [0.13, -0.5], [0.18, -0.26], [0.2, 0.0],
-      [0.18, 0.24], [0.13, 0.46], [0.08, 0.6], [0.045, 0.7], [0.02, 0.78],
-    ]
-    const bodyMesh = new THREE.Mesh(new THREE.LatheGeometry(prof.map(([r, x]) => new THREE.Vector2(r, x)), 12), D2)
-    bodyMesh.rotation.z = -Math.PI / 2 // lathe axis Y -> X
-    bodyMesh.scale.x = 0.85            // flatten belly-to-back a touch
-    bodyMesh.position.y = 0.28
-    bodyMesh.castShadow = true; bodyMesh.receiveShadow = true
-    g.add(bodyMesh)
-    // dorsal fin: swept-back flattened cone
-    const dorsal = new THREE.Mesh(new THREE.ConeGeometry(0.11, 0.28, 5), D2)
-    dorsal.scale.z = 0.35; dorsal.rotation.z = -0.5
-    dorsal.position.set(0.08, 0.52, 0); dorsal.castShadow = true
-    g.add(dorsal)
-    // tail flukes: two flattened cones sweeping outward
-    for (const s of [1, -1]) {
-      const fluke = new THREE.Mesh(new THREE.ConeGeometry(0.1, 0.3, 5), D2)
-      fluke.scale.y = 0.3
-      fluke.rotation.z = -Math.PI / 2
-      fluke.rotation.y = s * 0.7
-      fluke.position.set(0.82, 0.28, s * 0.1)
-      fluke.castShadow = true
-      g.add(fluke)
-    }
-    // pectoral fins
-    for (const s of [1, -1]) {
-      const pec = new THREE.Mesh(new THREE.ConeGeometry(0.07, 0.2, 4), D2)
-      pec.scale.y = 0.35
-      pec.rotation.z = -Math.PI / 2
-      pec.rotation.y = s * 1.1
-      pec.position.set(-0.28, 0.18, s * 0.16)
-      pec.castShadow = true
-      g.add(pec)
-    }
-    const body = new CANNON.Body({ mass: 0.8, angularDamping: 0.5 })
-    body.addShape(new CANNON.Sphere(0.26), new CANNON.Vec3(-0.25, 0.28, 0))
-    body.addShape(new CANNON.Sphere(0.22), new CANNON.Vec3(0.28, 0.28, 0))
-    return { g, body }
-  },
-  trophy () {
-    const g = new THREE.Group()
-    const B2 = M(0xc9a227, { metalness: 0.85, roughness: 0.32, side: THREE.DoubleSide })
-    // two-tier base
-    g.add(cyl(WOOD_DK, 0.27, 0.3, 0.07, 0, 0.035, 0, 0, 0, 0, 16))
-    g.add(cyl(WOOD_DK, 0.2, 0.25, 0.07, 0, 0.1, 0, 0, 0, 0, 16))
-    g.add(cyl(BRASS, 0.09, 0.12, 0.04, 0, 0.155, 0, 0, 0, 0, 14))
-    // goblet: lathe profile (r, y) with a lip folding inward so the cup has depth
-    const prof = [
-      [0.045, 0], [0.035, 0.1], [0.05, 0.2], [0.13, 0.29], [0.19, 0.38],
-      [0.225, 0.48], [0.235, 0.56], [0.22, 0.6], [0.17, 0.57], [0.14, 0.48],
-    ]
-    const cup = new THREE.Mesh(new THREE.LatheGeometry(prof.map(([r, y]) => new THREE.Vector2(r, y)), 14), B2)
-    cup.position.y = 0.17
-    cup.castShadow = true; cup.receiveShadow = true
-    g.add(cup)
-    const hL = new THREE.Mesh(new THREE.TorusGeometry(0.12, 0.028, 8, 16, Math.PI), BRASS)
-    hL.position.set(-0.27, 0.63, 0); hL.rotation.z = Math.PI / 2; hL.castShadow = true
-    const hR = hL.clone(); hR.position.x = 0.27; hR.rotation.z = -Math.PI / 2
-    g.add(hL, hR)
-    const body = new CANNON.Body({ mass: 1.4 })
-    body.addShape(new CANNON.Cylinder(0.26, 0.29, 0.8, 12), new CANNON.Vec3(0, 0.4, 0))
-    return { g, body }
-  },
-  medal () {
-    const g = new THREE.Group()
-    g.add(box(RIBBON, 0.18, 0.025, 0.44, 0, 0.03, -0.3))
-    g.add(cyl(BRASS, 0.23, 0.23, 0.05, 0, 0.03, 0))
-    g.add(cyl(M(0xe6c65a, { metalness: 0.85, roughness: 0.3 }), 0.16, 0.16, 0.055, 0, 0.032, 0))
-    const body = new CANNON.Body({ mass: 0.5 })
-    body.addShape(new CANNON.Box(new CANNON.Vec3(0.23, 0.04, 0.4)), new CANNON.Vec3(0, 0.04, -0.08))
-    return { g, body }
-  },
-}
-
 // ---------------------------------------------------------------- spawn objects
 
 const objects = [] // { item, mesh, body }
@@ -893,6 +618,7 @@ const cardEyebrow = document.getElementById('card-eyebrow')
 const cardTitle = document.getElementById('card-title')
 const cardBody = document.getElementById('card-body')
 const cardLink = document.getElementById('card-link')
+const cardPaper = document.getElementById('card-paper')
 const counter = document.getElementById('counter')
 const seen = new Set()
 
@@ -942,10 +668,10 @@ function openCard (o, viaKeyboard = false) {
   play.textContent = actions[o.item.id] || ''
   play.onclick = () => { closeCard(); discoveries.action(o.item.id) }
   if (o.item.id === 'dolphin') discoveries.action('dolphin')
-  if (o.item.link) {
-    cardLink.href = o.item.link
-    cardLink.hidden = false
-  } else cardLink.hidden = true
+  for (const [a, r] of [[cardLink, o.item.link], [cardPaper, o.item.paper]]) {
+    a.hidden = !r
+    if (r) { a.href = r.href; a.textContent = r.label }
+  }
   showCard()
   seen.add(o.item.id)
   if (seen.size === ITEMS.length && !completed) {
@@ -953,7 +679,7 @@ function openCard (o, viaKeyboard = false) {
     counter.textContent = ITEMS.length + '/' + ITEMS.length + ' — that’s everything ✓'
     counter.disabled = false
   } else if (!completed) {
-    counter.textContent = seen.size + '/' + ITEMS.length + ' examined'
+    counter.textContent = seen.size + '/' + ITEMS.length + ' objects read'
   }
   if (viaKeyboard) card.focus()
   srStatus.textContent = o.item.name + '. ' + o.item.eyebrow + '. ' + o.item.story
@@ -969,7 +695,7 @@ function showFinalCard () {
   cardEyebrow.textContent = '10/10 · THE WHOLE DRAWER'
   cardTitle.textContent = 'That’s everything.'
   cardBody.textContent = 'You’ve explored all ten objects and their stories. You can also read my CV below.'
-  cardLink.hidden = true
+  cardLink.hidden = cardPaper.hidden = true
   cardActions.hidden = false
   showCard()
   srStatus.textContent = 'You’ve read all ten stories. Links to the CV and GitHub are in the panel.'
@@ -987,8 +713,26 @@ if (IS_TOUCH) {
   card.addEventListener('pointerup', () => { sheetY = null })
 }
 document.addEventListener('keydown', (ev) => {
-  if (ev.key === 'Escape') closeCard()
+  if (ev.key === 'Escape' && inventory.classList.contains('open')) closeInventory()
+  else if (ev.key === 'Escape') closeCard()
 })
+
+// list view: the same inventory that stands in for the drawer without WebGL
+const inventory = document.getElementById('inventory')
+const listToggle = document.getElementById('list-toggle')
+function closeInventory () {
+  inventory.classList.remove('open')
+  listToggle.setAttribute('aria-expanded', 'false')
+  listToggle.focus()
+}
+listToggle.addEventListener('click', () => {
+  closeCard()
+  inventory.classList.add('open')
+  listToggle.setAttribute('aria-expanded', 'true')
+  document.getElementById('inventory-close').focus()
+})
+document.getElementById('inventory-close').addEventListener('click', closeInventory)
+inventory.addEventListener('click', (ev) => { if (ev.target === inventory) closeInventory() })
 
 // in-world confetti: little paper rectangles raining into the tray
 const confetti = []
@@ -1045,7 +789,7 @@ let muted = false
 muteBtn.setAttribute('aria-label', 'Mute sound effects')
 muteBtn.addEventListener('click', () => {
   muted = !muted
-  muteBtn.textContent = muted ? 'sound off' : 'sound on'
+  muteBtn.textContent = muted ? 'Sound off' : 'Sound on'
   muteBtn.setAttribute('aria-pressed', String(muted))
 })
 
@@ -1397,6 +1141,9 @@ function fanfare () {
 
 // ---------------------------------------------------------------- resize / parallax / loop
 
+// pulled back on narrow screens so the pile fits; pushed in on wide ones so objects aren't icon-sized
+const camZoom = aspect => aspect < 0.9 ? 1.35 : 0.86
+
 function resize () {
   wakeRender(120)
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2))
@@ -1404,7 +1151,7 @@ function resize () {
   renderer.setSize(w, h)
   camera.aspect = w / h
   // pull the camera back on narrow screens so the pile still fits
-  const zoomOut = w / h < 0.9 ? 1.35 : 1
+  const zoomOut = camZoom(w / h)
   camera.position.copy(CAM_BASE).multiplyScalar(zoomOut)
   camera.lookAt(0, 0, 0.2)
   camera.updateProjectionMatrix()
@@ -1493,7 +1240,7 @@ function tick () {
   updateHighlight(dt)
   updateContactShadows()
   if (!REDUCED) {
-    const zoomOut = innerWidth / innerHeight < 0.9 ? 1.35 : 1
+    const zoomOut = camZoom(innerWidth / innerHeight)
     camera.position.x = CAM_BASE.x * zoomOut + px * 0.35
     camera.position.z = CAM_BASE.z * zoomOut + py * 0.2
     camera.lookAt(0, 0, 0.2)
