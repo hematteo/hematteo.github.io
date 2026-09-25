@@ -20,8 +20,8 @@ const DAYS = 'Sun Mon Tue Wed Thu Fri Sat'.split(' ')
 const pad = n => String(n).padStart(2, '0')
 const stampDate = d => `${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`
 const historyDate = d => `${DAYS[d.getUTCDay()]}, ${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()} ${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}:${pad(d.getUTCSeconds())} UTC`
-const history = versions.map((v, i) =>
-  `<li><b>[v${i + 1}]</b> ${historyDate(v.date)} <a href="https://github.com/hematteo/hematteo.github.io/commit/${v.hash}">${v.hash.slice(0, 7)}</a></li>`).join('')
+const history = versions.map(v =>
+  `<li>${historyDate(v.date)} <a href="https://github.com/hematteo/hematteo.github.io/commit/${v.hash}">${v.hash.slice(0, 7)}</a></li>`).join('')
 
 // Deployed as a GitHub user site at https://hematteo.github.io/ , so base is '/'.
 export default defineConfig({
@@ -30,7 +30,7 @@ export default defineConfig({
     name: 'submission-history',
     transformIndexHtml: html => html
       .replace('%BUILD_DATE%', stampDate(latest))
-      .replace('%SITE_VERSION%', `v${Math.max(versions.length, 1)}`)
+      .replace('%SITE_VERSION%', 'v1') // the stamp always reads v1; the history lists every revision
       .replace('%SUBMISSION_HISTORY%', history),
   }],
   build: {
