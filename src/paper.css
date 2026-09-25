@@ -87,6 +87,13 @@ h1 {font-size:36px;line-height:1.2;}
 .footnote::before {content:'';display:block;width:160px;border-top:1px solid #000;margin-bottom:6px;}
 .footnote-mark {font-size:.75em;vertical-align:.45em;margin-right:1px;}
 
+/* Recent updates: an unnumbered section, newest first, dates hanging in a narrow column */
+.news {margin-top:54px;}
+.news h2 {font-size:22px;line-height:1.3;}
+.news-list {list-style:none;margin:10px 0 0;padding:0;}
+.news-list li {display:grid;grid-template-columns:5.5em minmax(0,1fr);gap:12px;padding:5px 0;}
+.news-list time {font-style:italic;font-variant-numeric:tabular-nums;}
+
 /* Numbered sections and subsections */
 main {counter-reset:sec fig;}
 .section {counter-increment:sec;counter-reset:sub;}
