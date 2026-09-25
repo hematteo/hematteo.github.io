@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Matteo He | AI Safety &amp; Interpretability Research</title>
   <meta name="description" content="Matteo He researches AI safety and interpretability. His first-author paper Learning to Read Out was accepted to NeurIPS 2026.">
-  <meta name="theme-color" content="#faf9f6">
+  <meta name="theme-color" content="#ffffff">
   <link rel="icon" type="image/png" href="/research/prism-mark.png">
   <link rel="canonical" href="https://hematteo.github.io/">
   <meta property="og:type" content="profile">
@@ -13,94 +13,49 @@
   <meta property="og:description" content="AI safety and interpretability research by Matteo He. Learning to Read Out was accepted to NeurIPS 2026.">
   <meta property="og:url" content="https://hematteo.github.io/">
   <meta name="twitter:card" content="summary">
-  <link rel="preload" href="/fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/src/profile.css">
-  <link rel="stylesheet" href="/src/homepage.css">
+  <link rel="preload" href="/fonts/lmroman10-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lmroman10-bold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/src/paper.css">
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"Person","name":"Matteo He","url":"https://hematteo.github.io/","sameAs":["https://github.com/hematteo","https://linkedin.com/in/matteohe","https://huggingface.co/hematteo"],"alumniOf":[{"@type":"CollegeOrUniversity","name":"University of Cambridge"},{"@type":"CollegeOrUniversity","name":"University of St Andrews"}],"knowsAbout":["Mechanistic interpretability","Machine learning","Language model evaluation"]}
   </script>
 </head>
-<body class="profile-page">
+<body class="paper-page">
   <a class="skip-link" href="#main">Skip to content</a>
+  <p class="arxiv-stamp" aria-hidden="true">hematteo.github.io&ensp;[cs.LG]&ensp;%BUILD_DATE%</p>
   <div class="page">
     <header class="masthead">
-      <a class="wordmark" href="#main" aria-label="Matteo He, top of page">Matteo He<span class="wordmark-period">.</span></a>
       <nav aria-label="Main navigation">
         <a href="#research">Research</a>
         <a href="#about">Education</a>
         <a href="#systems">Experience</a>
-        <a href="/cv/matteo-he-research.pdf">CV <span class="file-type">PDF</span></a>
+        <a href="/cv/matteo-he-research.pdf">CV</a>
         <a href="/drawer/">Junk drawer</a>
       </nav>
     </header>
 
     <main id="main">
       <section class="intro" aria-labelledby="name">
-        <div class="intro-main">
-          <p class="eyebrow">AI safety · Alignment · Interpretability</p>
-          <h1 id="name">Matteo He</h1>
-          <p class="research-statement">I’m a researcher interested in understanding AI systems and making their behavior easier to evaluate and oversee.</p>
-          <p class="intro-description">I completed an MPhil in Advanced Computer Science at Cambridge with Distinction. My dissertation studied how language models learn to turn internal information into predictions. The resulting first-author paper, <a href="#learning-to-read-out">Learning to Read Out</a>, was accepted to NeurIPS 2026.</p>
-          <p class="intro-availability">I’m seeking AI safety research fellowships and research scientist or research engineer roles. <a href="#contact">Get in touch →</a></p>
-          <div class="profile-links" aria-label="Profile and contact links">
-            <a href="mailto:matteohe.research@gmail.com">Email</a>
-            <a href="https://github.com/hematteo">GitHub</a>
-            <a href="https://huggingface.co/hematteo">Hugging Face</a>
-            <a href="https://linkedin.com/in/matteohe">LinkedIn</a>
-            <a href="/cv/matteo-he-research.pdf">Research CV</a>
-          </div>
+        <h1 id="name">Matteo He</h1>
+        <p class="research-statement">I’m a researcher interested in understanding AI systems and making their behavior easier to evaluate and oversee.</p>
+        <div class="abstract">
+          <h2 class="abstract-title">Abstract</h2>
+          <p>I completed an MPhil in Advanced Computer Science at Cambridge with Distinction. My dissertation studied how language models learn to turn internal information into predictions. The resulting first-author paper, <a href="#learning-to-read-out">Learning to Read Out</a>, was accepted to NeurIPS 2026.</p>
+          <p>I’m seeking AI safety research fellowships and research scientist or research engineer roles. <a href="#contact">Get in touch →</a></p>
         </div>
-
+        <div class="profile-links" aria-label="Profile and contact links">
+          <a href="https://github.com/hematteo">GitHub</a>
+          <a href="https://huggingface.co/hematteo">Hugging Face</a>
+          <a href="https://linkedin.com/in/matteohe">LinkedIn</a>
+          <a href="/cv/matteo-he-research.pdf">Research CV</a>
+        </div>
+        <p class="footnote"><span class="footnote-mark" aria-hidden="true">∗</span>Correspondence to <a href="mailto:matteohe.research@gmail.com">matteohe.research@gmail.com</a>.</p>
       </section>
 
       <section id="research" class="section" aria-labelledby="research-heading">
         <div class="section-heading">
           <h2 id="research-heading">Selected research</h2>
         </div>
-
-        <article class="cv-entry publication" id="sparse-readout-prism">
-          <div class="entry-content">
-            <header class="entry-heading">
-              <div class="entry-title">
-                <h3><a href="https://arxiv.org/abs/2609.01936">Sparse Readout Prism</a></h3>
-                <p class="paper-subtitle">Explaining Logit-Lens Scores in Features Instead of Tokens</p>
-              </div>
-              <p class="entry-date">2026</p>
-            </header>
-            <p class="authors"><strong>Matteo He</strong>, William F. Shen, Xinchi Qiu, Nicholas D. Lane</p>
-            <div class="paper-meta"><span>First author</span><span>Preprint · Under review</span></div>
-            <div class="publication-overview">
-            <div class="paper-body">
-                <p class="paper-question">What do token scores leave out about a model’s internal representations?</p>
-                <p>A lens translates model internals into token scores, but its fitting data can shape what it reports. In a controlled test, lenses fitted on English and Chinese reported different languages for the same hidden states. I developed Sparse Readout Prism to explain these scores through shared features of the output weights, with an explicit account of what remains unexplained.</p>
-                <div class="artifact-links">
-                  <a href="https://arxiv.org/abs/2609.01936">Paper</a>
-                  <a href="https://github.com/hematteo/sparse-readout-prism">Code</a>
-                  <a href="https://huggingface.co/hematteo/sparse-readout-prism">Dictionaries</a>
-                  <a href="/research/sparse-readout-prism.bib" download>BibTeX</a>
-                </div>
-              <a class="research-explorer-link" href="/research/prism/">Explore what token scores leave out →</a>
-            </div>
-              <figure class="paper-figure results-figure research-preview">
-                <a href="/research/sparse-readout-prism.png" class="figure-link" aria-label="View the Sparse Readout Prism method figure at full size">
-                  <img src="/research/sparse-readout-prism.png" alt="Sparse Readout Prism decomposes a readout query into feature directions, then accounts for its score using signed contributions and a residual." width="1400" height="707" fetchpriority="high">
-                </a>
-                <figcaption>How individual features contribute to a readout score. <span>Click to enlarge.</span></figcaption>
-
-              </figure>
-            </div>
-            <details class="research-details">
-              <summary>Method &amp; scope</summary>
-              <div class="details-content">
-                <p>The method fits sparse autoencoders directly to the model’s output weights and decomposes selected logits and margins into signed feature contributions. Across six readouts without softcaps, it improved reconstruction coverage for logit differences by 8.9 to 17.3 percentage points over the strongest of six geometric baselines. A reconstruction counts as covered when it has the correct sign and less than 50% relative error. I use reconstruction and replacement tests, alongside checks for sign errors, residuals, and confounds, to establish the explanation’s limits.</p>
-                <figure class="supporting-figure">
-                  <a href="/research/readout-features.png" class="figure-link" aria-label="View the readout feature examples at full size"><img src="/research/readout-features.png" alt="Two paper examples show signed feature differences between insect and software senses of bug, and structure and network senses of bridge." width="1400" height="1145" loading="lazy"></a>
-                  <figcaption>Selected feature contrasts from the paper: “bug” and “bridge”.</figcaption>
-                </figure>
-              </div>
-            </details>
-          </div>
-        </article>
 
         <article class="cv-entry publication" id="learning-to-read-out">
           <div class="entry-content">
@@ -127,7 +82,7 @@
             </div>
             <figure class="paper-figure results-figure research-preview">
               <a href="/research/trajectories/" aria-label="Explore feature trajectories across four models">
-                <img src="/research/trajectory-preview.png" alt="Measured feature trajectories in Pythia-1B, normalized to each feature’s peak, show different patterns of change during training. Open the explorer to inspect all four models." width="840" height="520" loading="lazy">
+                <img src="/research/trajectory-preview.png" alt="Measured feature trajectories in Pythia-1B, normalized to each feature’s peak, show different patterns of change during training. Open the explorer to inspect all four models." width="840" height="520" fetchpriority="high">
               </a>
               <figcaption>One model from the study: 1,200 sampled features, each scaled to its own peak. <a href="/research/trajectories/">Explore all four models →</a></figcaption>
 
@@ -140,29 +95,53 @@
               <a href="/research/learning-to-read-out.png" class="figure-link" aria-label="View the Learning to Read Out results figure at full size">
                 <img src="/research/learning-to-read-out.png" alt="Subject–verb agreement results in Pythia-6.9B. Left: a probe of hidden states reaches high accuracy before the model’s own readout. Right: at convergence, probe accuracy remains at ceiling while the model’s readout falls behind on harder grammatical dependencies, with the largest gap at 25 percentage points." width="1596" height="473" loading="lazy">
               </a>
-              <figcaption>Left: grammatical information becomes detectable before the model’s own readout uses it reliably. Right: the gap persists on harder examples, even at the end of training. SVA means subject–verb agreement. <span>Click to enlarge.</span></figcaption>
+              <figcaption>Left: grammatical information becomes detectable before the model’s own readout uses it reliably. Right: the gap persists on harder examples, even at the end of training. SVA means subject–verb agreement.</figcaption>
             </figure>
               <p>Using fixed hidden states from Pythia-1B at step 1000, removing eight localized features from the reconstructed final readout reduced agreement accuracy on held out examples from 90.0% to 48.7%. Matched controls stayed at 90.0%. In control runs with 31 million parameters and a single random seed, each 4× increase in the readout learning rate halved the training step at which reorganization occurred. Final validation losses agreed within 0.06 nats.</p><p>The public release includes reusable analysis tools, examples that run on a CPU, guided notebooks, and a manifest linking experiments to figures. The paper was accepted to NeurIPS 2026.</p></div>
             </details>
           </div>
         </article>
 
-        <article class="cv-entry publication" id="attention-heads">
+        <article class="cv-entry publication" id="sparse-readout-prism">
           <div class="entry-content">
             <header class="entry-heading">
               <div class="entry-title">
-                <h3>Automating the Interpretability of Attention Heads in LLMs</h3>
+                <h3><a href="https://arxiv.org/abs/2609.01936">Sparse Readout Prism</a></h3>
+                <p class="paper-subtitle">Explaining Logit-Lens Scores in Features Instead of Tokens</p>
               </div>
-              <p class="entry-date">2024</p>
+              <p class="entry-date">2026</p>
             </header>
-            <p class="paper-meta">Honours dissertation · St Andrews</p>
+            <p class="authors"><strong>Matteo He</strong>, William F. Shen, Xinchi Qiu, Nicholas D. Lane</p>
+            <div class="paper-meta"><span>First author</span><span>Preprint · Under review</span></div>
+            <div class="publication-overview">
             <div class="paper-body">
-              <p class="paper-question">Can language models generate and test explanations of attention heads?</p>
-              <p>I built a GPT-2 interpretability pipeline that uses language models to explain attention patterns and simulate them from those explanations. Comparing the simulated patterns with observed attention tests whether an explanation predicts what a head does. The pipeline paired GPT-4 as an explainer with GPT-3.5 as a simulator.</p>
+                <p class="paper-question">What do token scores leave out about a model’s internal representations?</p>
+                <p>A lens translates model internals into token scores, but its fitting data can shape what it reports. In a controlled test, lenses fitted on English and Chinese reported different languages for the same hidden states. I developed Sparse Readout Prism to explain these scores through shared features of the output weights, with an explicit account of what remains unexplained.</p>
+                <div class="artifact-links">
+                  <a href="https://arxiv.org/abs/2609.01936">Paper</a>
+                  <a href="https://github.com/hematteo/sparse-readout-prism">Code</a>
+                  <a href="https://huggingface.co/hematteo/sparse-readout-prism">Dictionaries</a>
+                  <a href="/research/sparse-readout-prism.bib" download>BibTeX</a>
+                </div>
+              <a class="research-explorer-link" href="/research/prism/">Explore what token scores leave out →</a>
+            </div>
+              <figure class="paper-figure results-figure research-preview">
+                <a href="/research/sparse-readout-prism.png" class="figure-link" aria-label="View the Sparse Readout Prism method figure at full size">
+                  <img src="/research/sparse-readout-prism.png" alt="Sparse Readout Prism decomposes a readout query into feature directions, then accounts for its score using signed contributions and a residual." width="1400" height="707" loading="lazy">
+                </a>
+                <figcaption>How individual features contribute to a readout score.</figcaption>
+
+              </figure>
             </div>
             <details class="research-details">
-              <summary>Approach &amp; evaluation</summary>
-              <div class="details-content"><p>The evaluation compared predicted and observed attention using errors across distributions and individual tokens. This tested whether the explanations could predict attention patterns within the dissertation’s experimental setup.</p></div>
+              <summary>Method &amp; scope</summary>
+              <div class="details-content">
+                <p>The method fits sparse autoencoders directly to the model’s output weights and decomposes selected logits and margins into signed feature contributions. Across six readouts without softcaps, it improved reconstruction coverage for logit differences by 8.9 to 17.3 percentage points over the strongest of six geometric baselines. A reconstruction counts as covered when it has the correct sign and less than 50% relative error. I use reconstruction and replacement tests, alongside checks for sign errors, residuals, and confounds, to establish the explanation’s limits.</p>
+                <figure class="supporting-figure">
+                  <a href="/research/readout-features.png" class="figure-link" aria-label="View the readout feature examples at full size"><img src="/research/readout-features.png" alt="Two paper examples show signed feature differences between insect and software senses of bug, and structure and network senses of bridge." width="1400" height="1145" loading="lazy"></a>
+                  <figcaption>Selected feature contrasts from the paper: “bug” and “bridge”.</figcaption>
+                </figure>
+              </div>
             </details>
           </div>
         </article>
@@ -177,7 +156,6 @@
               <div class="entry-title">
                 <h3>University of Cambridge</h3>
               </div>
-              <p class="entry-date">2025–2026</p>
             </header>
             <p class="paper-meta">MPhil, Advanced Computer Science</p>
             <div class="entry-description"><p><strong>Distinction</strong> · AI Alignment Fellowship</p></div>
@@ -189,7 +167,6 @@
               <div class="entry-title">
                 <h3>University of St Andrews</h3>
               </div>
-              <p class="entry-date">2021–2024</p>
             </header>
             <p class="paper-meta">BSc (Hons), Computer Science &amp; Mathematics</p>
             <div class="entry-description"><p><strong>First Class</strong> · 18/20 average · Dean’s List in all three years</p><p>Top Student Medal for the highest academic achievement in the Direct Entry Computer Science cohort.</p></div>

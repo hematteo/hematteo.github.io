@@ -1,9 +1,14 @@
 import { defineConfig } from 'vite'
 import { fileURLToPath } from 'node:url'
 
+// The homepage's arXiv-style margin stamp shows the build date, e.g. "25 Sep 2026".
+const now = new Date()
+const buildDate = `${now.getUTCDate()} ${'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' ')[now.getUTCMonth()]} ${now.getUTCFullYear()}`
+
 // Deployed as a GitHub user site at https://hematteo.github.io/ , so base is '/'.
 export default defineConfig({
   base: '/',
+  plugins: [{ name: 'build-date', transformIndexHtml: html => html.replace('%BUILD_DATE%', buildDate) }],
   build: {
     rollupOptions: {
       input: {

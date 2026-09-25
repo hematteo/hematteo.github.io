@@ -50,17 +50,17 @@ export async function mountTrajectories(root) {
     const m = model()
     const ctx = context
     ctx.clearRect(0, 0, width, height)
-    ctx.font = '12px "DM Sans", sans-serif'
+    ctx.font = '13px "Latin Modern Roman", serif'
     ctx.lineWidth = 1
     ctx.textAlign = 'right'
     for (const value of [0, .25, .5, .75, 1]) {
       const y = bottom - value * (bottom - top)
-      ctx.strokeStyle = '#e8ece6'
+      ctx.strokeStyle = '#e6e6e6'
       ctx.beginPath(); ctx.moveTo(left, y); ctx.lineTo(right, y); ctx.stroke()
-      ctx.fillStyle = '#727b74'
+      ctx.fillStyle = '#555555'
       ctx.fillText(value === 0 || value === 1 ? String(value) : value.toFixed(2), left - 12, y + 4)
     }
-    ctx.textAlign = 'left'; ctx.fillStyle = '#58665e'
+    ctx.textAlign = 'left'; ctx.fillStyle = '#333333'
     ctx.fillText('Decoder norm / own peak', left, 17)
     const ticks = m.name.startsWith('OLMo') ? [150,1000,14000,110000,928000] : [1,10,100,1000,14000,143000]
     const xFor = step => left + (Math.log10(step) - Math.log10(m.steps[firstCheckpoint()])) /
@@ -69,7 +69,7 @@ export async function mountTrajectories(root) {
       if (width < 440 && tick === 10) return
       const x = xFor(tick)
       ctx.textAlign = i === 0 ? 'left' : i === ticks.length - 1 ? 'right' : 'center'
-      ctx.fillStyle = '#727b74'; ctx.fillText(compact(tick), x, bottom + 23)
+      ctx.fillStyle = '#555555'; ctx.fillText(compact(tick), x, bottom + 23)
     })
     ctx.textAlign = 'right'; ctx.fillText('Training step · log scale', right, height - 4)
     ctx.save()
@@ -95,7 +95,7 @@ export async function mountTrajectories(root) {
     const marker = Math.min(hoverStep ?? checkpoint, checkpoint)
     if (checkpoint < 31 || selected !== null) {
       const x = xs[marker]
-      ctx.strokeStyle = '#4b6b5a'; ctx.lineWidth = 1; ctx.setLineDash([3,4])
+      ctx.strokeStyle = '#444444'; ctx.lineWidth = 1; ctx.setLineDash([3,4])
       ctx.beginPath(); ctx.moveTo(x,top); ctx.lineTo(x,bottom); ctx.stroke(); ctx.setLineDash([])
       if (selected !== null) {
         ctx.fillStyle = colours[selected]; ctx.beginPath(); ctx.arc(x,ys[selected][marker],4,0,Math.PI*2); ctx.fill()

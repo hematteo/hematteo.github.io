@@ -10,9 +10,10 @@ The original interactive 3D **physics junk drawer** lives at `/drawer/`. Click a
 
 ## Research profile
 
-The homepage is semantic HTML with a locally hosted font. Paper summaries, links, and native expandable details work without JavaScript. A small module adds accessible figure enlargement; the 3D renderer loads only on `/drawer/`.
+The homepage is semantic HTML typeset like a LaTeX preprint: Latin Modern, numbered sections, an abstract, a correspondence footnote, hyperref-style link borders (red in-page, cyan URLs, green BibTeX), and an arXiv-style margin stamp dated at build time by a small plugin in `vite.config.js`. Paper summaries, links, and native expandable details work without JavaScript. A small module adds accessible figure enlargement; the 3D renderer loads only on `/drawer/`.
 
-- Edit profile content in `index.html` and shared styles in `src/profile.css`, and homepage layout in `src/homepage.css`.
+- Edit profile content in `index.html` and homepage styles in `src/paper.css`. The research explainers use `src/profile.css` and their page styles, with `src/paper-explorer.css` layered on top so they read as supplementary material. Fonts and link borders shared by all three pages live in `src/latex.css`.
+- Fonts: `public/fonts/lmroman10-{regular,bold,italic}.woff2` and `lmmono10-regular.woff2` are Latin Modern Roman 10 and Mono 10 (GUST e-foundry, v2.005) converted to WOFF2 and subset to Latin text and punctuation, under the GUST Font License (`public/fonts/GUST-FONT-LICENSE.txt`).
 - Figure enlargement: `src/profile.js`. Direct email and LinkedIn links work without JavaScript.
 - Public CV, citations, and research figures: `public/cv/` and `public/research/`.
 - Website CV source: `cv-source/matteo-he-research.tex`. Compile with `latexmk -pdf -outdir=/tmp/website-cv cv-source/matteo-he-research.tex`, then copy the PDF to `public/cv/`. The public version uses the research contact address; application CVs are maintained separately.
