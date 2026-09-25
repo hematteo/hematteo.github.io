@@ -19,8 +19,8 @@ const ITEMS = [
     link: null, sound: 'wood',
   },
   {
-    id: 'plane', name: 'A paper airplane', eyebrow: 'PAPER · UNDER REVIEW',
-    story: '“Learning to Read Out: Unembedding Dynamics in Language Model Pretraining.” I am first author on this manuscript, which grew out of my dissertation and is under review. It tracks when information becomes available in hidden states and when the model’s own readout begins to express it.',
+    id: 'plane', name: 'A paper airplane', eyebrow: 'PAPER · NEURIPS 2026',
+    story: '“Learning to Read Out: Unembedding Dynamics in Language Model Pretraining.” My first-author paper was accepted to NeurIPS 2026. It asks when grammatical information appears inside a language model and when the model learns to use it in its next-word predictions.',
     link: 'https://github.com/hematteo/learning-to-read-out', sound: 'paper',
   },
   {

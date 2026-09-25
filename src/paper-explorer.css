@@ -1,0 +1,145 @@
+/* Research explorers typeset like a paper's supplementary material.
+   Loaded after profile.css and each page's own stylesheet; data colours in charts are unchanged. */
+@import './latex.css';
+
+:root {
+  --paper:#fff;
+  --ink:#000;
+  --muted:#3d3d3d;
+  --accent:#000;
+  --line:#c8c8c8;
+  --soft:#f2f2f2;
+  --serif:var(--tex);
+  --sans:var(--tex);
+  font-family:var(--tex);
+  background:#fff;
+}
+body {font-size:17px;line-height:1.45;font-kerning:normal;font-variant-ligatures:common-ligatures;}
+
+/* Running header */
+.masthead {height:auto;padding:16px 0 12px;border-bottom:1px solid #000;}
+.wordmark {font-size:17px;font-weight:400;font-style:italic;letter-spacing:0;color:#000;box-shadow:none !important;padding:0;}
+.wordmark:hover {background:none;text-decoration:underline;text-underline-offset:3px;}
+.wordmark-period,.file-type {display:none;}
+nav a,.story-nav {font-size:16px;color:#000;}
+nav a:hover {color:#000;text-decoration:none;}
+
+/* Headings and small labels: no letter-spaced capitals */
+.eyebrow,.chart-eyebrow,.story-number,.frozen-state > span {
+  font-size:16px;
+  font-weight:400;
+  font-style:italic;
+  letter-spacing:0;
+  text-transform:none;
+  color:#000;
+}
+.explorer-introduction {padding-top:28px;}
+.explorer-introduction h1 {font-size:clamp(30px,4.4vw,38px);font-weight:700;letter-spacing:0;line-height:1.2;margin:8px 0 16px;}
+.research-story-section h2,.prism-heading h2,.explorer-guide h2 {font-weight:700;font-size:clamp(23px,3vw,27px);letter-spacing:0;line-height:1.3;}
+.feature-example-heading h3 {font-weight:700;font-size:21px;}
+.native-card h3,.prism-reading h3 {font-weight:700;font-size:18px;}
+.trajectory-header h4 {font-family:var(--tex);font-weight:700;font-size:21px;letter-spacing:0;}
+.feature-tokens h4 {font:700 15px/1.5 var(--tex);}
+.feature-tokens h4 span {font-size:13px;}
+.prism-guide strong,.prism-takeaway strong,.score-equation b,.frozen-state strong {font-weight:700;}
+
+/* Text */
+.explorer-introduction p:not(.eyebrow),.story-intro,.prism-guide,.explorer-guide p,#score-prompt {font-size:17px;line-height:1.5;color:#000;}
+.story-figure figcaption,.figure-scope,.chart-note,.prism-animation-note,#score-scope,#score-context,
+.trajectory-sample,.reading-guide p,.feature-example-heading p,.lens-card p {font-size:15px;line-height:1.45;color:var(--muted);}
+.figure-scope {border-left:1px solid #000;}
+.back-link,.chart-source,.original-figure-link,.story-end {font-size:15px;}
+.research-story-section {border-top-color:#000;}
+
+/* Interactive figures are framed by rules, like floats in a paper */
+.prism-panel,.trajectory-explorer,.feature-example {
+  background:none;
+  border:0;
+  border-top:1px solid #000;
+  border-bottom:1px solid #000;
+  border-radius:0;
+  box-shadow:none;
+  padding:24px 0;
+}
+.native-card,.lens-card,#lens-local,.bug-prompts > div {background:none;border:1px solid var(--line);border-radius:0;box-shadow:none;}
+/* The next section's top rule closes the panel */
+.prism-panel {border-bottom:0;}
+.lens-card.selected,.bug-prompts > div.active {border-color:#000;box-shadow:inset 0 0 0 1px #000;}
+.prism-prompt {background:none;border-left:1px solid #000;}
+.feature-inspector {background:none;border:1px solid var(--line);color:#000;font-size:15px;}
+.prism-takeaway {border-left:0;padding-left:0;font-size:17px;}
+.story-figure img {border:0;padding:0;}
+.details-content {background:none;border-left:1px solid var(--line);font-size:16px;color:#000;}
+.research-details summary,.reading-guide summary,.chart-values summary {font-size:16px;color:#000;}
+
+/* Controls: square boxes, filled black when selected */
+.prism-choices button,#score-play,.model-options button,.trajectory-play,.feature-example-controls button {
+  font:inherit;
+  font-size:15px;
+  line-height:1.3;
+  color:#000;
+  background:#fff;
+  border:1px solid #000;
+  border-radius:0;
+  padding:7px 14px;
+  min-height:38px;
+}
+.prism-choices button:hover,#score-play:hover,.model-options button:hover,.trajectory-play:hover,.feature-example-controls button:hover {background:#eee;border-color:#000;}
+.prism-choices button[aria-pressed="true"],.model-options button[aria-pressed="true"],.feature-example-controls button[aria-pressed="true"],.stage-button[aria-pressed="true"] {background:#000;color:#fff;border-color:#000;}
+.stage-button {font:inherit;font-size:15px;color:#000;border-radius:0;}
+.stage-button span {font-size:13px;}
+.stage-button:hover {border-color:#000;}
+.token-stage {border-radius:0;}
+.token-stage.is-active {border-color:#000;background:none;}
+.stage-readout,.lens-announcement,.curve-readout {font-size:14px;color:#000;}
+.timeline-control input,.prism-controls input {accent-color:#000;}
+.timeline-control label,.prism-controls label,.trajectory-legend,.bar-legend,.native-legend {font-size:14px;color:var(--muted);}
+.timeline-control output,.prism-controls output {color:#000;font-weight:700;}
+.trajectory-controls,.prism-controls,.score-equation,.contribution-row.remainder,.lens-card dl,.feature-tokens,.trajectory-explorer figcaption,.chart-values {border-top-color:var(--line);}
+.trajectory-explorer figcaption {font-size:15px;}
+.trajectory-explorer :focus-visible {outline-color:#000;}
+
+/* Tokens set in typewriter type */
+.token-list span,#feature-inspector-tokens span {font-family:var(--tex-mono);font-size:14px;background:#f0f0f0;color:#000;border-radius:0;}
+.contribution-name small,.bug-token-list {font-family:var(--tex-mono);font-size:13px;}
+.bug-fixed strong {font-family:var(--tex-mono);font-weight:400;}
+
+/* Score charts */
+.contribution-row {font-family:var(--tex);font-size:14px;}
+.contribution-value {font-size:14px;}
+#bug-bars .contribution-row {font-size:15px;}
+button.contribution-row:hover {background:#f2f2f2;}
+.score-equation {font-size:14px;}
+.score-equation b {font-size:18px;}
+.prism-score-header span,.bug-fixed,.lens-card dl {font-size:14px;}
+.bug-fixed {border-bottom-color:var(--line);}
+.frozen-state {border-color:#000;}
+.frozen-state strong {font-size:16px;}
+.frozen-state p + p {font-size:15px;}
+.shared-feature-track,.shared-feature-track span {border-radius:0;}
+.shared-feature-track {background:#e6e6e6;}
+.prism-reading p {font-size:15px;}
+.native-svg text {fill:#333;}
+.native-svg .task-label {fill:#000;}
+.feature-example svg,.feature-example svg text {font-family:var(--tex);}
+
+/* Tables ruled like booktabs */
+.bug-accounting,.chart-values table {border-top:1.5px solid #000;border-bottom:1.5px solid #000;font-size:15px;}
+.bug-accounting th,.bug-accounting td,.chart-values th,.chart-values td {border-bottom:0;}
+.bug-accounting thead th,.chart-values thead th {border-bottom:1px solid #000;}
+.chart-values {font-size:14px;}
+
+footer {border-top:1px solid #000;font-size:14px;color:#000;}
+footer > span,footer a {color:#000;}
+footer a:hover {text-decoration:none;}
+
+dialog {border:1px solid #000;border-radius:0;}
+.dialog-header h2 {font-weight:700;}
+.dialog-header button {border:0;border-radius:0;box-shadow:0 0 0 1px var(--link);color:#000;background:#fff;padding:2px 10px;}
+.dialog-header button:hover {background:#ffe8e8;}
+
+@media(max-width:650px) {
+  .contribution-row,.contribution-value {font-size:12px;}
+  #bug-bars .contribution-row {font-size:13px;}
+  .contribution-name small {font-size:11px;}
+}

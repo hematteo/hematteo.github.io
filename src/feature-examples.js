@@ -17,7 +17,7 @@ if (controls && cards.length) {
     const marker = card.querySelector('svg circle')
     const guide = document.createElementNS('http://www.w3.org/2000/svg', 'line')
     guide.setAttribute('y1', '39'); guide.setAttribute('y2', '223')
-    guide.setAttribute('stroke', '#9fb6a8'); guide.setAttribute('stroke-dasharray', '4 4')
+    guide.setAttribute('stroke', '#999999'); guide.setAttribute('stroke-dasharray', '4 4')
     marker.before(guide)
     const stages = [...card.querySelectorAll('.stage-button')]
     const activate = button => {

@@ -1,0 +1,238 @@
+/* Homepage typeset like a LaTeX preprint. Explainer pages layer paper-explorer.css over profile.css. */
+@import './latex.css';
+@import './paper-motion.css';
+
+:root {
+  color-scheme:light;
+  font-family:var(--tex);
+  color:#000;
+  background:#fff;
+}
+
+* {box-sizing:border-box;}
+
+body {
+  margin:0;
+  background:#fff;
+  font-size:17px;
+  line-height:1.42;
+  font-kerning:normal;
+  font-variant-ligatures:common-ligatures;
+  -webkit-font-smoothing:antialiased;
+}
+
+p,h1,h2,h3,figure {margin:0;}
+h1,h2,h3 {font-weight:700;}
+img {max-width:100%;height:auto;display:block;}
+
+.cv-entry h3 a,.figure-link,.research-preview > a {box-shadow:none !important;padding:0;}
+.cv-entry h3 a:hover {background:none;text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px;}
+.figure-link {cursor:zoom-in;}
+.figure-link:hover,.research-preview > a:hover {background:none;}
+
+.page {width:min(100% - 32px,700px);margin:0 auto;}
+
+.skip-link {
+  position:fixed;
+  left:16px;
+  top:12px;
+  z-index:10;
+  padding:8px 16px;
+  background:#fff;
+  transform:translateY(-200%);
+  clip-path:inset(50%);
+}
+.skip-link:focus {transform:none;clip-path:none;}
+
+/* arXiv-style stamp in the left margin, versioned and dated from git at build time */
+.arxiv-stamp {
+  position:absolute;
+  top:132px;
+  left:max(16px,calc(50% - 460px));
+  margin:0;
+  transform:rotate(180deg);
+  font:30px/1 'Times New Roman',Times,serif;
+  color:#8c8c8c;
+  white-space:nowrap;
+  user-select:none;
+}
+
+.arxiv-stamp span {display:block;writing-mode:vertical-rl;} /* form controls ignore writing-mode in some browsers */
+.masthead {padding-top:18px;}
+nav {display:flex;flex-wrap:wrap;justify-content:center;gap:8px 20px;}
+nav a {font-size:16px;}
+
+/* Title block */
+.intro {padding-top:46px;text-align:center;}
+h1 {font-size:36px;line-height:1.2;}
+.research-statement {
+  max-width:640px;
+  margin:14px auto 0;
+  font-size:19px;
+  font-style:italic;
+  line-height:1.4;
+}
+.abstract {margin:30px 42px 0;text-align:justify;hyphens:auto;}
+.abstract-title {font-size:16px;text-align:center;margin-bottom:6px;}
+.abstract p {font-size:16px;line-height:1.45;}
+.abstract p + p {margin-top:8px;}
+.profile-links {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:8px 20px;
+  margin-top:22px;
+}
+.footnote {margin-top:34px;text-align:left;font-size:14px;line-height:1.4;}
+.footnote::before {content:'';display:block;width:160px;border-top:1px solid #000;margin-bottom:6px;}
+.footnote-mark {font-size:.75em;vertical-align:.45em;margin-right:1px;}
+
+/* Numbered sections and subsections */
+main {counter-reset:sec fig;}
+.section {counter-increment:sec;counter-reset:sub;}
+.section-heading {margin:54px 0 4px;}
+.section-heading h2,.contact h2 {font-size:22px;line-height:1.3;}
+.section-heading h2::before {content:counter(sec);margin-right:1em;}
+.section .cv-entry {counter-increment:sub;}
+.cv-entry h3::before {content:counter(sec) '.' counter(sub);margin-right:1em;}
+
+.cv-entry {padding:20px 0 12px;}
+.entry-heading {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) max-content;
+  gap:20px;
+  align-items:baseline;
+}
+.cv-entry h3 {font-size:19px;line-height:1.3;}
+.entry-date {font-variant-numeric:tabular-nums;}
+.paper-subtitle {margin-top:4px;}
+.authors {margin-top:6px;}
+.authors strong {font-weight:700;}
+.cv-entry .paper-meta {margin-top:4px;}
+.paper-meta span + span::before {content:'·';padding:0 .5em;}
+.paper-meta span:nth-child(2) {font-style:italic;}
+
+.publication-overview {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 34%;
+  gap:32px;
+  align-items:start;
+  margin-top:16px;
+}
+.paper-body p,.entry-description p,.details-content p {text-align:justify;hyphens:auto;}
+.paper-body p + p {margin-top:10px;}
+.paper-body .paper-question {font-style:italic;text-align:left;margin-bottom:-2px;}
+.cv-entry > .entry-content > .paper-body {margin-top:16px;}
+.artifact-links {
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px 18px;
+  margin-top:14px;
+}
+.paper-body .artifact-links {margin-bottom:10px;}
+
+.research-preview {padding-top:4px;}
+.research-preview img {width:100%;}
+figcaption {margin-top:8px;font-size:15px;line-height:1.4;}
+.research-preview figcaption::before {counter-increment:fig;content:'Figure ' counter(fig) ': ';}
+/* Figures inside "Method & scope" are numbered like an appendix */
+#learning-to-read-out .details-content figcaption::before {content:'Figure A.1: ';}
+#sparse-readout-prism .details-content figcaption::before {content:'Figure A.2: ';}
+
+summary {width:fit-content;cursor:pointer;}
+.research-details {margin-top:14px;}
+.details-content {margin-top:10px;padding-left:24px;font-size:16px;}
+.details-content p + p {margin-top:10px;}
+.details-content figure {margin:18px 0;}
+.supporting-figure {max-width:480px;margin-inline:auto !important;}
+
+.entry-description {margin-top:10px;}
+.entry-description p + p {margin-top:8px;}
+.entry-description strong,.academic-distinction strong {font-weight:700;}
+.cv-entry > .entry-content > .artifact-links {margin-top:12px;}
+.system-details {margin-top:10px;}
+.system-details p {margin-top:8px;text-align:justify;hyphens:auto;}
+.academic-distinction {padding:8px 0 0;}
+.academic-distinction span {display:block;}
+
+.contact {margin-top:54px;}
+.contact p {margin-top:8px;}
+.contact-link {display:inline-block;margin-top:10px;overflow-wrap:anywhere;}
+
+footer {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  gap:10px 24px;
+  margin-top:56px;
+  padding:16px 0 40px;
+  border-top:1px solid #000;
+  font-size:14px;
+}
+footer div {display:flex;flex-wrap:wrap;gap:6px 18px;}
+.footer-year {margin-left:6px;}
+
+dialog {
+  width:min(100% - 32px,1100px);
+  max-height:calc(100dvh - 48px);
+  overflow:auto;
+  padding:20px;
+  border:1px solid #000;
+  background:#fff;
+  color:#000;
+}
+dialog::backdrop {background:rgba(0,0,0,.6);}
+.dialog-header {display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:16px;}
+.dialog-header h2 {font-size:20px;}
+.dialog-header button {
+  font:inherit;
+  font-size:16px;
+  color:#000;
+  background:#fff;
+  border:0;
+  box-shadow:0 0 0 1px var(--link);
+  padding:2px 10px;
+  cursor:pointer;
+}
+.dialog-header button:hover {background:#ffe8e8;}
+dialog img {margin:auto;max-height:70dvh;object-fit:contain;}
+dialog p {margin-top:12px;font-size:15px;}
+
+@media (prefers-reduced-motion:no-preference) {
+  html {scroll-behavior:smooth;}
+}
+
+/* Not enough margin for a sideways stamp: run it across the top instead */
+@media (max-width:1000px) {
+  .arxiv-stamp {
+    position:static;
+    display:block;
+    transform:none;
+    margin:0 auto;
+    padding-top:14px;
+    font-size:14px;
+  }
+  .arxiv-stamp span {writing-mode:horizontal-tb;}
+  .masthead {padding-top:8px;}
+}
+
+@media (max-width:640px) {
+  .intro {padding-top:30px;}
+  h1 {font-size:31px;}
+  .research-statement {font-size:18px;}
+  .abstract {margin:26px 0 0;}
+  /* Justified text leaves rivers in narrow columns */
+  .abstract,.paper-body p,.entry-description p,.details-content p,.system-details p {text-align:left;}
+  .section-heading {margin-top:42px;}
+  .publication-overview {display:block;}
+  .research-preview {margin-top:18px;max-width:420px;}
+  .details-content {padding-left:14px;}
+  .supporting-figure {max-width:none;}
+}
+
+@media print {
+  body {font-size:11pt;}
+  .skip-link,.masthead,.profile-links,.research-explorer-link,.artifact-links,.research-details,.system-details,footer {display:none;}
+  .cv-entry {break-inside:avoid;}
+  .publication-overview {grid-template-columns:1fr 230px;gap:20px;}
+}
