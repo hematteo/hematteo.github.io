@@ -20,8 +20,16 @@ function entryPreview (entry) {
     card.append(line)
   }
   const figure = entry.querySelector('.research-preview')
+  const native = figure?.querySelector('svg.native-figure')
   const thumbnail = figure?.dataset.thumbnail || figure?.querySelector('img')?.src
-  if (thumbnail) {
+  if (native) {
+    const copy = native.cloneNode(true)
+    copy.classList.remove('armed', 'play')
+    copy.removeAttribute('data-focus')
+    copy.removeAttribute('role')
+    copy.setAttribute('aria-hidden', 'true')
+    card.append(copy)
+  } else if (thumbnail) {
     const img = document.createElement('img')
     img.src = thumbnail
     img.alt = ''

@@ -4,10 +4,12 @@ import { mountInk } from './paper/ink.js'
 import { mountPreviews } from './paper/previews.js'
 import { mountPrism } from './paper/prism.js'
 import { mountReplay } from './paper/replay.js'
+import { mountSrp } from './paper/srp.js'
 
 finishCompile()
 mountPrism(document.querySelector('.prism-slot'))
 mountReplay(document.querySelector('#learning-to-read-out .research-preview'))
+mountSrp(document.querySelector('.srp-figure'))
 mountPreviews()
 // Ink is positioned against laid-out text, so wait for the web fonts
 document.fonts.ready.then(mountInk)

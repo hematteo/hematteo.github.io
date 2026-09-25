@@ -139,6 +139,78 @@ main {counter-reset:sec fig;}
 
 .research-preview {padding-top:4px;}
 .research-preview img {width:100%;}
+
+/* Figures redrawn as inline SVG follow the theme: every colour is a mix of the page's paper and ink */
+.native-figure {display:block;width:100%;height:auto;}
+.srp-figure {
+  --srp-a1:color-mix(in srgb,#2358d8 86%,var(--ink));
+  --srp-a2:color-mix(in srgb,#4b9be0 86%,var(--ink));
+  --srp-b:color-mix(in srgb,#e8702a 90%,var(--ink));
+  --srp-glass:#4757e0;
+}
+.srp-title {font:700 16px var(--tex);fill:var(--ink);text-anchor:middle;}
+.srp-math {font-family:'Latin Modern Math',var(--tex);font-size:17px;fill:var(--ink);}
+.srp-math .sub {font-size:12px;}
+.srp-text {font:17px var(--tex);fill:var(--ink);}
+.srp-text.a1 {fill:var(--srp-a1);}
+.srp-text.b {fill:var(--srp-b);}
+.srp-panel {fill:color-mix(in srgb,var(--ink) 4%,var(--paper));stroke:color-mix(in srgb,var(--ink) 18%,var(--paper));}
+.srp-face.left {fill:color-mix(in srgb,var(--srp-glass) 16%,var(--paper));}
+.srp-face.front {fill:color-mix(in srgb,var(--srp-glass) 10%,var(--paper));}
+.srp-face.base {fill:color-mix(in srgb,var(--srp-glass) 5%,var(--paper));}
+.srp-face.back {fill:color-mix(in srgb,var(--srp-glass) 8%,var(--paper));}
+.srp-edge {fill:none;stroke:color-mix(in srgb,var(--srp-glass) 80%,var(--ink));stroke-width:1.6;stroke-linejoin:round;}
+.srp-edge.faint {stroke-opacity:.4;}
+.srp-arrow {fill:none;stroke-width:1.6;}
+.srp-arrow.ink {stroke:var(--ink-2);}
+.srp-arrow.a1 {stroke:var(--srp-a1);}
+.srp-arrow.a2 {stroke:var(--srp-a2);}
+.srp-arrow.b {stroke:var(--srp-b);}
+.srp-arrow.res {stroke:var(--ink-3);stroke-dasharray:5 4;}
+.srp-head.ink {fill:var(--ink-2);}
+.srp-head.a1 {fill:var(--srp-a1);}
+.srp-head.a2 {fill:var(--srp-a2);}
+.srp-head.b {fill:var(--srp-b);}
+.srp-head.res {fill:var(--ink-3);}
+.srp-bar.a1 {fill:var(--srp-a1);}
+.srp-bar.a2 {fill:var(--srp-a2);}
+.srp-bar.b {fill:var(--srp-b);}
+.srp-residual {fill:url(#srp-hatch);stroke:var(--ink-3);}
+.srp-hatch {stroke:var(--ink-3);stroke-width:1;}
+.srp-axis {stroke:var(--ink-2);stroke-width:1.4;}
+.srp-hit {fill:none;stroke:transparent;stroke-width:14;pointer-events:stroke;}
+
+/* Played once on first view by src/paper/srp.js: arrows grow out of the prism, bars out of the zero
+   axis, each bar just after its arrow. --d is each element's place in that sequence. */
+.srp-arrow {transform-box:view-box;transform-origin:205px 206px;}
+.srp-in {transform-origin:61px 206px;}
+.srp-bar,.srp-residual {transform-box:view-box;transform-origin:514px 0;}
+.srp-in {--d:0s;}
+.srp-fan,.srp-arrow[data-k="0"] {--d:.35s;}
+.srp-bar[data-k="0"] {--d:.5s;}
+.srp-arrow[data-k="1"] {--d:.55s;}
+.srp-bar[data-k="1"] {--d:.7s;}
+.srp-arrow[data-k="2"] {--d:.75s;}
+.srp-bar[data-k="2"] {--d:.9s;}
+.srp-arrow[data-k="3"] {--d:.95s;}
+.srp-bar[data-k="3"] {--d:1.1s;}
+.srp-arrow[data-k="r"] {--d:1.25s;}
+.srp-residual,.srp-math[data-k="r"] {--d:1.4s;}
+.srp-figure.armed .srp-arrow {transform:scale(0);}
+.srp-figure.armed :is(.srp-bar,.srp-residual) {transform:scaleX(0);}
+.srp-figure.armed :is(.srp-fan,.srp-math[data-k]) {opacity:0;}
+.srp-figure.armed.play :is(.srp-arrow,.srp-bar,.srp-residual,.srp-fan,.srp-math[data-k]) {
+  transform:none;
+  opacity:1;
+  transition:transform .35s cubic-bezier(.2,.7,.3,1) var(--d),opacity .3s var(--d);
+}
+@media print {.srp-figure.armed * {transform:none !important;opacity:1 !important;}}
+
+/* Hovering an arrow, a bar or the residual keeps its pair and dims the rest */
+.srp-figure [data-k] {transition:opacity .15s;}
+.srp-figure[data-focus] [data-k] {opacity:.2;}
+.srp-figure[data-focus="0"] [data-k="0"],.srp-figure[data-focus="1"] [data-k="1"],.srp-figure[data-focus="2"] [data-k="2"],
+.srp-figure[data-focus="3"] [data-k="3"],.srp-figure[data-focus="r"] [data-k="r"] {opacity:1;}
 figcaption {margin-top:8px;font-size:15px;line-height:1.4;}
 .research-preview figcaption::before {counter-increment:fig;content:'Figure ' counter(fig) ': ';}
 /* Figures inside "Method & scope" are numbered like an appendix */
@@ -202,6 +274,7 @@ dialog::backdrop {background:var(--backdrop);}
 }
 .dialog-header button:hover {background:var(--link-bg);}
 dialog img {margin:auto;max-height:70dvh;object-fit:contain;}
+dialog .native-figure {margin:auto;max-height:70dvh;}
 dialog p {margin-top:12px;font-size:15px;}
 
 @media (prefers-reduced-motion:no-preference) {

@@ -137,7 +137,7 @@ html.compiling .arxiv-stamp {opacity:0;}
 .ref-preview p + p,.ref-preview .contact-link {display:block;margin-top:4px;}
 .ref-preview .ref-title {font-weight:700;white-space:pre-wrap;}
 .ref-preview .ref-meta {font-style:italic;}
-.ref-preview img {width:100%;margin-top:8px;}
+.ref-preview img,.ref-preview .native-figure {width:100%;margin-top:8px;}
 .ref-preview a {box-shadow:none !important;padding:0;}
 
 @media (prefers-reduced-motion:no-preference) {

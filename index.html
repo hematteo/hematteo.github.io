@@ -156,7 +156,50 @@
             </div>
               <figure class="paper-figure results-figure research-preview">
                 <a href="/research/sparse-readout-prism.png" class="figure-link" aria-label="View the Sparse Readout Prism method figure at full size">
-                  <img src="/research/sparse-readout-prism.png" alt="Sparse Readout Prism decomposes a readout query into feature directions, then accounts for its score using signed contributions and a residual." width="1400" height="707" loading="lazy">
+                  <svg class="native-figure srp-figure" viewBox="0 0 700 354" role="img" aria-label="Sparse Readout Prism decomposes a readout query into feature directions, then accounts for its score using signed contributions and a residual.">
+                    <!-- Redrawn from the paper's schematic (readout_query_one_column); the PNG it links to is the original. -->
+                    <defs>
+                      <marker id="srp-head-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="srp-head ink"/></marker>
+                      <marker id="srp-head-a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="srp-head a1"/></marker>
+                      <marker id="srp-head-a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="srp-head a2"/></marker>
+                      <marker id="srp-head-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="srp-head b"/></marker>
+                      <marker id="srp-head-res" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="srp-head res"/></marker>
+                      <pattern id="srp-hatch" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="4" class="srp-hatch"/></pattern>
+                    </defs>
+                    <text class="srp-title" x="175" y="22">Sparse readout features</text>
+                    <text class="srp-title" x="525" y="22">Signed score accounting</text>
+                    <text class="srp-math" x="175" y="52" text-anchor="middle">𝑞<tspan class="sub" dy="4">𝛼</tspan><tspan dx="5" dy="-4">=</tspan><tspan dx="5">∑</tspan><tspan class="sub" dy="4">𝑖</tspan><tspan dx="3" dy="-4">𝛽</tspan><tspan class="sub" dy="4">𝑖</tspan><tspan dy="-4">(𝛼)</tspan><tspan dx="3">𝑑</tspan><tspan class="sub" dy="4">𝑖</tspan><tspan dx="5" dy="-4">+</tspan><tspan dx="5">𝑟</tspan><tspan class="sub" dy="4">𝛼</tspan></text>
+                    <text class="srp-math" x="525" y="52" text-anchor="middle">𝑠<tspan class="sub" dy="4">𝛼</tspan><tspan dx="5" dy="-4">=</tspan><tspan dx="5">∑</tspan><tspan class="sub" dy="4">𝑖</tspan><tspan dx="3" dy="-4">𝑐</tspan><tspan class="sub" dy="4">𝑖</tspan><tspan dx="5" dy="-4">+</tspan><tspan dx="5">ℎ̃</tspan><tspan class="sub" dy="-7">⊤</tspan><tspan class="sub" dx="-8" dy="11">ℓ</tspan><tspan dx="4" dy="-4">𝑟</tspan><tspan class="sub" dy="4">𝛼</tspan></text>
+
+                    <rect class="srp-panel" x="18" y="70" width="314" height="270" rx="10"/>
+                    <polygon class="srp-face back" points="175,124 243,227 212,251"/>
+                    <polygon class="srp-face base" points="109,248 172,216 212,251"/>
+                    <polygon class="srp-face left" points="175,124 109,248 172,216"/>
+                    <polygon class="srp-face front" points="175,124 172,216 212,251"/>
+                    <path class="srp-edge faint" d="M175 124L243 227L212 251"/>
+                    <path class="srp-edge" d="M175 124L109 248L212 251Z M175 124L172 216 M109 248L172 216L212 251"/>
+                    <path class="srp-arrow ink srp-in" d="M61 206H129" marker-end="url(#srp-head-ink)"/>
+                    <path class="srp-arrow a1" data-k="0" d="M205 206L281 125" marker-end="url(#srp-head-a1)"/>
+                    <path class="srp-arrow a1" data-k="1" d="M205 206L281 167" marker-end="url(#srp-head-a1)"/>
+                    <path class="srp-arrow a2" data-k="2" d="M205 206H281" marker-end="url(#srp-head-a2)"/>
+                    <path class="srp-arrow b" data-k="3" d="M205 206L281 244" marker-end="url(#srp-head-b)"/>
+                    <path class="srp-arrow res" data-k="r" d="M205 206L281 283" marker-end="url(#srp-head-res)"/>
+                    <text class="srp-math" x="36" y="211">𝑞<tspan class="sub" dy="4">𝛼</tspan></text>
+                    <text class="srp-math srp-fan" x="262" y="100" text-anchor="middle">𝛽<tspan class="sub" dy="4">𝑖</tspan><tspan dy="-4">(𝛼)</tspan><tspan dx="3">𝑑</tspan><tspan class="sub" dy="4">𝑖</tspan></text>
+                    <text class="srp-math" data-k="r" x="282" y="318" text-anchor="middle">𝑟<tspan class="sub" dy="4">𝛼</tspan></text>
+
+                    <rect class="srp-panel" x="368" y="70" width="314" height="270" rx="10"/>
+                    <text class="srp-text b" x="477" y="108" text-anchor="middle">B</text>
+                    <text class="srp-text" x="515" y="108" text-anchor="middle">0</text>
+                    <text class="srp-text a1" x="554" y="108" text-anchor="middle">A</text>
+                    <rect class="srp-bar a1" data-k="0" x="514" y="114" width="84" height="20"/>
+                    <rect class="srp-bar a1" data-k="1" x="514" y="155" width="56" height="20"/>
+                    <rect class="srp-bar a2" data-k="2" x="514" y="195" width="30" height="20"/>
+                    <rect class="srp-bar b" data-k="3" x="466" y="235" width="48" height="20"/>
+                    <rect class="srp-residual" data-k="r" x="514" y="276" width="16" height="20"/>
+                    <line class="srp-axis" x1="514" y1="114" x2="514" y2="298"/>
+                    <text class="srp-math" data-k="r" x="546" y="292">ℎ̃<tspan class="sub" dy="-7">⊤</tspan><tspan class="sub" dx="-8" dy="11">ℓ</tspan><tspan dx="4" dy="-4">𝑟</tspan><tspan class="sub" dy="4">𝛼</tspan></text>
+                  </svg>
                 </a>
                 <figcaption>How individual features contribute to a readout score.</figcaption>
 
@@ -263,7 +306,7 @@
   </dialog>
   <script type="module" src="/src/profile.js"></script>
   <script type="module" src="/src/paper.js"></script>
+  <script type="module" src="/src/theme.js"></script>
   <script type="module" src="/src/paper-mobile.js"></script>
 </body>
 </html>
-  <script type="module" src="/src/theme.js"></script>

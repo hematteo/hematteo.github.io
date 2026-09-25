@@ -15,6 +15,7 @@ const dialog = document.getElementById('figure-dialog')
 const expandedFigure = document.getElementById('expanded-figure')
 const description = document.getElementById('figure-description')
 let trigger = null
+let nativeCopy = null // an inline SVG figure is shown as a copy, so it keeps following the theme
 
 if (typeof dialog.showModal === 'function') {
   document.querySelectorAll('.figure-link').forEach(link => {
@@ -23,10 +24,22 @@ if (typeof dialog.showModal === 'function') {
       if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
       event.preventDefault()
       trigger = link
-      const source = link.querySelector('img')
-      expandedFigure.src = link.href
-      expandedFigure.alt = source.alt
-      description.textContent = source.alt
+      const source = link.querySelector('img, svg')
+      const alt = source.getAttribute('alt') ?? source.getAttribute('aria-label') ?? ''
+      nativeCopy?.remove()
+      nativeCopy = null
+      if (source.tagName === 'svg') {
+        nativeCopy = source.cloneNode(true)
+        nativeCopy.classList.remove('armed', 'play')
+        nativeCopy.removeAttribute('data-focus')
+        expandedFigure.hidden = true
+        expandedFigure.after(nativeCopy)
+      } else {
+        expandedFigure.hidden = false
+        expandedFigure.src = link.href
+        expandedFigure.alt = alt
+      }
+      description.textContent = alt
       dialog.showModal()
     })
   })
