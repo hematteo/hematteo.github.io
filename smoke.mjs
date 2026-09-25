@@ -39,6 +39,7 @@ try {
   const initialHtml = await initialResponse.text()
   check('research email is available in static HTML', initialHtml.includes('mailto:matteohe.research@gmail.com'))
   check('research profile renders', await page.locator('h1').textContent() === 'Matteo He')
+  check('recent updates are listed', await page.locator('#news .news-list li').count() >= 1)
   check('selected research is visible', await page.locator('#research h3').count() === 2)
   check('profile does not load the 3D renderer', await page.evaluate(() => typeof window.__jd) === 'undefined')
   const cv = await page.request.get(new URL(await page.locator('.profile-links a').last().getAttribute('href'), BASE).href)

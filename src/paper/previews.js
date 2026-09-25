@@ -79,7 +79,7 @@ export function mountPreviews () {
     owner = null
   }
 
-  for (const link of document.querySelectorAll('.footnote-ref, .abstract a[href^="#"]')) {
+  for (const link of document.querySelectorAll('.footnote-ref, .abstract a[href^="#"], .news a[href^="#"]')) {
     link.addEventListener('pointerenter', e => {
       if (e.pointerType !== 'mouse') return
       clearTimeout(timer)
