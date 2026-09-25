@@ -91,4 +91,7 @@ export function mountPreviews () {
     link.addEventListener('click', hide)
   }
   addEventListener('keydown', e => { if (e.key === 'Escape') hide() })
+  // A preview is placed for the current layout; drop it when that changes
+  addEventListener('resize', hide)
+  addEventListener('scroll', () => { if (!card.hidden) hide() }, { passive: true })
 }

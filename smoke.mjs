@@ -58,6 +58,8 @@ try {
   await page.locator('.footnote-ref').hover()
   await page.waitForTimeout(500)
   check('footnote preview appears', (await page.locator('#ref-preview').textContent()).includes('Correspondence'))
+  await page.mouse.move(0, 0)
+  check('footnote preview closes', await page.locator('#ref-preview').isHidden())
   await page.locator('#learning-to-read-out').scrollIntoViewIfNeeded()
   await page.locator('.replay-figure').waitFor({ timeout: 5000 })
   check('Figure 1 replays the measured curves', await page.locator('.replay-curves path').count() === 1200)
