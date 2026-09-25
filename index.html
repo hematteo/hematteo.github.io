@@ -4,13 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Matteo He | AI Safety &amp; Interpretability Research</title>
-  <meta name="description" content="Matteo He is a researcher interested in AI safety, alignment, and oversight. Cambridge MPhil with Distinction; selected research, engineering experience, and CV.">
+  <meta name="description" content="Matteo He researches AI safety and interpretability. His first-author paper Learning to Read Out was accepted to NeurIPS 2026.">
   <meta name="theme-color" content="#faf9f6">
   <link rel="icon" type="image/png" href="/research/prism-mark.png">
   <link rel="canonical" href="https://hematteo.github.io/">
   <meta property="og:type" content="profile">
   <meta property="og:title" content="Matteo He | Research &amp; selected work">
-  <meta property="og:description" content="AI safety, alignment, and interpretability. Selected research and engineering work from Matteo He, Cambridge MPhil with Distinction.">
+  <meta property="og:description" content="AI safety and interpretability research by Matteo He. Learning to Read Out was accepted to NeurIPS 2026.">
   <meta property="og:url" content="https://hematteo.github.io/">
   <meta name="twitter:card" content="summary">
   <link rel="preload" href="/fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -40,7 +40,7 @@
           <p class="eyebrow">AI safety · Alignment · Interpretability</p>
           <h1 id="name">Matteo He</h1>
           <p class="research-statement">I’m a researcher interested in understanding AI systems and making their behavior easier to evaluate and oversee.</p>
-          <p class="intro-description">I completed an MPhil in Advanced Computer Science at Cambridge with Distinction. My dissertation examined how methods for reading model internals affect our conclusions about what they have learned.</p>
+          <p class="intro-description">I completed an MPhil in Advanced Computer Science at Cambridge with Distinction. My dissertation studied how language models learn to turn internal information into predictions. The resulting first-author paper, <a href="#learning-to-read-out">Learning to Read Out</a>, was accepted to NeurIPS 2026.</p>
           <p class="intro-availability">I’m seeking AI safety research fellowships and research scientist or research engineer roles. <a href="#contact">Get in touch →</a></p>
           <div class="profile-links" aria-label="Profile and contact links">
             <a href="mailto:matteohe.research@gmail.com">Email</a>
@@ -112,12 +112,12 @@
               <p class="entry-date">2026</p>
             </header>
             <p class="authors"><strong>Matteo He</strong>, William F. Shen, Alex Iacob, Andrej Jovanovic, Xinchi Qiu, Nicholas D. Lane</p>
-            <div class="paper-meta"><span>First author</span><span>Manuscript under review</span></div>
+            <div class="paper-meta"><span>First author</span><span>NeurIPS 2026 · Accepted</span></div>
             <div class="publication-overview">
             <div class="paper-body">
-              <p class="paper-question">How does a model learn to express what its hidden states contain?</p>
-              <p>A model’s readout turns internal representations into predictions. I developed trajectory crosscoding to track how patterns in the readout change during training. Across four models, some patterns peaked early and faded, while others emerged later or persisted.</p>
-              <p>In grammar experiments, a separate classifier recovered information before the model’s own readout used it reliably. The gap persisted on harder examples, showing how predictions can give an incomplete picture of what a model has learned.</p>
+              <p class="paper-question">When does a language model acquire information, and when can it use that information to predict the next word?</p>
+              <p>A model’s output layer turns its internal information into scores for possible next words. I studied how that layer changes during training, using probes to check what information was already present and trajectory crosscoders to track how the output weights developed.</p>
+              <p>In subject–verb agreement tests, grammatical information was detectable in hidden states hundreds of training steps before the model used it reliably in its predictions. The gap remained on harder sentences at the end of training. Predictions alone can therefore give a misleading date for when this information became available.</p>
               <div class="artifact-links">
                 <a href="https://github.com/hematteo/learning-to-read-out">Code</a>
                 <a href="https://github.com/hematteo/learning-to-read-out/tree/main/notebooks">Guided notebooks</a>
@@ -142,7 +142,7 @@
               </a>
               <figcaption>Left: grammatical information becomes detectable before the model’s own readout uses it reliably. Right: the gap persists on harder examples, even at the end of training. SVA means subject–verb agreement. <span>Click to enlarge.</span></figcaption>
             </figure>
-              <p>Using fixed hidden states from Pythia-1B at step 1000, removing eight localized features from the reconstructed final readout reduced agreement accuracy on held out examples from 90.0% to 48.7%. Matched controls stayed at 90.0%. In control runs with 31 million parameters and a single random seed, each 4× increase in the readout learning rate halved the training step at which reorganization occurred. Final validation losses agreed within 0.06 nats.</p><p>The public release includes reusable analysis tools, examples that run on a CPU, guided notebooks, and a manifest linking experiments to figures. The manuscript remains under review.</p></div>
+              <p>Using fixed hidden states from Pythia-1B at step 1000, removing eight localized features from the reconstructed final readout reduced agreement accuracy on held out examples from 90.0% to 48.7%. Matched controls stayed at 90.0%. In control runs with 31 million parameters and a single random seed, each 4× increase in the readout learning rate halved the training step at which reorganization occurred. Final validation losses agreed within 0.06 nats.</p><p>The public release includes reusable analysis tools, examples that run on a CPU, guided notebooks, and a manifest linking experiments to figures. The paper was accepted to NeurIPS 2026.</p></div>
             </details>
           </div>
         </article>
