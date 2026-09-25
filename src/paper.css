@@ -1,5 +1,6 @@
 /* Homepage typeset like a LaTeX preprint. Explainer pages layer paper-explorer.css over profile.css. */
 @import './latex.css';
+@import './paper-motion.css';
 
 :root {
   color-scheme:light;
@@ -24,7 +25,7 @@ p,h1,h2,h3,figure {margin:0;}
 h1,h2,h3 {font-weight:700;}
 img {max-width:100%;height:auto;display:block;}
 
-.cv-entry h3 a,.figure-link,.research-preview > a {box-shadow:none;padding:0;}
+.cv-entry h3 a,.figure-link,.research-preview > a {box-shadow:none !important;padding:0;}
 .cv-entry h3 a:hover {background:none;text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px;}
 .figure-link {cursor:zoom-in;}
 .figure-link:hover,.research-preview > a:hover {background:none;}
@@ -43,13 +44,12 @@ img {max-width:100%;height:auto;display:block;}
 }
 .skip-link:focus {transform:none;clip-path:none;}
 
-/* arXiv-style stamp in the left margin; dated at build time */
+/* arXiv-style stamp in the left margin, versioned and dated from git at build time */
 .arxiv-stamp {
   position:absolute;
   top:132px;
   left:max(16px,calc(50% - 460px));
   margin:0;
-  writing-mode:vertical-rl;
   transform:rotate(180deg);
   font:30px/1 'Times New Roman',Times,serif;
   color:#8c8c8c;
@@ -57,6 +57,7 @@ img {max-width:100%;height:auto;display:block;}
   user-select:none;
 }
 
+.arxiv-stamp span {display:block;writing-mode:vertical-rl;} /* form controls ignore writing-mode in some browsers */
 .masthead {padding-top:18px;}
 nav {display:flex;flex-wrap:wrap;justify-content:center;gap:8px 20px;}
 nav a {font-size:16px;}
@@ -64,13 +65,6 @@ nav a {font-size:16px;}
 /* Title block */
 .intro {padding-top:46px;text-align:center;}
 h1 {font-size:36px;line-height:1.2;}
-h1::after {
-  content:'∗' / '';
-  font-size:.5em;
-  font-weight:400;
-  vertical-align:.95em;
-  margin-left:.12em;
-}
 .research-statement {
   max-width:640px;
   margin:14px auto 0;
@@ -212,12 +206,13 @@ dialog p {margin-top:12px;font-size:15px;}
 @media (max-width:1000px) {
   .arxiv-stamp {
     position:static;
-    writing-mode:horizontal-tb;
+    display:block;
     transform:none;
+    margin:0 auto;
     padding-top:14px;
-    text-align:center;
     font-size:14px;
   }
+  .arxiv-stamp span {writing-mode:horizontal-tb;}
   .masthead {padding-top:8px;}
 }
 

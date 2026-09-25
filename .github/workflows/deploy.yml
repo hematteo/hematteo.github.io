@@ -20,6 +20,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history for the homepage's submission history
       # Turns on Pages (source = GitHub Actions) on first run, so no manual
       # Settings step is needed for a brand-new repo.
       - name: Configure Pages

@@ -16,13 +16,29 @@
   <link rel="preload" href="/fonts/lmroman10-regular.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lmroman10-bold.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/src/paper.css">
+  <script>
+    // Before first paint: mark JS as available and, once per visit, show "??" references until the page "compiles".
+    document.documentElement.classList.add('js')
+    try {
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches && !sessionStorage.getItem('compiled')) {
+        document.documentElement.classList.add('compiling')
+        setTimeout(() => document.documentElement.classList.remove('compiling'), 2500)
+      }
+    } catch {}
+  </script>
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"Person","name":"Matteo He","url":"https://hematteo.github.io/","sameAs":["https://github.com/hematteo","https://linkedin.com/in/matteohe","https://huggingface.co/hematteo"],"alumniOf":[{"@type":"CollegeOrUniversity","name":"University of Cambridge"},{"@type":"CollegeOrUniversity","name":"University of St Andrews"}],"knowsAbout":["Mechanistic interpretability","Machine learning","Language model evaluation"]}
   </script>
 </head>
 <body class="paper-page">
   <a class="skip-link" href="#main">Skip to content</a>
-  <p class="arxiv-stamp" aria-hidden="true">hematteo.github.io&ensp;[cs.LG]&ensp;%BUILD_DATE%</p>
+  <button type="button" class="arxiv-stamp" popovertarget="submission-history" aria-label="Submission history"><span>hematteo.github.io&ensp;%SITE_VERSION%&ensp;[cs.LG]&ensp;%BUILD_DATE%</span></button>
+  <div id="submission-history" class="submission-history" popover>
+    <h2>Submission history</h2>
+    <p>From: Matteo He</p>
+    <ol>%SUBMISSION_HISTORY%</ol>
+    <button type="button" popovertarget="submission-history" popovertargetaction="hide">Close</button>
+  </div>
   <div class="page">
     <header class="masthead">
       <nav aria-label="Main navigation">
@@ -36,7 +52,7 @@
 
     <main id="main">
       <section class="intro" aria-labelledby="name">
-        <h1 id="name">Matteo He</h1>
+        <div class="title-line"><h1 id="name">Matteo He</h1><a class="footnote-ref" href="#correspondence" aria-label="Footnote">∗</a></div>
         <p class="research-statement">I’m a researcher interested in understanding AI systems and making their behavior easier to evaluate and oversee.</p>
         <div class="abstract">
           <h2 class="abstract-title">Abstract</h2>
@@ -49,7 +65,8 @@
           <a href="https://linkedin.com/in/matteohe">LinkedIn</a>
           <a href="/cv/matteo-he-research.pdf">Research CV</a>
         </div>
-        <p class="footnote"><span class="footnote-mark" aria-hidden="true">∗</span>Correspondence to <a href="mailto:matteohe.research@gmail.com">matteohe.research@gmail.com</a>.</p>
+        <div class="prism-slot"></div>
+        <p class="footnote" id="correspondence"><span class="footnote-mark" aria-hidden="true">∗</span>Correspondence to <a href="mailto:matteohe.research@gmail.com">matteohe.research@gmail.com</a>.</p>
       </section>
 
       <section id="research" class="section" aria-labelledby="research-heading">
@@ -233,5 +250,6 @@
     <p id="figure-description"></p>
   </dialog>
   <script type="module" src="/src/profile.js"></script>
+  <script type="module" src="/src/paper.js"></script>
 </body>
 </html>

@@ -67,6 +67,19 @@ a[href$=".bib"] {box-shadow:0 0 0 1px var(--cite);}
 a[href$=".bib"]:hover {background:#e3f4e3;}
 a:focus-visible,button:focus-visible,summary:focus-visible {outline:2px solid #000;outline-offset:3px;}
 
+/* Hovered link borders run through the prism's spectrum. Boxless links use box-shadow:none !important. */
+@media (prefers-reduced-motion:no-preference) {
+  a:hover {animation:link-spectrum 1.3s linear infinite;}
+}
+@keyframes link-spectrum {
+  0%,100% {box-shadow:0 0 0 1px #e5484d;}
+  17% {box-shadow:0 0 0 1px #f76b15;}
+  33% {box-shadow:0 0 0 1px #e2a336;}
+  50% {box-shadow:0 0 0 1px #30a46c;}
+  67% {box-shadow:0 0 0 1px #0090ff;}
+  83% {box-shadow:0 0 0 1px #6e56cf;}
+}
+
 @media print {
   /* hyperref's link borders never print either */
   a {box-shadow:none !important;padding:0;}
