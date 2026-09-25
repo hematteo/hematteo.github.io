@@ -47,8 +47,8 @@ export function mountPrism (slot) {
     'aria-label': 'Diagram: a readout query enters a prism and splits into coloured feature contributions, while the residual is reflected.',
   })
   const grad = svgEl('linearGradient', { id: 'prism-glass', x1: 0, y1: 0, x2: 1, y2: 1 }, svgEl('defs', {}, svg))
-  svgEl('stop', { offset: 0, 'stop-color': '#fdfdfd' }, grad)
-  svgEl('stop', { offset: 1, 'stop-color': '#e9eef1' }, grad)
+  svgEl('stop', { offset: 0, class: 'glass-a' }, grad)
+  svgEl('stop', { offset: 1, class: 'glass-b' }, grad)
 
   const G = [318, 112], radius = 132 / Math.sqrt(3)
   const corner = a => [G[0] + radius * Math.cos(a - TILT), G[1] + radius * Math.sin(a - TILT)]
@@ -64,7 +64,7 @@ export function mountPrism (slot) {
 
   const residual = svgEl('path', { class: 'prism-residual' }, svg)
   const inside = SPECTRUM.map(colour => svgEl('path', { class: 'prism-inside', stroke: colour }, svg))
-  svgEl('path', { d: `M${A}L${B}L${C}Z`, fill: 'url(#prism-glass)', stroke: '#000', 'stroke-width': 1.3, 'stroke-linejoin': 'round' }, svg)
+  svgEl('path', { d: `M${A}L${B}L${C}Z`, class: 'prism-body', fill: 'url(#prism-glass)', 'stroke-width': 1.3, 'stroke-linejoin': 'round' }, svg)
   const beam = svgEl('path', { class: 'prism-beam' }, svg)
   const beamFlow = svgEl('path', { class: 'prism-flow' }, svg)
   const rays = SPECTRUM.map(colour => svgEl('path', { class: 'prism-ray', stroke: colour }, svg))

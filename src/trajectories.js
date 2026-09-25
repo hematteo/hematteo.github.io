@@ -1,3 +1,5 @@
+import { onThemeChange } from './theme.js'
+
 const palette = [[68,1,84],[71,44,122],[59,81,139],[44,113,142],[33,144,141],[39,173,129],[92,200,99],[170,220,50],[253,231,37]]
 const format = n => n.toLocaleString('en-GB')
 const compact = n => n >= 1000 ? `${n / 1000}k` : String(n)
@@ -6,6 +8,12 @@ function colour(peak) {
   const index = Math.min(palette.length - 2, Math.floor(position))
   const t = position - index
   return `rgb(${palette[index].map((v, i) => Math.round(v + t * (palette[index + 1][i] - v))).join(',')})`
+}
+// axis colours and curve strength come from the page's plot tokens
+function plotTokens(el) {
+  const s = getComputedStyle(el), get = name => s.getPropertyValue(name).trim()
+  return { grid: get('--plot-grid'), text: get('--plot-text'), title: get('--plot-title'), cursor: get('--plot-cursor'),
+    alpha: Number(get('--plot-alpha')) || 1 }
 }
 
 export async function mountTrajectories(root) {
@@ -48,19 +56,19 @@ export async function mountTrajectories(root) {
 
   function draw() {
     const m = model()
-    const ctx = context
+    const ctx = context, pt = plotTokens(canvas)
     ctx.clearRect(0, 0, width, height)
     ctx.font = '13px "Latin Modern Roman", serif'
     ctx.lineWidth = 1
     ctx.textAlign = 'right'
     for (const value of [0, .25, .5, .75, 1]) {
       const y = bottom - value * (bottom - top)
-      ctx.strokeStyle = '#e6e6e6'
+      ctx.strokeStyle = pt.grid
       ctx.beginPath(); ctx.moveTo(left, y); ctx.lineTo(right, y); ctx.stroke()
-      ctx.fillStyle = '#555555'
+      ctx.fillStyle = pt.text
       ctx.fillText(value === 0 || value === 1 ? String(value) : value.toFixed(2), left - 12, y + 4)
     }
-    ctx.textAlign = 'left'; ctx.fillStyle = '#333333'
+    ctx.textAlign = 'left'; ctx.fillStyle = pt.title
     ctx.fillText('Decoder norm / own peak', left, 17)
     const ticks = m.name.startsWith('OLMo') ? [150,1000,14000,110000,928000] : [1,10,100,1000,14000,143000]
     const xFor = step => left + (Math.log10(step) - Math.log10(m.steps[firstCheckpoint()])) /
@@ -69,12 +77,12 @@ export async function mountTrajectories(root) {
       if (width < 440 && tick === 10) return
       const x = xFor(tick)
       ctx.textAlign = i === 0 ? 'left' : i === ticks.length - 1 ? 'right' : 'center'
-      ctx.fillStyle = '#555555'; ctx.fillText(compact(tick), x, bottom + 23)
+      ctx.fillStyle = pt.text; ctx.fillText(compact(tick), x, bottom + 23)
     })
     ctx.textAlign = 'right'; ctx.fillText('Training step · log scale', right, height - 4)
     ctx.save()
     ctx.beginPath(); ctx.rect(left, top, Math.max(1, xs[checkpoint] - left), bottom - top); ctx.clip()
-    ctx.globalAlpha = selected === null ? .12 : .045
+    ctx.globalAlpha = Math.min(1, (selected === null ? .12 : .045) * pt.alpha)
     ctx.lineWidth = .8
     for (let j = 0; j < m.curves.length; j++) {
       ctx.strokeStyle = colours[j]; ctx.beginPath()
@@ -95,7 +103,7 @@ export async function mountTrajectories(root) {
     const marker = Math.min(hoverStep ?? checkpoint, checkpoint)
     if (checkpoint < 31 || selected !== null) {
       const x = xs[marker]
-      ctx.strokeStyle = '#444444'; ctx.lineWidth = 1; ctx.setLineDash([3,4])
+      ctx.strokeStyle = pt.cursor; ctx.lineWidth = 1; ctx.setLineDash([3,4])
       ctx.beginPath(); ctx.moveTo(x,top); ctx.lineTo(x,bottom); ctx.stroke(); ctx.setLineDash([])
       if (selected !== null) {
         ctx.fillStyle = colours[selected]; ctx.beginPath(); ctx.arc(x,ys[selected][marker],4,0,Math.PI*2); ctx.fill()
@@ -185,4 +193,5 @@ export async function mountTrajectories(root) {
   interactive.hidden = false; fallback.hidden = true
   chooseModel(1); updateMotionLabel()
   new ResizeObserver(resize).observe(canvas.parentElement)
+  onThemeChange(draw) // axis colours and curve strength follow the theme
 }

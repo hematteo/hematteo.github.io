@@ -22,11 +22,11 @@
     margin:6px -16px 0;
     padding:0 8px;
     min-height:48px;
-    background:#fff;
+    background:var(--paper);
     border-bottom:1px solid transparent;
     transition:border-color .2s;
   }
-  .running-head.stuck {border-bottom-color:#000;}
+  .running-head.stuck {border-bottom-color:var(--ink);}
   .rh-toggle {
     flex:1;
     min-width:0;
@@ -38,7 +38,7 @@
     font:inherit;
     font-size:16px;
     font-style:italic;
-    color:#000;
+    color:var(--ink);
     background:none;
     border:0;
     text-align:left;
@@ -58,7 +58,7 @@
     padding:0 8px;
     font:inherit;
     font-size:16px;
-    color:#000;
+    color:var(--ink);
     background:none;
     border:0;
     box-shadow:none;
@@ -78,8 +78,8 @@
     overflow:auto;
     overscroll-behavior:contain;
     padding:8px 16px 14px;
-    background:#fff;
-    border-bottom:1px solid #000;
+    background:var(--paper);
+    border-bottom:1px solid var(--ink);
     box-shadow:0 10px 18px rgba(0,0,0,.08);
   }
   .rh-contents[hidden] {display:none;}
@@ -90,19 +90,19 @@
     min-height:44px;
     padding:10px 0;
     font-size:16px;
-    color:#000;
+    color:var(--ink);
     box-shadow:none;
   }
-  .rh-contents a:hover,.rh-contents a:focus-visible {background:#f2f2f2;}
+  .rh-contents a:hover,.rh-contents a:focus-visible {background:var(--tint);}
   .rh-contents .toc-section {font-weight:700;}
   .rh-contents .toc-entry {padding-left:24px;}
   .rh-contents .n {flex:none;width:2.3em;}
   .rh-contents .toc-entry .n {width:2.7em;}
   .rh-contents .t {flex:none;max-width:70%;}
-  .rh-contents .fill {flex:1;min-width:1em;margin:0 6px;overflow:hidden;white-space:nowrap;color:#777;letter-spacing:.3em;}
+  .rh-contents .fill {flex:1;min-width:1em;margin:0 6px;overflow:hidden;white-space:nowrap;color:var(--ink-3);letter-spacing:.3em;}
   .rh-contents .fill::after {content:'. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .';}
   .rh-contents .yr {flex:none;}
-  .rh-contents .toc-extra {border-top:1px solid #ddd;margin-top:6px;}
+  .rh-contents .toc-extra {border-top:1px solid var(--rule-soft);margin-top:6px;}
 
   /* Anchored jumps land below the sticky header */
   .section,.cv-entry,.contact,#main {scroll-margin-top:56px;}
@@ -132,7 +132,7 @@
 
   /* ---------- headings: dates drop below the title ---------- */
   .entry-heading {display:block;}
-  .entry-date {margin-top:2px;font-size:15px;color:#444;}
+  .entry-date {margin-top:2px;font-size:15px;color:var(--ink-2);}
 
   /* ---------- figures run edge to edge ---------- */
   .research-preview,.details-content figure,.supporting-figure,.story-figure {
@@ -155,8 +155,8 @@
     display:grid;
     place-items:center;
     font-size:17px;
-    background:rgba(255,255,255,.9);
-    border:1px solid #000;
+    background:color-mix(in srgb,var(--paper) 90%,transparent);
+    border:1px solid var(--ink);
   }
 
   /* ---------- full-screen figure viewer with zoom ---------- */
@@ -172,13 +172,13 @@
     flex-direction:column;
   }
   dialog#figure-dialog[open] {display:flex;}
-  #figure-dialog .dialog-header {position:sticky;top:0;z-index:1;margin:0;padding:8px 12px 8px 16px;background:#fff;border-bottom:1px solid #000;}
+  #figure-dialog .dialog-header {position:sticky;top:0;z-index:1;margin:0;padding:8px 12px 8px 16px;background:var(--paper);border-bottom:1px solid var(--ink);}
   #figure-dialog .dialog-header button {min-height:40px;}
   .zoom-frame {flex:1;overflow:auto;display:flex;touch-action:pan-x pan-y pinch-zoom;-webkit-overflow-scrolling:touch;}
   #figure-dialog img {margin:auto;max-width:100%;max-height:none;cursor:zoom-in;}
   #figure-dialog img.zoomed {max-width:none;width:260%;cursor:zoom-out;}
-  #figure-dialog p {margin:0;padding:10px 16px 16px;border-top:1px solid #ddd;}
-  #figure-dialog .zoom-hint {display:block;margin:0;padding:6px 16px;border:0;font-size:13px;color:#555;}
+  #figure-dialog p {margin:0;padding:10px 16px 16px;border-top:1px solid var(--rule-soft);}
+  #figure-dialog .zoom-hint {display:block;margin:0;padding:6px 16px;border:0;font-size:13px;color:var(--ink-2);}
 
   /* ---------- explorer score charts: name and value above a full-width bar ---------- */
   .contribution-row,#bug-bars .contribution-row {

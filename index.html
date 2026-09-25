@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
   <title>Matteo He | AI Safety &amp; Interpretability Research</title>
   <meta name="description" content="Matteo He researches AI safety and interpretability. His first-author paper Learning to Read Out was accepted to NeurIPS 2026.">
   <meta name="theme-color" content="#ffffff">
@@ -20,6 +21,8 @@
   <script>
     // Before first paint: mark JS as available and, once per visit, show "??" references until the page "compiles".
     document.documentElement.classList.add('js')
+    // Apply a stored light/dark choice before first paint (src/theme.js keeps it).
+    try { const t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t } catch {}
     try {
       if (!matchMedia('(prefers-reduced-motion: reduce)').matches && !sessionStorage.getItem('compiled')) {
         document.documentElement.classList.add('compiling')
@@ -263,3 +266,4 @@
   <script type="module" src="/src/paper-mobile.js"></script>
 </body>
 </html>
+  <script type="module" src="/src/theme.js"></script>

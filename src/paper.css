@@ -3,17 +3,16 @@
 @import './paper-motion.css';
 
 :root {
-  color-scheme:light;
   font-family:var(--tex);
-  color:#000;
-  background:#fff;
+  color:var(--ink);
+  background:var(--paper);
 }
 
 * {box-sizing:border-box;}
 
 body {
   margin:0;
-  background:#fff;
+  background:var(--paper);
   font-size:17px;
   line-height:1.42;
   font-kerning:normal;
@@ -38,7 +37,7 @@ img {max-width:100%;height:auto;display:block;}
   top:12px;
   z-index:10;
   padding:8px 16px;
-  background:#fff;
+  background:var(--paper);
   transform:translateY(-200%);
   clip-path:inset(50%);
 }
@@ -52,7 +51,7 @@ img {max-width:100%;height:auto;display:block;}
   margin:0;
   transform:rotate(180deg);
   font:30px/1 'Times New Roman',Times,serif;
-  color:#8c8c8c;
+  color:var(--ink-3);
   white-space:nowrap;
   user-select:none;
 }
@@ -84,7 +83,7 @@ h1 {font-size:36px;line-height:1.2;}
   margin-top:22px;
 }
 .footnote {margin-top:34px;text-align:left;font-size:14px;line-height:1.4;}
-.footnote::before {content:'';display:block;width:160px;border-top:1px solid #000;margin-bottom:6px;}
+.footnote::before {content:'';display:block;width:160px;border-top:1px solid var(--ink);margin-bottom:6px;}
 .footnote-mark {font-size:.75em;vertical-align:.45em;margin-right:1px;}
 
 /* Recent updates: an unnumbered section, newest first, dates hanging in a narrow column */
@@ -173,7 +172,7 @@ footer {
   gap:10px 24px;
   margin-top:56px;
   padding:16px 0 40px;
-  border-top:1px solid #000;
+  border-top:1px solid var(--ink);
   font-size:14px;
 }
 footer div {display:flex;flex-wrap:wrap;gap:6px 18px;}
@@ -184,24 +183,24 @@ dialog {
   max-height:calc(100dvh - 48px);
   overflow:auto;
   padding:20px;
-  border:1px solid #000;
-  background:#fff;
-  color:#000;
+  border:1px solid var(--ink);
+  background:var(--paper);
+  color:var(--ink);
 }
-dialog::backdrop {background:rgba(0,0,0,.6);}
+dialog::backdrop {background:var(--backdrop);}
 .dialog-header {display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:16px;}
 .dialog-header h2 {font-size:20px;}
 .dialog-header button {
   font:inherit;
   font-size:16px;
-  color:#000;
-  background:#fff;
+  color:var(--ink);
+  background:var(--paper);
   border:0;
   box-shadow:0 0 0 1px var(--link);
   padding:2px 10px;
   cursor:pointer;
 }
-.dialog-header button:hover {background:#ffe8e8;}
+.dialog-header button:hover {background:var(--link-bg);}
 dialog img {margin:auto;max-height:70dvh;object-fit:contain;}
 dialog p {margin-top:12px;font-size:15px;}
 

@@ -30,6 +30,10 @@
       } catch {}
     })()
   </script>
+  <script>
+    // The stored light/dark choice from the other pages (src/theme.js); main.js follows data-theme.
+    try { const t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t } catch {}
+  </script>
   <link rel="stylesheet" href="/src/latex.css">
   <link rel="stylesheet" href="/src/drawer.css">
 </head>

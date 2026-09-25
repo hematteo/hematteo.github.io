@@ -1,4 +1,6 @@
 // Phone navigation and figure zoom. Without this script the plain nav stays visible.
+import { themeToggle } from './theme.js'
+
 const phone = matchMedia('(max-width:640px)')
 
 function buildRunningHead () {
@@ -31,8 +33,7 @@ function buildRunningHead () {
     rows += '<a class="toc-section" href="#contact"><span class="n"></span><span class="t">Contact</span></a>'
   }
   const cv = masthead.querySelector('a[href$=".pdf"]')?.getAttribute('href')
-  const drawer = masthead.querySelector('a[href^="/drawer"]')?.getAttribute('href')
-  const extras = [cv && `<a href="${cv}"><span class="n"></span><span class="t">CV (PDF)</span></a>`, drawer && `<a href="${drawer}"><span class="n"></span><span class="t">The junk drawer</span></a>`].filter(Boolean).join('')
+  const extras = [cv && `<a href="${cv}"><span class="n"></span><span class="t">CV (PDF)</span></a>`].filter(Boolean).join('')
 
   const bar = document.createElement('div')
   bar.className = 'running-head'
@@ -46,6 +47,7 @@ function buildRunningHead () {
       <p>Contents</p>${rows}${extras ? `<div class="toc-extra">${extras}</div>` : ''}
     </nav>`
   masthead.after(bar)
+  bar.querySelector('.rh-top').before(themeToggle())
   document.documentElement.classList.add('has-running-head')
 
   const toggle = bar.querySelector('.rh-toggle')

@@ -16,6 +16,15 @@
   :root:not([data-theme="light"]) {
     --paper: #ece6d8;
     --rule: #d3ccbb;
+    /* the slips stay paper-coloured at night, so keep latex.css's light ink and link colours */
+    --ink: #1b1a17;
+    --link: #ff0000;
+    --url: #00a0a0;
+    --link-bg: #ffe8e8;
+    --url-bg: #e0f4f4;
+    --cite-bg: #e3f4e3;
+    --select: #c9f1f1;
+    --pen: #d62828;
     --slip-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 10px 26px rgba(0, 0, 0, 0.45);
     --vig: 0.32;
   }
@@ -23,6 +32,15 @@
 :root[data-theme="dark"] {
   --paper: #ece6d8;
   --rule: #d3ccbb;
+  /* the slips stay paper-coloured at night, so keep latex.css's light ink and link colours */
+  --ink: #1b1a17;
+  --link: #ff0000;
+  --url: #00a0a0;
+  --link-bg: #ffe8e8;
+  --url-bg: #e0f4f4;
+  --cite-bg: #e3f4e3;
+  --select: #c9f1f1;
+  --pen: #d62828;
   --slip-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 10px 26px rgba(0, 0, 0, 0.45);
   --vig: 0.32;
 }

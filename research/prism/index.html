@@ -13,6 +13,11 @@
   <link rel="stylesheet" href="/src/prism.css">
   <link rel="stylesheet" href="/src/paper-explorer.css">
   <link rel="stylesheet" href="/src/paper-mobile.css">
+  <meta name="color-scheme" content="light dark">
+  <script>
+    // Apply a stored light/dark choice before first paint (src/theme.js keeps it).
+    try { const t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t } catch {}
+  </script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -91,5 +96,6 @@
     <footer><span>Matteo He</span><div><a href="/#research">Research</a><a href="/research/trajectories/">Learning to Read Out</a><a href="#main">Back to top</a></div></footer>
   </div>
   <script type="module" src="/src/prism.js"></script>
+  <script type="module" src="/src/theme.js"></script>
 </body>
 </html>

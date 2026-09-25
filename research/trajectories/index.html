@@ -12,6 +12,11 @@
   <link rel="stylesheet" href="/src/trajectory-page.css">
   <link rel="stylesheet" href="/src/paper-explorer.css">
   <link rel="stylesheet" href="/src/paper-mobile.css">
+  <meta name="color-scheme" content="light dark">
+  <script>
+    // Apply a stored light/dark choice before first paint (src/theme.js keeps it).
+    try { const t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t } catch {}
+  </script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -141,5 +146,6 @@
   </dialog>
   <script type="module" src="/src/profile.js"></script>
   <script type="module" src="/src/feature-examples.js"></script>
+  <script type="module" src="/src/theme.js"></script>
 </body>
 </html>
