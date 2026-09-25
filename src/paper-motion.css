@@ -75,7 +75,7 @@ button.arxiv-stamp:hover {color:#555;}
 }
 .replay-button:hover {background:#ffe8e8;}
 
-/* Ink layer: red pen and drawer marginalia */
+/* Ink layer: red pen */
 .ink-layer {position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:2;}
 .pen-mark {position:absolute;overflow:visible;}
 .pen-mark path {
@@ -90,33 +90,6 @@ button.arxiv-stamp:hover {color:#555;}
   transition:stroke-dashoffset .75s cubic-bezier(.6,.05,.4,1);
 }
 .pen-mark.drawn path {stroke-dashoffset:0;}
-.margin-object {position:absolute;display:block;width:72px;height:54px;padding:0;pointer-events:auto;box-shadow:none !important;background:none !important;}
-.margin-object svg {width:100%;height:100%;overflow:visible;}
-.margin-object svg * {transform-box:fill-box;}
-.margin-object .ink {
-  fill:none;
-  stroke:#000;
-  stroke-width:1.3;
-  stroke-linecap:round;
-  stroke-linejoin:round;
-  stroke-dasharray:1;
-  stroke-dashoffset:1;
-  transition:stroke-dashoffset 1.2s ease;
-}
-.margin-object.drawn .ink {stroke-dashoffset:0;}
-.margin-tip {position:absolute;left:0;top:100%;white-space:nowrap;font-size:14px;font-style:italic;opacity:0;transition:opacity .2s;}
-.margin-object:hover .margin-tip,.margin-object:focus-visible .margin-tip {opacity:1;}
-.margin-object .spectrum line {stroke-width:1.6;opacity:0;transition:opacity .25s;}
-.margin-object.prism:hover .spectrum line {opacity:1;}
-.margin-object.prism .spectrum line:nth-child(2) {transition-delay:.04s;}
-.margin-object.prism .spectrum line:nth-child(3) {transition-delay:.08s;}
-.margin-object.prism .spectrum line:nth-child(4) {transition-delay:.12s;}
-.margin-object.prism .spectrum line:nth-child(5) {transition-delay:.16s;}
-.margin-object .key {fill:#000;opacity:0;}
-.margin-object .steam {fill:none;stroke:#777;stroke-width:1.2;stroke-linecap:round;opacity:0;}
-.margin-object .fan {transform-origin:center;}
-.margin-object .rock {transform-origin:50% 100%;}
-.margin-object .swing {transform-origin:50% 0;}
 
 /* Once per visit, references read "??" until the page "compiles" */
 html.compiling .section-heading h2::before,
@@ -143,39 +116,6 @@ html.compiling .arxiv-stamp {opacity:0;}
 }
 .latex-log.show {opacity:1;transform:translate(-50%,0);}
 
-/* Page corner lifts to show the junk drawer */
-.page-peel {
-  --s:58px;
-  position:fixed;
-  right:0;
-  bottom:0;
-  z-index:30;
-  width:var(--s);
-  height:var(--s);
-  padding:0;
-  box-shadow:none !important;
-  background:none !important;
-  filter:drop-shadow(-3px -3px 4px rgba(0,0,0,.22));
-  transition:width .4s cubic-bezier(.3,1.3,.5,1),height .4s cubic-bezier(.3,1.3,.5,1);
-}
-.page-peel:hover,.page-peel:focus-visible {--s:190px;}
-.peel-under {position:absolute;inset:0;clip-path:polygon(100% 0,100% 100%,0 100%);background:#79b3a6;}
-.page-peel.loaded .peel-under {background:#79b3a6 url('/drawer-peek.jpg') 58% 62% / 520px auto no-repeat;}
-.peel-flap {position:absolute;inset:0;clip-path:polygon(0 0,100% 0,0 100%);background:linear-gradient(135deg,#fbfbfb 0%,#efefef 30%,#d8d8d8 48%,#bdbdbd 50%);}
-.peel-label {
-  position:absolute;
-  right:10px;
-  bottom:9px;
-  padding:3px 8px;
-  white-space:nowrap;
-  font:13px var(--tex-mono);
-  color:#fff;
-  background:rgba(20,18,12,.78);
-  opacity:0;
-  transition:opacity .2s .15s;
-}
-.page-peel:hover .peel-label,.page-peel:focus-visible .peel-label {opacity:1;}
-
 /* Reference previews */
 .ref-preview {
   position:absolute;
@@ -199,33 +139,17 @@ html.compiling .arxiv-stamp {opacity:0;}
 @media (prefers-reduced-motion:no-preference) {
   .prism-flow,.prism-residual {animation:prism-flow 1.1s linear infinite;}
   .prism-residual {animation-duration:1.6s;}
-  .margin-object.plane:hover .lift {animation:plane-glide 1.8s ease-in-out;}
-  .margin-object.punt:hover .rock {animation:punt-rock 1.4s ease-in-out infinite;}
-  .margin-object.medal:hover .swing {animation:medal-swing 1.6s ease-in-out;}
-  .margin-object.gpu:hover .fan {animation:fan-spin .6s linear infinite;}
-  .margin-object.keyboard:hover .key {animation:key-press 1.2s steps(1) infinite;}
-  .margin-object.mug:hover .steam {animation:mug-steam 1.6s ease-out infinite;}
-  .margin-object.mug:hover .steam:nth-of-type(2) {animation-delay:.5s;}
   .ref-preview:not([hidden]) {animation:preview-in .15s ease-out;}
 }
 @media (prefers-reduced-motion:reduce) {
-  .pen-mark path,.margin-object .ink {transition:none;}
+  .pen-mark path {transition:none;}
 }
 @keyframes prism-flow {to {stroke-dashoffset:-25;}}
-@keyframes plane-glide {0% {transform:none;} 45% {transform:translate(14px,-9px) rotate(-8deg);} 100% {transform:none;}}
-@keyframes punt-rock {0%,100% {transform:rotate(0);} 30% {transform:rotate(-3deg) translateY(1px);} 70% {transform:rotate(2.5deg);}}
-@keyframes medal-swing {0% {transform:rotate(0);} 20% {transform:rotate(14deg);} 45% {transform:rotate(-9deg);} 70% {transform:rotate(4deg);} 100% {transform:rotate(0);}}
-@keyframes fan-spin {to {transform:rotate(360deg);}}
-@keyframes key-press {0% {opacity:1;} 18% {opacity:0;}}
-@keyframes mug-steam {0% {opacity:0;transform:translateY(4px);} 30% {opacity:.9;} 100% {opacity:0;transform:translateY(-8px);}}
 @keyframes preview-in {from {opacity:0;transform:translateY(4px);}}
 
-@media (max-width:900px) {
-  .page-peel {display:none;}
-}
 @media (max-width:640px) {
   .prism-label {font-size:30px;} /* viewBox units: the figure is drawn at roughly half size */
 }
 @media print {
-  .ink-layer,.page-peel,.latex-log,.ref-preview,.replay-button,.submission-history {display:none !important;}
+  .ink-layer,.latex-log,.ref-preview,.replay-button,.submission-history {display:none !important;}
 }

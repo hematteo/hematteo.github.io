@@ -69,8 +69,8 @@ try {
     check(`profile fits ${width}px viewport`, await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth))
   }
   await page.setViewportSize({ width: 1280, height: 800 })
-  await page.locator('footer a[href="/drawer/"]').click()
-  check('drawer link navigates', new URL(page.url()).pathname === '/drawer/')
+  check('homepage does not link to the drawer', await page.locator('a[href^="/drawer"]').count() === 0)
+  await page.goto(BASE + 'drawer/')
   await page.waitForTimeout(4000)
 
   const jd = await page.evaluate(() => typeof window.__jd)
