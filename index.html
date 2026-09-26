@@ -311,9 +311,7 @@
             <p class="paper-meta">Web app · three.js, WebGPU</p>
             <div class="publication-overview">
               <div class="paper-body">
-                <p class="paper-question">What does Conway’s Game of Life do when it is given a third dimension?</p>
-                <p>In three dimensions a cell has 26 neighbours rather than 8, so Conway’s rule no longer carries over and the interesting behaviour depends on choosing new ones. The app is built around that search. You can set the birth and survival counts directly, weight face, edge and corner neighbours differently, add dying states in the style of Generations rules, or let a rule finder try hundreds of random rules and keep the ones whose worlds stay alive and structured. Worlds go up to 100 × 100 × 100 cells and can be painted one slice at a time.</p>
-                <p>Where the browser supports it, the simulation and rendering both stay on the GPU through WebGPU, with WebGL as the fallback. Any world can be shared as a link of a few hundred characters that rebuilds it with its history, embedded in another page, or entered in VR. It merges four earlier versions of the project into one app.</p>
+                <p>Conway’s Game of Life on a 3D grid of up to 100³ cells. A cell has 26 neighbours rather than 8, so the app is built around finding rules that work: set the birth and survival counts, weight neighbours by face, edge and corner, or let the rule finder try hundreds of random rules and keep the ones that stay alive. It runs on the GPU through WebGPU, and any world can be shared as a short link or viewed in VR.</p>
                 <div class="artifact-links"><a href="https://3dgameoflife.com/">Open it</a></div>
               </div>
               <figure class="paper-figure results-figure research-preview">
@@ -335,9 +333,7 @@
             <p class="paper-meta">Web app · Python server, browser client</p>
             <div class="publication-overview">
               <div class="paper-body">
-                <p class="paper-question">Can you learn Dou Dizhu, “fight the landlord”, by playing it with friends and bots in a browser?</p>
-                <p>Good Hand plays Dou Dizhu in English, Simplified and Traditional Chinese, and Italian. A room is shared by a link or a six-letter code, and any empty seat can take a bot. It has the three-player game and the northern four-player variant with two decks, in which the landlord calls a card and whoever plays it becomes their secret partner, so nobody knows the teams until that card lands. A guided first round teaches bidding and the card combinations, and ranked matchmaking keeps separate ratings for each variant.</p>
-                <p>The strong bots play DouZero, a policy trained by self-play reinforcement learning (Kuaishou and Texas A&amp;M, ICML 2021). I converted its weights to run with numpy alone on the server, where a move takes under a millisecond. DouZero never learned to bid, so the bots bid from the landlord model’s value of the opening hand, averaged over samples of the cards they cannot see. The same model judges each play as it is made, which gives the review after a three-player round its estimates.</p>
+                <p>Dou Dizhu (斗地主, “fight the landlord”) with friends and bots, in English, Chinese and Italian. It has the classic three-player game and a four-player, two-deck variant with a secret partner, plus a guided first round and ranked play. The strong bots run DouZero, a self-play RL policy (ICML 2021), which I ported to numpy and taught to bid from its own value of the opening hand.</p>
                 <div class="artifact-links"><a href="https://haopai.app/">Open it</a></div>
               </div>
               <figure class="paper-figure results-figure research-preview">
@@ -363,9 +359,7 @@
             <p class="paper-meta">Interactive · One HTML file, no dependencies</p>
             <div class="publication-overview">
               <div class="paper-body">
-                <p class="paper-question">What would the falling code from <i>The Matrix</i> look like if you could move through it?</p>
-                <p>The film shows the rain as flat columns of characters on a screen. I built a version you can fly through: the camera travels down a corridor of falling code, and you steer with the mouse or a finger. Nearer strands pass faster than distant ones, which gives the corridor depth, and the space bar warps the view into a stretched tunnel. The film’s flat columns are one key away.</p>
-                <p>Each view grows from a seed, a short piece of text such as a name, so the same seed always produces the same rain. The seed, colours and mode are kept in the page address, so any view can be shared as a link. The characters are mirrored half-width katakana, as in the film.</p>
+                <p>The falling code from <i>The Matrix</i> as a corridor you fly through, steering with the mouse or a finger. The space bar warps it into a tunnel, and the film’s flat columns are one key away. Each view grows from a seed, such as a name, kept in the page address so it can be shared as a link.</p>
                 <div class="artifact-links"><a href="/matrix-rain/">Open it</a><a href="https://github.com/hematteo/matrix-rain">Code</a></div>
               </div>
               <figure class="paper-figure results-figure research-preview">
@@ -387,9 +381,7 @@
             <p class="paper-meta">Interactive · One HTML file, no dependencies</p>
             <div class="publication-overview">
               <div class="paper-body">
-                <p class="paper-question">What if the falling code were the only thing you could see in a cave?</p>
-                <p>Nothing in the cave is lit. Every string of code is a drop of water running down the rock, so the roof, the walls, the floor, the pools and the lava show only where the rain traces over them. The cave is generated the way Minecraft generates its caves, from a 3D density field, with caverns, winding tunnels and ravines cut through bedded rock, and water comes through the joints and seeps where it would in a real cave. You walk through it at a person’s pace and weight, and pressing E sends a pulse out along the passages that lights the rock as it reaches it.</p>
-                <p>Every sound is synthesised in the page. Drips arrive as late as their distance puts them, duller the further away they are and duller again through rock, and the echo follows the size of the room around you. Each cave grows from a seed kept in the page address, so any cave can be shared as a link.</p>
+                <p>A generated cave lit only by the falling code: each string is a drop of water running over the rock, so the walls, pools and lava show only where it traces them. You walk through at a person’s pace, and E sends out a pulse that lights the passages. Every sound is synthesised in the page, with drips delayed and muffled by distance and rock. Caves are seeded and shareable as links.</p>
                 <div class="artifact-links"><a href="/matrix-cave/">Open it</a><a href="https://github.com/hematteo/matrix-cave">Code</a></div>
               </div>
               <figure class="paper-figure results-figure research-preview">
