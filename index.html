@@ -300,7 +300,61 @@
       </section>
 
       <section id="apps" class="section" aria-labelledby="apps-heading">
-        <div class="section-heading"><h2 id="apps-heading">Small apps</h2></div>
+        <div class="section-heading"><h2 id="apps-heading">Apps</h2></div>
+        <article class="cv-entry" id="game-of-life-3d">
+          <div class="entry-content">
+            <header class="entry-heading">
+              <div class="entry-title">
+                <h3><a href="https://3dgameoflife.com/">3D Game of Life</a></h3>
+              </div>
+              <p class="entry-date">2025–2026</p>
+            </header>
+            <p class="paper-meta">Web app · three.js, WebGPU</p>
+            <div class="publication-overview">
+              <div class="paper-body">
+                <p class="paper-question">What does Conway’s Game of Life do when it is given a third dimension?</p>
+                <p>In three dimensions a cell has 26 neighbours rather than 8, so Conway’s rule no longer carries over and the interesting behaviour depends on choosing new ones. The app is built around that search. You can set the birth and survival counts directly, weight face, edge and corner neighbours differently, add dying states in the style of Generations rules, or let a rule finder try hundreds of random rules and keep the ones whose worlds stay alive and structured. Worlds go up to 100 × 100 × 100 cells and can be painted one slice at a time.</p>
+                <p>Where the browser supports it, the simulation and rendering both stay on the GPU through WebGPU, with WebGL as the fallback. Any world can be shared as a link of a few hundred characters that rebuilds it with its history, embedded in another page, or entered in VR. It merges four earlier versions of the project into one app.</p>
+                <div class="artifact-links"><a href="https://3dgameoflife.com/">Open it</a></div>
+              </div>
+              <figure class="paper-figure results-figure research-preview">
+                <a href="https://3dgameoflife.com/" aria-label="Open 3D Game of Life">
+                  <img src="/apps/game-of-life-3d.jpg" alt="A cube of white voxels, grown by 3D Game of Life rules, inside a wireframe box on a deep blue background." width="1200" height="750" loading="lazy">
+                </a>
+                <figcaption>Drag to orbit, scroll to zoom, space to run.</figcaption>
+              </figure>
+            </div>
+          </div>
+        </article>
+        <article class="cv-entry" id="good-hand">
+          <div class="entry-content">
+            <header class="entry-heading">
+              <div class="entry-title">
+                <h3><a href="https://haopai.app/">好牌 · Good Hand</a></h3>
+              </div>
+              <p class="entry-date">2026</p>
+            </header>
+            <p class="paper-meta">Web app · Python server, browser client</p>
+            <div class="publication-overview">
+              <div class="paper-body">
+                <p class="paper-question">Can you learn Dou Dizhu, “fight the landlord”, by playing it with friends and bots in a browser?</p>
+                <p>Good Hand plays Dou Dizhu in English, Simplified and Traditional Chinese, and Italian. A room is shared by a link or a six-letter code, and any empty seat can take a bot. It has the three-player game and the northern four-player variant with two decks, in which the landlord calls a card and whoever plays it becomes their secret partner, so nobody knows the teams until that card lands. A guided first round teaches bidding and the card combinations, and ranked matchmaking keeps separate ratings for each variant.</p>
+                <p>The strong bots play DouZero, a policy trained by self-play reinforcement learning (Kuaishou and Texas A&amp;M, ICML 2021). I converted its weights to run with numpy alone on the server, where a move takes under a millisecond. DouZero never learned to bid, so the bots bid from the landlord model’s value of the opening hand, averaged over samples of the cards they cannot see. The same model judges each play as it is made, which gives the review after a three-player round its estimates.</p>
+                <div class="artifact-links"><a href="https://haopai.app/">Open it</a></div>
+              </div>
+              <figure class="paper-figure results-figure research-preview">
+                <a href="https://haopai.app/" aria-label="Open Good Hand">
+                  <img src="/apps/good-hand.jpg" alt="A Dou Dizhu table: two bot opponents, three face-down bottom cards, and a seventeen-card hand below a prompt to call landlord." width="1200" height="750" loading="lazy">
+                </a>
+                <figcaption>Bidding for landlord against two bots.</figcaption>
+              </figure>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section id="small-apps" class="section" aria-labelledby="small-apps-heading">
+        <div class="section-heading"><h2 id="small-apps-heading">Small apps</h2></div>
         <article class="cv-entry" id="matrix-rain">
           <div class="entry-content">
             <header class="entry-heading">
