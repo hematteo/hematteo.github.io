@@ -1,0 +1,192 @@
+/* Shared LaTeX look: Latin Modern and hyperref-style link borders.
+   Metric overrides give link borders a TeX-like box height instead of the font's tall default. */
+@font-face {
+  font-family:'Latin Modern Roman';
+  src:url('/fonts/lmroman10-regular.woff2') format('woff2');
+  font-weight:400;
+  font-style:normal;
+  font-display:swap;
+  ascent-override:88%;
+  descent-override:24%;
+  line-gap-override:0%;
+}
+@font-face {
+  font-family:'Latin Modern Roman';
+  src:url('/fonts/lmroman10-bold.woff2') format('woff2');
+  font-weight:700;
+  font-style:normal;
+  font-display:swap;
+  ascent-override:88%;
+  descent-override:24%;
+  line-gap-override:0%;
+}
+@font-face {
+  font-family:'Latin Modern Roman';
+  src:url('/fonts/lmroman10-italic.woff2') format('woff2');
+  font-weight:400;
+  font-style:italic;
+  font-display:swap;
+  ascent-override:88%;
+  descent-override:24%;
+  line-gap-override:0%;
+}
+@font-face {
+  font-family:'Latin Modern Mono';
+  src:url('/fonts/lmmono10-regular.woff2') format('woff2');
+  font-weight:400;
+  font-style:normal;
+  font-display:swap;
+  ascent-override:88%;
+  descent-override:24%;
+  line-gap-override:0%;
+}
+
+:root {
+  --tex:'Latin Modern Roman','CMU Serif',Georgia,serif;
+  --tex-mono:'Latin Modern Mono',ui-monospace,Menlo,monospace;
+  /* hyperref's link border colours (internal links, URLs, citations), darkened to stay visible on white */
+  --link:#ff0000;
+  --url:#00a0a0;
+  --cite:#00a000;
+  color-scheme:light;
+  --paper:#fff;
+  --ink:#000;
+  --ink-2:#444;
+  --ink-3:#8c8c8c;
+  --rule-soft:#ddd;
+  --tint:#f2f2f2;
+  --link-bg:#ffe8e8;
+  --url-bg:#e0f4f4;
+  --cite-bg:#e3f4e3;
+  --select:#c9f1f1;
+  --pen:#d62828;
+  --shadow:rgba(0,0,0,.18);
+  --backdrop:rgba(0,0,0,.6);
+  --plate-filter:none;
+  /* plots drawn by the site (Figure 1 replay, trajectory explorer); peak colour is viridis over log peak step
+     in both themes, so a curve's colour means the same thing day and night */
+  --plot-grid:#e6e6e6;
+  --plot-text:#555;
+  --plot-title:#333;
+  --plot-cursor:#444;
+  --plot-alpha:1;
+  --peak-scale:linear-gradient(90deg,#440154,#3b518b,#21908d,#5cc863,#fde725);
+}
+
+/* Dark mode follows the system unless the reader picked a theme (data-theme, set before first paint
+   and by the toggle in src/theme.js). Both selectors outrank the pages' own :root palettes. */
+/* Ink only: at night every link box is the same quiet grey, and colour appears only on hover
+   (a tint of the light theme's hue for that link type) and in the red pen. */
+@media (prefers-color-scheme:dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme:dark;
+    --paper:#151618;
+    --ink:#e6e3dc;
+    --ink-2:#b3b0a8;
+    --ink-3:#8a877f;
+    --rule-soft:#34353a;
+    --tint:#232428;
+    --link:#6d6a64;
+    --url:#6d6a64;
+    --cite:#6d6a64;
+    --link-bg:color-mix(in srgb,#d9776f 18%,var(--paper));
+    --url-bg:color-mix(in srgb,#6aaeb0 18%,var(--paper));
+    --cite-bg:color-mix(in srgb,#80b27d 18%,var(--paper));
+    --select:color-mix(in srgb,#6aaeb0 30%,var(--paper));
+    --pen:#d9776f;
+    --shadow:rgba(0,0,0,.55);
+    --backdrop:rgba(0,0,0,.72);
+    /* the research explorers' own names for the same roles */
+    --muted:#b3b0a8;
+    --accent:#e6e3dc;
+    --line:#3d3e43;
+    --soft:#232428;
+    /* curves are drawn more strongly at night so the darker viridis colours still read */
+      --plot-grid:#2c2d31;
+      --plot-text:#9d9a93;
+      --plot-title:#d8d5ce;
+      --plot-cursor:#b3b0a8;
+      --plot-alpha:1.6;
+    --plate-filter:brightness(.88);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme:dark;
+  --paper:#151618;
+  --ink:#e6e3dc;
+  --ink-2:#b3b0a8;
+  --ink-3:#8a877f;
+  --rule-soft:#34353a;
+  --tint:#232428;
+  --link:#6d6a64;
+  --url:#6d6a64;
+  --cite:#6d6a64;
+  --link-bg:color-mix(in srgb,#d9776f 18%,var(--paper));
+  --url-bg:color-mix(in srgb,#6aaeb0 18%,var(--paper));
+  --cite-bg:color-mix(in srgb,#80b27d 18%,var(--paper));
+  --select:color-mix(in srgb,#6aaeb0 30%,var(--paper));
+  --pen:#d9776f;
+  --shadow:rgba(0,0,0,.55);
+  --backdrop:rgba(0,0,0,.72);
+  /* the research explorers' own names for the same roles */
+  --muted:#b3b0a8;
+  --accent:#e6e3dc;
+  --line:#3d3e43;
+  --soft:#232428;
+  /* curves are drawn more strongly at night so the darker viridis colours still read */
+    --plot-grid:#2c2d31;
+    --plot-text:#9d9a93;
+    --plot-title:#d8d5ce;
+    --plot-cursor:#b3b0a8;
+    --plot-alpha:1.6;
+    --plate-filter:brightness(.88);
+}
+
+::selection {background:var(--select);}
+/* the paper's PNG figures stay white plates; at night they are dimmed so they do not glare */
+img {filter:var(--plate-filter);}
+
+/* src/theme.js: a plain boxed word in the nav, like the links beside it */
+.theme-toggle {
+  font:inherit;
+  color:inherit;
+  background:none;
+  border:0;
+  padding:0 1px;
+  box-shadow:0 0 0 1px var(--ink-3);
+  cursor:pointer;
+}
+.theme-toggle:hover {background:var(--tint);}
+
+a {
+  color:inherit;
+  text-decoration:none;
+  padding:0 1px;
+  box-shadow:0 0 0 1px var(--url);
+  -webkit-box-decoration-break:clone;
+  box-decoration-break:clone;
+}
+a:hover {background:var(--url-bg);}
+a[href^="#"] {box-shadow:0 0 0 1px var(--link);}
+a[href^="#"]:hover {background:var(--link-bg);}
+a[href$=".bib"] {box-shadow:0 0 0 1px var(--cite);}
+a[href$=".bib"]:hover {background:var(--cite-bg);}
+a:focus-visible,button:focus-visible,summary:focus-visible {outline:2px solid var(--ink);outline-offset:3px;}
+
+/* Hovered link borders run through the prism's spectrum. Boxless links use box-shadow:none !important. */
+@media (prefers-reduced-motion:no-preference) {
+  a:hover {animation:link-spectrum 1.3s linear infinite;}
+}
+@keyframes link-spectrum {
+  0%,100% {box-shadow:0 0 0 1px #e5484d;}
+  17% {box-shadow:0 0 0 1px #f76b15;}
+  33% {box-shadow:0 0 0 1px #e2a336;}
+  50% {box-shadow:0 0 0 1px #30a46c;}
+  67% {box-shadow:0 0 0 1px #0090ff;}
+  83% {box-shadow:0 0 0 1px #6e56cf;}
+}
+
+@media print {
+  /* hyperref's link borders never print either */
+  a {box-shadow:none !important;padding:0;}
+}

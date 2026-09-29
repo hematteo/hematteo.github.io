@@ -1,0 +1,17 @@
+{
+  "name": "hematteo-github-io",
+  "version": "1.0.0",
+  "description": "Matteo He's research profile and selected work.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "smoke": "vite build && node smoke.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.61.1",
+    "vite": "^6.0.0"
+  }
+}

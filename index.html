@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Matteo He | AI Safety &amp; Interpretability Research</title>
+  <meta name="description" content="Matteo He works on AI safety and interpretability. His first-author paper Learning to Read Out was accepted to NeurIPS 2026.">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#151618" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="/favicon.ico" sizes="32x32">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="canonical" href="https://matteohe.com/">
+  <meta property="og:type" content="profile">
+  <meta property="og:title" content="Matteo He | Research &amp; selected work">
+  <meta property="og:description" content="AI safety and interpretability research by Matteo He. Learning to Read Out was accepted to NeurIPS 2026.">
+  <meta property="og:url" content="https://matteohe.com/">
+  <meta property="og:image" content="https://matteohe.com/share.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Matteo He: interested in AI safety research on model internals and scalable oversight. A prism splits a readout query into feature contributions.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://matteohe.com/share.png">
+  <link rel="preload" href="/fonts/lmroman10-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lmroman10-bold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/src/paper.css">
+  <link rel="stylesheet" href="/src/paper-mobile.css">
+  <script>
+    // Before first paint: mark JS as available and, once per visit, show "??" references until the page "compiles".
+    document.documentElement.classList.add('js')
+    // Apply a stored light/dark choice before first paint (src/theme.js keeps it).
+    try { const t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t } catch {}
+    try {
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches && !sessionStorage.getItem('compiled')) {
+        document.documentElement.classList.add('compiling')
+        setTimeout(() => document.documentElement.classList.remove('compiling'), 2500)
+      }
+    } catch {}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Person","name":"Matteo He","url":"https://matteohe.com/","sameAs":["https://github.com/hematteo","https://linkedin.com/in/matteohe","https://huggingface.co/hematteo"],"alumniOf":[{"@type":"CollegeOrUniversity","name":"University of Cambridge"},{"@type":"CollegeOrUniversity","name":"University of St Andrews"}],"knowsAbout":["Mechanistic interpretability","Machine learning","Language model evaluation"]}
+  </script>
+</head>
+<body class="paper-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <button type="button" class="arxiv-stamp" popovertarget="submission-history" aria-label="Submission history"><span>matteohe.com&ensp;%SITE_VERSION%&ensp;[cs.LG]&ensp;%BUILD_DATE%</span></button>
+  <div id="submission-history" class="submission-history" popover>
+    <h2>Submission history</h2>
+    <p>From: Matteo He</p>
+    <ol>%SUBMISSION_HISTORY%</ol>
+    <button type="button" popovertarget="submission-history" popovertargetaction="hide">Close</button>
+  </div>
+  <div class="page">
+    <header class="masthead">
+      <nav aria-label="Main navigation">
+        <a href="#research">Research</a>
+        <a href="#about">Education</a>
+        <a href="#systems">Experience</a>
+        <a href="#apps">Apps</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="intro" aria-labelledby="name">
+        <div class="title-line"><h1 id="name">Matteo He</h1><a class="footnote-ref" href="#correspondence" aria-label="Footnote">∗</a></div>
+        <p class="research-statement">I’m interested in AI safety research on model internals and scalable oversight: using what a model represents to evaluate and oversee what it does.</p>
+        <div class="abstract">
+          <h2 class="abstract-title">Abstract</h2>
+          <p>I completed an MPhil in Advanced Computer Science at Cambridge with Distinction. My dissertation studied how language models learn to turn internal information into predictions. The resulting first-author paper, <a href="#learning-to-read-out">Learning to Read Out</a>, was accepted to NeurIPS 2026.</p>
+          <p>I’m seeking AI safety research fellowships and research scientist or research engineer roles. <a href="#contact">Get in touch →</a></p>
+        </div>
+        <div class="profile-links" aria-label="Profile and contact links">
+          <a href="https://github.com/hematteo">GitHub</a>
+          <a href="https://huggingface.co/hematteo">Hugging Face</a>
+          <a href="https://linkedin.com/in/matteohe">LinkedIn</a>
+        </div>
+        <div class="prism-slot"></div>
+        <p class="footnote" id="correspondence"><span class="footnote-mark" aria-hidden="true">∗</span>Correspondence to <a href="mailto:matteohe.research@gmail.com">matteohe.research@gmail.com</a>.</p>
+      </section>
+
+      <section id="news" class="news" aria-labelledby="news-heading">
+        <h2 id="news-heading">Recent updates</h2>
+        <ol class="news-list">
+          <li><time datetime="2026-09">Sep 2026</time><p><a href="#learning-to-read-out">Learning to Read Out</a> accepted at NeurIPS 2026.</p></li>
+          <li><time datetime="2026-09">Sep 2026</time><p><a href="https://arxiv.org/abs/2609.01936">Sparse Readout Prism</a> preprint released on arXiv.</p></li>
+          <li><time datetime="2026">2026</time><p>Completed the MPhil in Advanced Computer Science at Cambridge with Distinction.</p></li>
+        </ol>
+      </section>
+
+      <section id="research" class="section" aria-labelledby="research-heading">
+        <div class="section-heading">
+          <h2 id="research-heading">Selected research</h2>
+        </div>
+
+        <article class="cv-entry publication" id="learning-to-read-out">
+          <div class="entry-content">
+            <header class="entry-heading">
+              <div class="entry-title">
+                <h3><a href="https://github.com/hematteo/learning-to-read-out">Learning to Read Out</a></h3>
+                <p class="paper-subtitle">Unembedding Dynamics in Language Model Pretraining</p>
+              </div>
+              <p class="entry-date">2026</p>
+            </header>
+            <p class="authors"><strong>Matteo He</strong>, William F. Shen, Alex Iacob, Andrej Jovanovic, Xinchi Qiu, Nicholas D. Lane</p>
+            <div class="paper-meta"><span>First author</span><span>NeurIPS 2026 · Accepted</span></div>
+            <div class="publication-overview">
+            <div class="paper-body">
+              <p class="paper-question">A model’s outputs can lag behind what it already represents.</p>
+              <p>Studies of how capabilities emerge, and evaluations run during training, usually date a capability by when the model starts answering correctly. We identify a confound in that approach: the model’s outputs pass through its readout, which is itself still being learned, so it’s like reading a ruler whose markings are still being drawn. Probing hidden states directly and swapping readouts between checkpoints, we find task information that becomes decodable before the model’s own readout expresses it, with gaps on harder tasks that remain at the end of training. Output-only evaluations can therefore miss what a model already represents, which matters most for early-warning evaluations meant to catch a capability before it appears in behaviour.</p>
+              <div class="artifact-links">
+                <a href="https://github.com/hematteo/learning-to-read-out">Code</a>
+                <a href="https://github.com/hematteo/learning-to-read-out/tree/main/notebooks">Guided notebooks</a>
+                <a href="/research/learning-to-read-out.bib" download>BibTeX</a>
+              </div>
+              <a class="research-explorer-link" href="/research/trajectories/">Explore how readout features develop during training →</a>
+            </div>
+            <figure class="paper-figure results-figure research-preview">
+              <a href="/research/trajectories/" aria-label="Explore feature trajectories across four models">
+                <img src="/research/trajectory-preview.png" alt="Measured feature trajectories in Pythia-1B, normalised to each feature’s peak, show different patterns of change during training. Open the explorer to inspect all four models." width="840" height="520" fetchpriority="high">
+              </a>
+              <figcaption>One model from the study: 1,200 sampled features, each scaled to its own peak. <a href="/research/trajectories/">See all four models →</a></figcaption>
+
+            </figure>
+            </div>
+            <details class="research-details">
+              <summary>Method &amp; scope</summary>
+              <div class="details-content"><p>We tracked snapshots of the output weights during pretraining and fitted trajectory crosscoders to study how they changed. We tested the resulting features with readout swaps, linear probes, and ablations.</p>
+            <figure class="paper-figure results-figure">
+              <a href="/research/learning-to-read-out.png" class="figure-link" aria-label="View the Learning to Read Out results figure at full size">
+                <img src="/research/learning-to-read-out.png" alt="Subject–verb agreement results in Pythia-6.9B. Left: a probe of hidden states reaches high accuracy before the model’s own readout. Right: at convergence, probe accuracy remains at ceiling while the model’s readout falls behind on harder grammatical dependencies, with the largest gap at 25 percentage points." width="1596" height="473" loading="lazy">
+              </a>
+              <figcaption>Left: grammatical information becomes detectable before the model’s own readout uses it reliably. Right: the gap persists on harder examples, even at the end of training. SVA means subject–verb agreement.</figcaption>
+            </figure>
+              <p>Using fixed hidden states from Pythia-1B at step 1000, removing eight localised features from the reconstructed final readout reduced agreement accuracy on held out examples from 90.0% to 48.7%. Matched controls stayed at 90.0%. In control runs with 31 million parameters and a single random seed, each 4× increase in the readout learning rate halved the training step at which reorganisation occurred. Final validation losses agreed within 0.06 nats.</p><p>The public release includes reusable analysis tools, examples that run on a CPU, guided notebooks, and a manifest linking experiments to figures.</p></div>
+            </details>
+          </div>
+        </article>
+
+        <article class="cv-entry publication" id="sparse-readout-prism">
+          <div class="entry-content">
+            <header class="entry-heading">
+              <div class="entry-title">
+                <h3><a href="https://arxiv.org/abs/2609.01936">Sparse Readout Prism</a></h3>
+                <p class="paper-subtitle">Explaining Logit-Lens Scores in Features Instead of Tokens</p>
+              </div>
+              <p class="entry-date">2026</p>
+            </header>
+            <p class="authors"><strong>Matteo He</strong>, William F. Shen, Xinchi Qiu, Nicholas D. Lane</p>
+            <div class="paper-meta"><span>First author</span><span>Preprint · Under review</span></div>
+            <div class="publication-overview">
+            <div class="paper-body">
+                <p class="paper-question">A lens reading tells you about the lens as well as the model.</p>
+                <p>Lenses read a model’s intermediate hidden states as next-token predictions, and researchers use them to ask questions like whether a model computes in English. We identify a confound in these readings: two lenses that differ only in the text they were fitted on can read the same hidden state as different tokens, so conclusions drawn from one lens can partly reflect the lens itself. To compare readings on common ground, we introduce Sparse Readout Prism: it learns features from the model’s output weights and explains any token score as contributions from those shared features, plus an explicit account of what is left unexplained.</p>
+                <div class="artifact-links">
+                  <a href="https://arxiv.org/abs/2609.01936">Paper</a>
+                  <a href="https://github.com/hematteo/sparse-readout-prism">Code</a>
+                  <a href="https://huggingface.co/hematteo/sparse-readout-prism">Dictionaries</a>
+                  <a href="/research/sparse-readout-prism.bib" download>BibTeX</a>
+                </div>
+              <a class="research-explorer-link" href="/research/prism/">Explore what token scores leave out →</a>
+            </div>
+              <figure class="paper-figure results-figure research-preview">
+                <a href="/research/sparse-readout-prism.png" class="figure-link" aria-label="View the Sparse Readout Prism method figure at full size">
+                  <svg class="native-figure srp-figure" viewBox="0 0 700 354" role="img" aria-label="Sparse Readout Prism decomposes a readout query into feature directions, then accounts for its score using signed contributions and a residual.">
+                    <!-- Redrawn from the paper's schematic (readout_query_one_column); the PNG it links to is the original. -->
+                    <defs>
+                      <marker id="srp-head-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="srp-head ink"/></marker>
+                      <marker id="srp-head-a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="srp-head a1"/></marker>
+                      <marker id="srp-head-a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="srp-head a2"/></marker>
+                      <marker id="srp-head-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="srp-head b"/></marker>
+                      <marker id="srp-head-res" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="srp-head res"/></marker>
+                      <pattern id="srp-hatch" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="4" class="srp-hatch"/></pattern>
+                    </defs>
+                    <text class="srp-title" x="175" y="22">Sparse readout features</text>
+                    <text class="srp-title" x="525" y="22">Signed score accounting</text>
+                    <text class="srp-math" x="175" y="52" text-anchor="middle">𝑞<tspan class="sub" dy="4">𝛼</tspan><tspan dx="5" dy="-4">=</tspan><tspan dx="5">∑</tspan><tspan class="sub" dy="4">𝑖</tspan><tspan dx="3" dy="-4">𝛽</tspan><tspan class="sub" dy="4">𝑖</tspan><tspan dy="-4">(𝛼)</tspan><tspan dx="3">𝑑</tspan><tspan class="sub" dy="4">𝑖</tspan><tspan dx="5" dy="-4">+</tspan><tspan dx="5">𝑟</tspan><tspan class="sub" dy="4">𝛼</tspan></text>
+                    <text class="srp-math" x="525" y="52" text-anchor="middle">𝑠<tspan class="sub" dy="4">𝛼</tspan><tspan dx="5" dy="-4">=</tspan><tspan dx="5">∑</tspan><tspan class="sub" dy="4">𝑖</tspan><tspan dx="3" dy="-4">𝑐</tspan><tspan class="sub" dy="4">𝑖</tspan><tspan dx="5" dy="-4">+</tspan><tspan dx="5">ℎ̃</tspan><tspan class="sub" dy="-7">⊤</tspan><tspan class="sub" dx="-8" dy="11">ℓ</tspan><tspan dx="4" dy="-4">𝑟</tspan><tspan class="sub" dy="4">𝛼</tspan></text>
+
+                    <rect class="srp-panel" x="18" y="70" width="314" height="270" rx="10"/>
+                    <polygon class="srp-face back" points="175,124 243,227 212,251"/>
+                    <polygon class="srp-face base" points="109,248 172,216 212,251"/>
+                    <polygon class="srp-face left" points="175,124 109,248 172,216"/>
+                    <polygon class="srp-face front" points="175,124 172,216 212,251"/>
+                    <path class="srp-edge faint" d="M175 124L243 227L212 251"/>
+                    <path class="srp-edge" d="M175 124L109 248L212 251Z M175 124L172 216 M109 248L172 216L212 251"/>
+                    <path class="srp-arrow ink srp-in" d="M61 206H129" marker-end="url(#srp-head-ink)"/>
+                    <path class="srp-arrow a1" data-k="0" d="M205 206L281 125" marker-end="url(#srp-head-a1)"/>
+                    <path class="srp-arrow a1" data-k="1" d="M205 206L281 167" marker-end="url(#srp-head-a1)"/>
+                    <path class="srp-arrow a2" data-k="2" d="M205 206H281" marker-end="url(#srp-head-a2)"/>
+                    <path class="srp-arrow b" data-k="3" d="M205 206L281 244" marker-end="url(#srp-head-b)"/>
+                    <path class="srp-arrow res" data-k="r" d="M205 206L281 283" marker-end="url(#srp-head-res)"/>
+                    <text class="srp-math" x="36" y="211">𝑞<tspan class="sub" dy="4">𝛼</tspan></text>
+                    <text class="srp-math srp-fan" x="262" y="100" text-anchor="middle">𝛽<tspan class="sub" dy="4">𝑖</tspan><tspan dy="-4">(𝛼)</tspan><tspan dx="3">𝑑</tspan><tspan class="sub" dy="4">𝑖</tspan></text>
+                    <text class="srp-math" data-k="r" x="282" y="318" text-anchor="middle">𝑟<tspan class="sub" dy="4">𝛼</tspan></text>
+
+                    <rect class="srp-panel" x="368" y="70" width="314" height="270" rx="10"/>
+                    <text class="srp-text b" x="477" y="108" text-anchor="middle">B</text>
+                    <text class="srp-text" x="515" y="108" text-anchor="middle">0</text>
+                    <text class="srp-text a1" x="554" y="108" text-anchor="middle">A</text>
+                    <rect class="srp-bar a1" data-k="0" x="514" y="114" width="84" height="20"/>
+                    <rect class="srp-bar a1" data-k="1" x="514" y="155" width="56" height="20"/>
+                    <rect class="srp-bar a2" data-k="2" x="514" y="195" width="30" height="20"/>
+                    <rect class="srp-bar b" data-k="3" x="466" y="235" width="48" height="20"/>
+                    <rect class="srp-residual" data-k="r" x="514" y="276" width="16" height="20"/>
+                    <line class="srp-axis" x1="514" y1="114" x2="514" y2="298"/>
+                    <text class="srp-math" data-k="r" x="546" y="292">ℎ̃<tspan class="sub" dy="-7">⊤</tspan><tspan class="sub" dx="-8" dy="11">ℓ</tspan><tspan dx="4" dy="-4">𝑟</tspan><tspan class="sub" dy="4">𝛼</tspan></text>
+                  </svg>
+                </a>
+                <figcaption>How individual features contribute to a readout score.</figcaption>
+
+              </figure>
+            </div>
+            <details class="research-details">
+              <summary>Method &amp; scope</summary>
+              <div class="details-content">
+                <p>The method fits sparse autoencoders directly to the model’s output weights and decomposes selected logits and margins into signed feature contributions. Across six readouts without softcaps, it improved reconstruction coverage for logit differences by 8.9 to 17.3 percentage points over the strongest of six geometric baselines. A reconstruction counts as covered when it has the correct sign and less than 50% relative error. We use reconstruction and replacement tests, alongside checks for sign errors, residuals, and confounds, to establish the explanation’s limits.</p>
+                <figure class="supporting-figure">
+                  <a href="/research/readout-features.png" class="figure-link" aria-label="View the readout feature examples at full size"><img src="/research/readout-features.png" alt="Two paper examples show signed feature differences between insect and software senses of bug, and structure and network senses of bridge." width="1400" height="1145" loading="lazy"></a>
+                  <figcaption>Selected feature contrasts from the paper: “bug” and “bridge”.</figcaption>
+                </figure>
+              </div>
+            </details>
+          </div>
+        </article>
+
+      </section>
+
+      <section id="about" class="section education-section" aria-labelledby="about-heading">
+        <div class="section-heading"><h2 id="about-heading">Education &amp; distinctions</h2></div>
+        <article class="cv-entry">
+          <div class="entry-content">
+            <header class="entry-heading">
+              <div class="entry-title">
+                <h3>University of Cambridge</h3>
+              </div>
+            </header>
+            <p class="paper-meta">MPhil, Advanced Computer Science</p>
+            <div class="entry-description"><p><strong>Distinction</strong> · AI Alignment Fellowship</p></div>
+          </div>
+        </article>
+        <article class="cv-entry">
+          <div class="entry-content">
+            <header class="entry-heading">
+              <div class="entry-title">
+                <h3>University of St Andrews</h3>
+              </div>
+            </header>
+            <p class="paper-meta">BSc (Hons), Computer Science &amp; Mathematics</p>
+            <div class="entry-description"><p><strong>First Class</strong> · 18/20 average · Dean’s List in all three years</p><p>Top Student Medal for the highest academic achievement in the Direct Entry Computer Science cohort.</p></div>
+          </div>
+        </article>
+        <p class="academic-distinction"><strong><a href="https://www.ets.org/gre.html">GRE</a>: 340/340</strong> · taken in September 2021, before I started university</p>
+      </section>
+
+      <section id="systems" class="section" aria-labelledby="systems-heading">
+        <div class="section-heading"><h2 id="systems-heading">Experience &amp; projects</h2></div>
+        <article class="cv-entry" aria-labelledby="amazon-heading">
+          <div class="entry-content">
+            <header class="entry-heading">
+              <div class="entry-title">
+                <h3 id="amazon-heading">Amazon Alexa AI</h3>
+              </div>
+              <p class="entry-date">June–September 2023</p>
+            </header>
+            <p class="paper-meta">Software Development Engineer Intern</p>
+            <div class="entry-description">
+            <p>On the Alexa NLU team I built ML data and experiment infrastructure for model evaluation, used by <strong>20+ applied scientists</strong> to iterate on datasets faster.</p>
+            </div>
+          </div>
+        </article>
+        <article class="cv-entry">
+          <div class="entry-content">
+            <header class="entry-heading">
+              <div class="entry-title">
+                <h3><a href="https://github.com/hematteo/vigil">vigil-gpu</a></h3>
+              </div>
+              <p class="entry-date">2026</p>
+            </header>
+            <p class="paper-meta">Open source · Python</p>
+            <div class="entry-description"><p>I built a terminal monitor for rented cloud GPUs. It tracks training logs and metrics across instances, with reconnecting SSH streams and alerts for stalled runs, NaNs, and loss plateaus.</p></div>
+            <div class="artifact-links"><a href="https://github.com/hematteo/vigil">Code</a><a href="https://pypi.org/project/vigil-gpu/">PyPI</a><a href="https://github.com/hematteo/vigil/blob/main/docs/demo.gif">Recorded demo</a><a href="https://github.com/hematteo/vigil#readme">Documentation</a></div>
+          </div>
+        </article>
+        <article class="cv-entry">
+          <div class="entry-content">
+            <header class="entry-heading">
+              <div class="entry-title">
+                <h3>LLMs in the browser</h3>
+              </div>
+              <p class="entry-date">2024–2025</p>
+            </header>
+            <p class="paper-meta">Independent project · Archived</p>
+            <div class="entry-description"><p>A platform for learning Japanese that I built and ran, with about 3,000 monthly active users. Models ran on users’ own devices through WebGPU/WebLLM, so there were no server inference costs.</p></div>
+            <details class="system-details"><summary>Engineering scope</summary><p>I built and maintained all of it: inference, frontend and backend, authentication, subscriptions, deployment and monitoring.</p></details>
+          </div>
+        </article>
+      </section>
+
+      <section id="apps" class="section" aria-labelledby="apps-heading">
+        <div class="section-heading"><h2 id="apps-heading">Apps</h2></div>
+        <article class="cv-entry" id="game-of-life-3d">
+          <div class="entry-content">
+            <header class="entry-heading">
+              <div class="entry-title">
+                <h3><a href="https://3dgameoflife.com/">3D Game of Life</a></h3>
+              </div>
+            </header>
+            <div class="publication-overview">
+              <div class="paper-body">
+                <p>I took Conway’s Game of Life into three dimensions, on a grid of up to 100³ cells. A cell there has 26 neighbours rather than 8, so I built the app around finding rules that work: you can set the birth and survival counts, weight neighbours by face, edge and corner, or let the rule finder try hundreds of random rules and keep the ones that stay alive. I wrote it to run on the GPU through WebGPU, and any world can be shared as a short link or viewed in VR.</p>
+                <div class="artifact-links"><a href="https://3dgameoflife.com/">Open it</a><a href="https://3dgameoflife.com/?ambient=1">Watch it run</a></div>
+              </div>
+              <figure class="paper-figure results-figure research-preview">
+                <a href="https://3dgameoflife.com/" aria-label="Open 3D Game of Life">
+                  <img src="/apps/game-of-life-3d.jpg" alt="A cube of white voxels, grown by 3D Game of Life rules, inside a wireframe box on a deep blue background." width="1200" height="750" loading="lazy">
+                </a>
+                <figcaption>Drag to orbit, scroll to zoom, space to run.</figcaption>
+              </figure>
+            </div>
+          </div>
+        </article>
+        <article class="cv-entry" id="good-hand">
+          <div class="entry-content">
+            <header class="entry-heading">
+              <div class="entry-title">
+                <h3><a href="https://haopai.app/">好牌 · Good Hand</a></h3>
+              </div>
+            </header>
+            <div class="publication-overview">
+              <div class="paper-body">
+                <p>I built Dou Dizhu (斗地主, “fight the landlord”) to play with friends and bots, in English, Chinese and Italian. Besides the classic three-player game, I made a four-player, two-deck variant with a secret partner, a guided first round and ranked play. For the strong bots I ported DouZero, a self-play RL policy (ICML 2021), to numpy and taught it to bid from its own value of the opening hand.</p>
+                <div class="artifact-links"><a href="https://haopai.app/">Open it</a></div>
+              </div>
+              <figure class="paper-figure results-figure research-preview">
+                <a href="https://haopai.app/" aria-label="Open Good Hand">
+                  <img src="/apps/good-hand.jpg" alt="A Dou Dizhu table: the bot landlord has played a straight from ten to ace, marked with the characters 顺子, above the player’s seventeen-card hand." width="1200" height="750" loading="lazy">
+                </a>
+                <figcaption>The bot landlord leads a straight, 10 to A.</figcaption>
+              </figure>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section id="small-apps" class="section" aria-labelledby="small-apps-heading">
+        <div class="section-heading"><h2 id="small-apps-heading">Vibe-coded art</h2></div>
+        <article class="cv-entry" id="matrix-rain">
+          <div class="entry-content">
+            <header class="entry-heading">
+              <div class="entry-title">
+                <h3><a href="/matrix-rain/">Matrix Digital Rain</a></h3>
+              </div>
+            </header>
+            <div class="publication-overview">
+              <div class="paper-body">
+                <p>I turned the falling code from <i>The Matrix</i> into a corridor you fly through, steering with the mouse or a finger. The space bar warps it into a tunnel, and the film’s flat columns are one key away. Each view grows from a seed, such as a name, kept in the page address so it can be shared as a link.</p>
+                <div class="artifact-links"><a href="/matrix-rain/">Open it</a><a href="https://github.com/hematteo/matrix-rain">Code</a></div>
+              </div>
+              <figure class="paper-figure results-figure research-preview">
+                <a href="/matrix-rain/" aria-label="Open Matrix Digital Rain">
+                  <img src="/apps/matrix-rain.jpg" alt="Green glyphs falling down the walls of a corridor that recedes into darkness." width="1200" height="750" loading="lazy">
+                </a>
+                <figcaption>Steer with the mouse or a finger; space to warp.</figcaption>
+              </figure>
+            </div>
+          </div>
+        </article>
+        <article class="cv-entry" id="matrix-cave">
+          <div class="entry-content">
+            <header class="entry-heading">
+              <div class="entry-title">
+                <h3><a href="/matrix-cave/">Matrix Cave</a></h3>
+              </div>
+            </header>
+            <div class="publication-overview">
+              <div class="paper-body">
+                <p>I lit a generated cave with nothing but the falling code: each string is a drop of water running over the rock, so the walls, pools and lava show only where it traces them. You walk through at a person’s pace, and E sends out a pulse that lights the passages. I synthesised every sound in the page, with drips delayed and muffled by distance and rock. Caves are seeded and shareable as links.</p>
+                <div class="artifact-links"><a href="/matrix-cave/">Open it</a><a href="https://github.com/hematteo/matrix-cave">Code</a></div>
+              </div>
+              <figure class="paper-figure results-figure research-preview">
+                <a href="/matrix-cave/" aria-label="Open Matrix Cave">
+                  <img src="/apps/matrix-cave.jpg" alt="Green glyphs running down the walls and floor of a cave passage that recedes into darkness." width="1200" height="750" loading="lazy">
+                </a>
+                <figcaption>Click to look, WASD to walk, E to ping.</figcaption>
+              </figure>
+            </div>
+          </div>
+        </article>
+      </section>
+      <section id="contact" class="contact" aria-labelledby="contact-heading">
+        <div><h2 id="contact-heading">Contact</h2><p>For enquiries about research roles, fellowships, or collaborations.</p><p><a href="https://linkedin.com/in/matteohe">Contact me on LinkedIn</a></p></div>
+        <a class="contact-link" href="mailto:matteohe.research@gmail.com">matteohe.research@gmail.com</a>
+      </section>
+    </main>
+    <footer><span>Matteo He <span class="footer-year">2026</span></span><div><a href="https://github.com/hematteo">GitHub</a><a href="#main">Back to top</a></div></footer>
+  </div>
+  <dialog id="figure-dialog" aria-labelledby="figure-dialog-title">
+    <div class="dialog-header"><h2 id="figure-dialog-title">Research figure</h2><button type="button" id="close-figure">Close</button></div>
+    <img id="expanded-figure" alt="">
+    <p id="figure-description"></p>
+  </dialog>
+  <script type="module" src="/src/profile.js"></script>
+  <script type="module" src="/src/paper.js"></script>
+  <script type="module" src="/src/theme.js"></script>
+  <script type="module" src="/src/paper-mobile.js"></script>
+</body>
+</html>
