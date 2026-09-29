@@ -20,8 +20,8 @@ try {
   const page = await browser.newPage({ viewport: { width: 960, height: 504 }, deviceScaleFactor: 1.25, colorScheme: 'light', reducedMotion: 'reduce' })
   await page.goto(BASE)
   await page.evaluate(() => document.fonts.ready)
-  await page.addStyleTag({ content: `.masthead,.arxiv-stamp,.abstract,.profile-links,.footnote,.footnote-ref,.ink-layer,.latex-log,main > :not(.intro),.page > footer {display:none !important}
-    .intro {padding-top:84px} .prism-slot {margin-top:18px !important}` })
+  await page.addStyleTag({ content: `.masthead,.arxiv-stamp,.abstract > p:not(.research-statement),.profile-links,.footnote,.footnote-ref,.ink-layer,.latex-log,main > :not(.intro),.page > footer {display:none !important}
+    .intro {padding-top:84px} .abstract {max-width:680px;margin:14px auto 0 !important} .research-statement {text-align:center;hyphens:manual;font-size:19px;line-height:1.4} .prism-slot {margin-top:18px !important}` })
   await page.waitForTimeout(1500)
   await page.screenshot({ path: OUT })
   await browser.close()

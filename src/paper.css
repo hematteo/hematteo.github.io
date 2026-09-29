@@ -64,15 +64,7 @@ nav a {font-size:16px;}
 /* Title block */
 .intro {padding-top:46px;text-align:center;}
 h1 {font-size:36px;line-height:1.2;}
-.research-statement {
-  max-width:640px;
-  margin:14px auto 0;
-  font-size:19px;
-  font-style:italic;
-  line-height:1.4;
-}
 .abstract {margin:30px 42px 0;text-align:justify;hyphens:auto;}
-.abstract-title {font-size:16px;text-align:center;margin-bottom:6px;}
 .abstract p {font-size:16px;line-height:1.45;}
 .abstract p + p {margin-top:8px;}
 .profile-links {
@@ -298,7 +290,6 @@ dialog p {margin-top:12px;font-size:15px;}
 @media (max-width:640px) {
   .intro {padding-top:30px;}
   h1 {font-size:31px;}
-  .research-statement {font-size:18px;}
   .abstract {margin:26px 0 0;}
   /* Justified text leaves rivers in narrow columns */
   .abstract,.paper-body p,.entry-description p,.details-content p,.system-details p {text-align:left;}
