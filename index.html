@@ -119,7 +119,7 @@
               <a href="/research/trajectories/" aria-label="Explore feature trajectories across four models">
                 <img src="/research/trajectory-preview.png" alt="Measured feature trajectories in Pythia-1B, normalised to each feature’s peak, show different patterns of change during training. Open the explorer to inspect all four models." width="840" height="520" fetchpriority="high">
               </a>
-              <figcaption>One model from the study: 1,200 sampled features, each scaled to its own peak. <a href="/research/trajectories/">See all four models →</a></figcaption>
+              <figcaption>Each line tracks one readout feature through Pythia-1B’s training, scaled to its own peak: some fade early, some persist and others emerge late. <a href="/research/trajectories/">See all four models →</a></figcaption>
 
             </figure>
             </div>
@@ -207,7 +207,7 @@
                     <text class="srp-math" data-k="r" x="546" y="292">ℎ̃<tspan class="sub" dy="-7">⊤</tspan><tspan class="sub" dx="-8" dy="11">ℓ</tspan><tspan dx="4" dy="-4">𝑟</tspan><tspan class="sub" dy="4">𝛼</tspan></text>
                   </svg>
                 </a>
-                <figcaption>How individual features contribute to a readout score.</figcaption>
+                <figcaption>Sparse Readout Prism splits a readout score into signed contributions from shared features, plus a residual it leaves unexplained.</figcaption>
 
               </figure>
             </div>
@@ -217,7 +217,7 @@
                 <p>The method fits sparse autoencoders directly to the model’s output weights and decomposes selected logits and margins into signed feature contributions. Across six readouts without softcaps, it improved reconstruction coverage for logit differences by 8.9 to 17.3 percentage points over the strongest of six geometric baselines. A reconstruction counts as covered when it has the correct sign and less than 50% relative error. We use reconstruction and replacement tests, alongside checks for sign errors, residuals, and confounds, to establish the explanation’s limits.</p>
                 <figure class="supporting-figure">
                   <a href="/research/readout-features.png" class="figure-link" aria-label="View the readout feature examples at full size"><img src="/research/readout-features.png" alt="Two paper examples show signed feature differences between insect and software senses of bug, and structure and network senses of bridge." width="1400" height="1145" loading="lazy"></a>
-                  <figcaption>Selected feature contrasts from the paper: “bug” and “bridge”.</figcaption>
+                  <figcaption>Different features support the insect and software senses of “bug”, and the structure and network senses of “bridge”.</figcaption>
                 </figure>
               </div>
             </details>
@@ -314,7 +314,7 @@
                 <a href="https://3dgameoflife.com/" aria-label="Open 3D Game of Life">
                   <img src="/apps/game-of-life-3d.jpg" alt="A symmetric, snowflake-like structure of white voxels with an orange core, grown by 3D Game of Life rules, on a deep blue background." width="1200" height="750" loading="lazy">
                 </a>
-                <figcaption>Drag to orbit, scroll to zoom, space to run.</figcaption>
+                <figcaption>A symmetric structure grown by one of the app’s 3D rules.</figcaption>
               </figure>
             </div>
           </div>
@@ -328,14 +328,14 @@
             </header>
             <div class="publication-overview">
               <div class="paper-body">
-                <p>I built Dou Dizhu (斗地主, “fight the landlord”) to play with friends and bots, in English, Chinese and Italian. Besides the classic three-player game, I made a four-player, two-deck variant with a secret partner, a guided first round and ranked play. For the strong bots I ported DouZero, a self-play RL policy (ICML 2021), to numpy and taught it to bid from its own value of the opening hand.</p>
+                <p>I built Dou Dizhu (斗地主, “fight the landlord”) and Shuangkou (双扣), Zhejiang’s partnership game, to play with friends and bots in English, Chinese and Italian. Dou Dizhu has the classic three-player game and a four-player, two-deck variant with a secret partner; in Shuangkou, two fixed pairs play with two decks. There’s a guided first round, and all three games have ranked play. For the three-player game’s strong bots I ported DouZero, a self-play RL policy (ICML 2021), to numpy and taught it to bid from its own value of the opening hand.</p>
                 <div class="artifact-links"><a href="https://haopai.app/">Open it</a></div>
               </div>
               <figure class="paper-figure results-figure research-preview">
                 <a href="https://haopai.app/" aria-label="Open Good Hand">
                   <img src="/apps/good-hand.jpg" alt="A Dou Dizhu table: the bot landlord plays both jokers, marked with the characters 王炸 and a burst of stars, above the player’s hand." width="1200" height="750" loading="lazy">
                 </a>
-                <figcaption>The bot landlord plays the rocket: both jokers.</figcaption>
+                <figcaption>The bot landlord plays the rocket, both jokers, which beats anything.</figcaption>
               </figure>
             </div>
           </div>
@@ -357,7 +357,7 @@
                 <a href="https://github.com/hematteo/vigil/blob/main/docs/demo.gif" aria-label="Watch the vigil-gpu demo">
                   <img src="/apps/vigil-gpu.jpg" alt="The vigil-gpu terminal dashboard: four rented GPU instances, each with a live loss sparkline and a scrolling training log." width="1200" height="750" loading="lazy">
                 </a>
-                <figcaption>Four rented GPUs, one terminal.</figcaption>
+                <figcaption>Four rented GPU instances in one terminal, each with a live loss sparkline and training log.</figcaption>
               </figure>
             </div>
           </div>
@@ -394,7 +394,7 @@
                 <a href="/matrix-rain/" aria-label="Open Matrix Digital Rain">
                   <img src="/apps/matrix-rain.jpg" alt="Green glyphs falling down the walls of a corridor that recedes into darkness." width="1200" height="750" loading="lazy">
                 </a>
-                <figcaption>Steer with the mouse or a finger; space to warp.</figcaption>
+                <figcaption>The corridor grown from the seed “matteo”.</figcaption>
               </figure>
             </div>
           </div>
@@ -415,7 +415,7 @@
                 <a href="/matrix-cave/" aria-label="Open Matrix Cave">
                   <img src="/apps/matrix-cave.jpg" alt="Green glyphs running down the walls and floor of a cave passage that recedes into darkness." width="1200" height="750" loading="lazy">
                 </a>
-                <figcaption>Click to look, WASD to walk, E to ping.</figcaption>
+                <figcaption>A cave passage, lit only where the falling code runs over the rock.</figcaption>
               </figure>
             </div>
           </div>
